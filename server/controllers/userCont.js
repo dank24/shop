@@ -8,6 +8,7 @@ exports.register = asyncHandler(
     async(req, res, next) => {
         let {name, email, password} = req.body;
         [name, email, password] = [name.toLowerCase(), email.toLowerCase(), password.toLowerCase()];
+        const userId = name + '@admin'
  
         const existingUser = await user.findOne({name: name}).select('_id');
         if(existingUser) return res.status(409).json({status: 'failure', message: 'user exists'});
@@ -15,7 +16,7 @@ exports.register = asyncHandler(
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const newUser = await user.create({name, email, passwordHash});
+        const newUser = await user.create({name, email, passwordHash, id: userId});
         if(!newUser) return res.status(500).json({status: 'failure', message: 'failed to register user'});
 
         const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {expiresIn: '5d'})

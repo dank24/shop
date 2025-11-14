@@ -1,0 +1,145 @@
+import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import AddShopMini from "../components/minis/add_shop";
+import SideBar from "../components/utils/sideBar";
+
+interface infoCardsSecTy {
+    main: string,  secondary?: string, btn1?: string, btn2?: string
+}
+
+interface utiliiesBtnTy {
+    name: string,  link: string,  type?: string
+}
+
+interface historyDivTy {
+    header: string,  main: string,  date: string
+}
+
+function DashBoardPage() {
+ /* variable */
+    const [inDisplay, setInDisplay] = useState<string>('utilities')
+    const [searchParams, setSearchParams] = useSearchParams()
+    let currentView = searchParams.get('view');
+
+
+ /* function */
+    function handleSecOne(e: BaseSyntheticEvent) {
+        const {tagName, className, id, innerHTML} = e.target;
+
+        if(tagName == 'BUTTON' && innerHTML == 'Add') {
+            let str = 'add_' + id.toLowerCase();
+            setSearchParams(p => ({view: str } ))
+        }
+
+    }// first_sec_fn
+
+    function handleSecTwo(e: BaseSyntheticEvent) {
+        let {tagName, id, className, innerHTML} = e.target;
+        innerHTML = innerHTML.toLowerCase()
+
+        if(className == 'sec2div1_toggle') {
+            setInDisplay(p => (innerHTML ))
+        }
+
+    }// second_sec_fn
+
+
+ /* append Data */
+    const [infoCardsSec, setInfoCardsSec] = useState<infoCardsSecTy[]>([
+        {main: 'Store', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
+        {main: 'Manager', secondary: 'count: 4', btn1: 'Add', btn2: 'Manage'  },
+        {main: 'Product', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
+        {main: 'Current Date', btn1: 'Set', btn2: 'View'  },
+    ])
+    const [utilityBtns, setUtilityBtns] = useState<utiliiesBtnTy[]>([
+        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'},
+        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'},
+        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'}
+    ])
+    const [historyData, setHistoryData] = useState<historyDivTy[]>([
+        {header: 'Stock update', main: 'Main Shop update Stock', date: '12/10/25'},
+        {header: 'Stock update', main: 'Main Shop update Stock', date: '12/10/25'},
+    ])
+
+
+ /* Append */
+    const AppendSec1 = infoCardsSec.map((it, id) => {
+        return(
+            <div key={id} className="sec1_divs" > 
+                <button id={it.main}>{it.btn1}</button>
+                <div>
+                    <h4>{it.main}</h4>
+                    <h4>{it.secondary}</h4>
+                </div>
+                <button>{it.btn2}</button>
+            </div>
+        )
+    })
+
+    const AppendUtils = utilityBtns.map((it, id) => {
+        return(
+            <button key={id} className={`util_btns ${it.type}`} id={it.link}>
+                {it.name}
+            </button>
+        )
+    })
+
+    const AppendHistory = historyData.map((it, id) => {
+        return(
+            <div key={id} className="history_datas">
+                <h3>{it.header}</h3>
+                <p>{it.main}</p>
+                <h5>{it.date}</h5>
+            </div>
+        )
+    })
+
+
+    console.log('cV:', currentView)
+ /* Useeffect */
+
+ /* return */
+    return(
+        <main id="dashboard_page_main">
+            < SideBar />
+
+            { !currentView &&
+             <>
+                <section id="dashboard_first_sec" onClick={handleSecOne}>
+                    {
+                        AppendSec1
+                    }
+                </section>
+            
+                <section id="dashboard_second_sec" onClick={handleSecTwo}>
+                    <div id="sec2div1">
+                        <p className="sec2div1_toggle">utilities</p>
+                        <p className="sec2div1_toggle">History</p>
+                    </div>
+
+                    <div id="sec2div2">
+                        { inDisplay == 'utilities' &&
+                            AppendUtils
+                        }
+
+                        { inDisplay == 'history' && 
+                            AppendHistory
+                        }
+
+                    </div>
+                </section>
+             </>
+            }
+
+            { currentView &&
+                < AddShopMini />
+
+            }
+
+
+        </main>
+    )
+}
+
+export default DashBoardPage

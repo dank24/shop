@@ -10,6 +10,11 @@ const userSchema = new schema({
         maxLength: [31, 'name must be smaller than 31 chars'], 
         unique: true
     },
+    id: {
+        type: String,
+        unique: true,
+        require: true
+    },
     email: {
         type: String,
         required: true,

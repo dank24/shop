@@ -1,0 +1,128 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+@mixin basic-layout($he: 0, $wid: 0, $bor: 0, $brr: 0, $bgc: 0, $pad: 0 ) {
+    height: $he;  width: $wid;  border: 1px solid $bor;  border-radius: $brr;
+    background-color: $bgc;  padding: $pad;
+}
+
+@mixin flex($jc: 0, $ai: 0, $fdir: 0, $gap: 0) {
+    display: flex;  justify-content: $jc;  align-items: $ai;
+    flex-direction: $fdir;  gap: $gap;
+}
+
+@mixin pos($pos: 0, $l: 0, $r: 0, $t: 0, $b: 0) {
+    position: $pos;  left: $l; right: $r;  top: $t;  bottom: $b;
+}
+
+
+/* mobile first view              */
+
+#input_comp_main {
+    @include basic-layout(fit-content, 100%, 0, 0, 0, 4px);
+    @include flex(center, flex-start, column, 2px);
+
+    label {
+        @include basic-layout(23px, 30%);
+    }
+
+    input {
+        @include basic-layout(50px, 98%, black, 0.2rem, $pad: 4px);
+        margin-left: 4px;
+        outline: none;
+    }
+
+    p {
+        @include basic-layout(fit-content, 99%, black, 0.6rem, black, 6px);
+        align-self: center;  text-align: justify; font-size: 1.9dvh;
+        color: white 
+    }
+}
+
+
+#button_comp_main {
+    @include basic-layout(38px, 80px, 0, 0.0, 0, 0);
+    
+    button {
+        @include basic-layout(100%, 100%, black, 0.4rem )
+    }
+}
+
+#sidebar_comp_main {
+    @include basic-layout(3.5dvh, 100%, $bgc: rgb(221, 215, 205), $pad: 3px);
+    border-bottom: 1px solid black;
+
+    >p {
+        @include basic-layout(100%, 10%, $bgc: transparent, $pad: 2px );
+        @include flex(flex-start, center); 
+        font-size: 2.5dvh; 
+    }
+
+    #sidebar_sec {
+        @include basic-layout(96.5dvh, 55dvw, black, 0.3rem);
+        @include pos(absolute, 0.1px, $t: 3.5dvh)
+    }
+}
+
+
+    /*  Minis                                    */
+
+#dashboard_add_mini {
+    @include basic-layout(100%, 100%);
+    @include flex(flex-start, center, column, 1.5vh);
+
+    #form_div {
+        @include basic-layout(60vh, 96%, black, 0, 0,);
+        @include flex(flex-start, center, column, 1%);
+        padding-bottom: 4px;  padding-top: 10px;
+
+        select {
+            @include basic-layout(51px, 95%, black );
+            margin-top: 10px; outline: none;
+            box-shadow: 2px 1px black;
+        }
+
+        button {
+            @include basic-layout(50px, 95%, black, 0.4rem, rgb(46, 95, 117) );
+            margin-top: 2.5dvh;
+        }
+    }
+
+    .input_div {
+        @include basic-layout(82px, 99%, $pad: 5px, $bgc: transparent);
+        @include flex(center, flex-start , column, 4% );
+
+        label {
+            @include basic-layout(30%, fit-content, $bgc: transparent );
+            margin-left: 1vw;  font-size: 1.9vh;
+            font-family: 'Times New Roman', Times, serif;
+
+        }
+
+        input {
+            @include basic-layout(70%, 98%, black, 0rem, $pad: 4px, $bgc: rgb(167, 140, 140) );
+            align-self: center;  font-size: 2vh; outline:  none;
+            box-shadow: 2px 1px black ;
+        }
+        
+
+    }
+
+    #mini_header {
+        font-size: 3vh;  align-self: flex-start;
+        padding-left: 3px;  margin-top: 10vh
+    }
+
+    #options_div {
+        @include basic-layout(90px, 99%, $pad: 5px, $bgc: transparent);
+    }
+
+
+    
+}
+
+@media (min-width: 600px) {
+    
+}

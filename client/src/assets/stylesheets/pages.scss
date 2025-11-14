@@ -1,0 +1,140 @@
+* {
+    background-color: rgba(156, 145, 145, 0.884);
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+}
+
+@mixin basic-layout($he: 0, $wid: 0, $bor: 0, $brr: 0, $bgc: 0, $pad: 0 ) {
+    height: $he;  width: $wid;  border: 1px solid $bor;  border-radius: $brr;
+    background-color: $bgc;  padding: $pad;
+}
+
+@mixin flex($jc: 0, $ai: 0, $fdir: 0, $gap: 0) {
+    display: flex;  justify-content: $jc;  align-items: $ai;
+    flex-direction: $fdir;  gap: $gap;
+}
+
+
+@mixin pos($pos: 0, $l: 0, $r: 0, $t: 0, $b: 0) {
+    position: $pos;  left: $l; right: $r;  top: $t;  bottom: $b;
+}
+
+
+#login_page_main {
+    @include basic-layout(100dvh, 100dvw, 0, 0, 0);
+    @include flex(center, center, $fdir: column );
+
+    h2 {
+        @include pos(relative, 2px);
+        align-self: flex-start;
+    }
+
+    #error_msg{
+        @include basic-layout(30px, 90%, red, 0, rgb(138, 73, 73), 2px);
+        @include flex(center, center);
+        align-self: center;  color: white; 
+    }
+
+    #login_form_sec {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        
+        @include basic-layout(65dvh, 97%, 0, 0.4rem, );
+        @include flex(center, 0-start, column, 10px )
+    }
+}   
+
+#dashboard_page_main {
+    @include basic-layout(fit-content, 100dvw, 0, 0, black, );
+    @include flex(flex-start, center, column, 1px);
+    background-color: rgb(88, 88, 86);
+
+    #dashboard_first_sec {
+        @include basic-layout(36dvh, 99%);
+        @include flex(flex-start, center, column);
+
+        .sec1_divs {
+            @include basic-layout(24%, 99%, black, 0.4rem);
+            @include flex(flex-start, center, row, 2%);
+            margin-top: 0.5%;
+            box-shadow: 2px 2px 2px rgb(87, 82, 82);
+
+            >:first-child {
+                @include basic-layout(97%, 10%, $bgc: rgb(100, 156, 100));
+                border: none;  border-right: 1px solid black;
+            }
+
+            div {
+                @include basic-layout(100%, 66%);
+                @include flex(center, flex-start, column, 4% );
+                font-size: 1.5dvh;
+
+                :nth-child(2) {
+                    @include basic-layout(25%, fit-content );
+                }
+            }
+
+            >:last-child {
+                @include basic-layout(100%, 20%, $bgc: rgb(104, 151, 189));
+                border: none; border-left: 1px solid rgb(104, 151, 189);
+            }
+        }
+    }
+
+    #dashboard_second_sec {
+        @include basic-layout(55dvh, 99%);
+        @include flex(flex-start, center, column, 1px);
+        margin-top: 4px;
+
+        button {
+            background-color: blue;
+        }
+
+        #sec2div1 {
+            @include basic-layout(3.5dvh, 40%, black, 0rem, black);
+            @include pos(relative); 
+            @include flex(center, center, row, 3%);
+            align-self: flex-end; color: white;
+
+            p {
+                @include basic-layout(80%, 46%, white, 0.5rem, transparent );
+                @include flex(center, center)
+            }
+
+        }
+
+        #sec2div2 {
+            @include basic-layout(fit-content, 100%, 0 );
+            @include flex(center, center, column, 3px);
+            margin-top: 3px;
+            
+            .util_btns {
+                @include basic-layout(60px, 98%, black, 0, rgb(99, 94, 94));
+                box-shadow: 1.5px 1px black;  font-size: 2dvh;
+            }
+
+            .history_datas {
+                @include basic-layout(70px, 98%, grey, $pad: 2px);
+                @include flex(center, flex-start, column, 5px);
+
+                >:first-child {
+                    border-bottom: 1px solid black;
+                }
+
+                >:nth-child(2) {
+                    align-self: center;  font-size: 2dvh;
+                }
+
+                >:last-child {
+                    align-self: flex-end;  font-size: 1.8dvh;
+                }
+            }
+        }
+    }
+
+    #dashboard_con_sec {
+        @include basic-layout(96.4dvh, 100%, $bgc: red );
+    }
+
+}

@@ -1,0 +1,251 @@
+* {
+  background-color: rgba(156, 145, 145, 0.884);
+  box-sizing: border-box;
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+}
+
+#login_page_main {
+  height: 100dvh;
+  width: 100dvw;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+}
+#login_page_main h2 {
+  position: relative;
+  left: 2px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  align-self: flex-start;
+}
+#login_page_main #error_msg {
+  height: 30px;
+  width: 90%;
+  border: 1px solid red;
+  border-radius: 0;
+  background-color: rgb(138, 73, 73);
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  align-self: center;
+  color: white;
+}
+#login_page_main #login_form_sec {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  height: 65dvh;
+  width: 97%;
+  border: 1px solid 0;
+  border-radius: 0.4rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: 0-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#dashboard_page_main {
+  height: fit-content;
+  width: 100dvw;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: black;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 1px;
+  background-color: rgb(88, 88, 86);
+}
+#dashboard_page_main #dashboard_first_sec {
+  height: 36dvh;
+  width: 99%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+}
+#dashboard_page_main #dashboard_first_sec .sec1_divs {
+  height: 24%;
+  width: 99%;
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 2%;
+  margin-top: 0.5%;
+  box-shadow: 2px 2px 2px rgb(87, 82, 82);
+}
+#dashboard_page_main #dashboard_first_sec .sec1_divs > :first-child {
+  height: 97%;
+  width: 10%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgb(100, 156, 100);
+  padding: 0;
+  border: none;
+  border-right: 1px solid black;
+}
+#dashboard_page_main #dashboard_first_sec .sec1_divs div {
+  height: 100%;
+  width: 66%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4%;
+  font-size: 1.5dvh;
+}
+#dashboard_page_main #dashboard_first_sec .sec1_divs div :nth-child(2) {
+  height: 25%;
+  width: fit-content;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+}
+#dashboard_page_main #dashboard_first_sec .sec1_divs > :last-child {
+  height: 100%;
+  width: 20%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgb(104, 151, 189);
+  padding: 0;
+  border: none;
+  border-left: 1px solid rgb(104, 151, 189);
+}
+#dashboard_page_main #dashboard_second_sec {
+  height: 55dvh;
+  width: 99%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 4px;
+}
+#dashboard_page_main #dashboard_second_sec button {
+  background-color: blue;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div1 {
+  height: 3.5dvh;
+  width: 40%;
+  border: 1px solid black;
+  border-radius: 0rem;
+  background-color: black;
+  padding: 0;
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 3%;
+  align-self: flex-end;
+  color: white;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div1 p {
+  height: 80%;
+  width: 46%;
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 {
+  height: fit-content;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 3px;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 .util_btns {
+  height: 60px;
+  width: 98%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: rgb(99, 94, 94);
+  padding: 0;
+  box-shadow: 1.5px 1px black;
+  font-size: 2dvh;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 .history_datas {
+  height: 70px;
+  width: 98%;
+  border: 1px solid grey;
+  border-radius: 0;
+  background-color: 0;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 .history_datas > :first-child {
+  border-bottom: 1px solid black;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 .history_datas > :nth-child(2) {
+  align-self: center;
+  font-size: 2dvh;
+}
+#dashboard_page_main #dashboard_second_sec #sec2div2 .history_datas > :last-child {
+  align-self: flex-end;
+  font-size: 1.8dvh;
+}
+#dashboard_page_main #dashboard_con_sec {
+  height: 96.4dvh;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: red;
+  padding: 0;
+}
+
+/*# sourceMappingURL=pages.css.map */
