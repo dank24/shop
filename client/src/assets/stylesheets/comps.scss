@@ -51,23 +51,27 @@
 }
 
 #sidebar_comp_main {
-    @include basic-layout(3.5dvh, 100%, $bgc: rgb(221, 215, 205), $pad: 3px);
-    border-bottom: 1px solid black;
+    @include basic-layout(4vh, 100%, $bgc: rgb(221, 215, 205), $pad: 3px);
+    @include flex(flex-start, center, $gap: 20px );
 
     >p {
         @include basic-layout(100%, 10%, $bgc: transparent, $pad: 2px );
         @include flex(flex-start, center); 
-        font-size: 2.5dvh; 
+        font-size: 3vh; 
+    }
+
+    >h3 {
+        font-size: 2vh
     }
 
     #sidebar_sec {
-        @include basic-layout(96.5dvh, 55dvw, black, 0.3rem);
-        @include pos(absolute, 0.1px, $t: 3.5dvh)
+        @include basic-layout(96.5vh, 55vw, 0, 0.3rem, rgb(221, 215, 205));
+        @include pos(absolute, 0.1px, $t: 4vh); z-index: 200;
     }
 }
 
 
-    /*  Minis                                    */
+ /*  Minis                                    */
 
 #dashboard_add_mini {
     @include basic-layout(100%, 100%);

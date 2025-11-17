@@ -1,8 +1,9 @@
 import React, { BaseSyntheticEvent, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import AddShopMini from "../components/minis/add_shop";
 import SideBar from "../components/utils/sideBar";
+import { ta } from "zod/v4/locales";
 
 interface infoCardsSecTy {
     main: string,  secondary?: string, btn1?: string, btn2?: string
@@ -17,6 +18,9 @@ interface historyDivTy {
 }
 
 function DashBoardPage() {
+ /* react hoookw */
+    const navigate = useNavigate();
+
  /* variable */
     const [inDisplay, setInDisplay] = useState<string>('utilities')
     const [searchParams, setSearchParams] = useSearchParams()
@@ -31,6 +35,11 @@ function DashBoardPage() {
             let str = 'add_' + id.toLowerCase();
             setSearchParams(p => ({view: str } ))
         }
+
+        if(tagName == 'BUTTON' && innerHTML == 'Manage') {
+            navigate(`/home/${id.toLowerCase()}s`)
+        }
+        
 
     }// first_sec_fn
 
@@ -72,7 +81,7 @@ function DashBoardPage() {
                     <h4>{it.main}</h4>
                     <h4>{it.secondary}</h4>
                 </div>
-                <button>{it.btn2}</button>
+                <button id={it.main}>{it.btn2}</button>
             </div>
         )
     })

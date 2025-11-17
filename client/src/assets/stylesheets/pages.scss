@@ -1,8 +1,8 @@
 * {
-    background-color: rgba(156, 145, 145, 0.884);
     box-sizing: border-box;
     font-family: 'Times New Roman', Times, serif;
     margin: 0;
+    
 }
 
 @mixin basic-layout($he: 0, $wid: 0, $bor: 0, $brr: 0, $bgc: 0, $pad: 0 ) {
@@ -20,6 +20,13 @@
     position: $pos;  left: $l; right: $r;  top: $t;  bottom: $b;
 }
 
+/* General Ids                    */
+#sidebar_container_div {
+    @include pos(sticky, 0, 0, 0px, );
+    z-index: 200;
+}
+
+/* Pages                         */
 
 #login_page_main {
     @include basic-layout(100dvh, 100dvw, 0, 0, 0);
@@ -137,4 +144,141 @@
         @include basic-layout(96.4dvh, 100%, $bgc: red );
     }
 
+}
+
+/* 01                             */
+
+#stores_page_main {
+    @include basic-layout(fit-content, 100dvw );
+    
+    #stores_first_sec {
+        @include basic-layout(fit-content, 100% );
+        @include flex(center, center, column, 6px);
+        margin-top: 0.4vh;
+
+        .stores_divs{
+            @include basic-layout(200px, 96%, black, 0rem, rgb(56, 43, 43),);
+            box-shadow: 2px 2px 2px black;
+            font-size: 1.7vh;  color: rgb(221, 212, 212);
+
+            >H2 {
+                text-align: center;
+            }
+
+            >div {
+                @include basic-layout(35px, 100%, rgb(156, 88, 88), $pad: 6px );
+                @include flex(flex-start, center, row, 2px );
+
+                >:first-child {
+                    width: 25%;
+                }
+            }
+
+            section {
+                @include basic-layout(35px, 100%, rgb(156, 88, 88), );
+                @include flex(center, center, row, 0% );
+
+                p {
+                    @include basic-layout(100%, 25%, 0, );
+                    @include flex(center, center, );
+                    border-right: 1px solid rgb(156, 88, 88);
+
+                }
+            }
+
+            button {
+                @include basic-layout(35px, 100%, 0, 0, rgb(243, 233, 233) )
+            }
+        }
+    }
+}
+
+#managers_page_main {
+    @include basic-layout(fit-content, 100vw, );
+
+    #managers_first_sec {
+        @include basic-layout(fit-content, 100%,);
+        @include flex(center, center, column, 4px);
+        margin-top: 4px;
+
+        .managers_card_divs {
+            @include basic-layout(160px, 96%, black, $bgc: rgb(150, 148, 148) );
+            color: rgb(44, 33, 33);
+            font-size: 2vh;
+
+            #profile_sec {
+                @include basic-layout(20%, 100%, 0, $pad: 1% );
+                @include flex(flex-start, center, row, 0%);
+                border-bottom: 1px solid black;
+
+                :first-child {
+                    width: 75%;
+                }
+
+                #img_div {
+                    @include basic-layout(10vh, 10vh, black, 50%, white );
+                    @include pos(relative, 0, 0, 4vh, )
+                }
+            }
+
+            div {
+                @include basic-layout(20%, 100%, 0, $pad: 5px );
+                @include flex(flex-start, center, row, );
+                border-bottom: 1px solid grey;
+
+                :first-child {
+                    width: 30%;
+                }
+            }
+
+ 
+        }
+    }
+}
+
+#products_page_main {
+    @include basic-layout(fit-content, 100dvw, );
+    position: relative;
+
+
+    #products_first_sec {
+        @include basic-layout(fit-content, 100%, );
+        @include flex(center, center, column, 4px );
+
+        .prd_div {
+            >* {
+                @include flex(flex-start, center, );
+                width: 17%;
+                padding: 1px;  height: 90%;
+                border-right: 1px solid rgb(211, 181, 181);
+            }
+
+            :first-child {
+                width: 30%;
+            }
+
+            >:last-child {
+                border-right: none;
+            }
+        }
+
+        #sec1div1 {
+            @include basic-layout(30px, 98%, black, $bgc: rgb(65, 58, 58), $pad: 4px );
+            @include flex(flex-start, center, row, 2%);  color: white;
+            @include pos(sticky, 0, 0, 4.1vh, 0);
+            font-size: 1.7vh;
+         
+        }
+
+        #products_card_div {
+            @include basic-layout(45px, 98%, black, 0rem, rgb(104, 89, 89), 4px );
+            @include flex(flex-start, center, row, 2% );  color: rgb(250, 238, 238);
+            font-size: 1.8vh;
+
+            button {
+                @include basic-layout(70%, 60px, black, 0rem, );
+                @include flex(center, center, )
+            }
+        }
+    }
 }

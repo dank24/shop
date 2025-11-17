@@ -3,7 +3,7 @@ import axios from 'axios'
 interface userDataTy { name: string, email: string, password: string }
 
 /* variables */
-const baseUserURL = 'http://localhost:5378/user';
+const baseUserURL = 'http://localhost:5378/';
 const token = localStorage.getItem('token');
 
 const axiosinstance = axios.create({
@@ -34,11 +34,14 @@ export const register = async(registerData: userDataTy) => {
 }// register_user_fn
 
 
-export const add_prop = async(data: {}) => {
-    const urls = ['/add_store', '/add_manager', 'add_product'];
-    const useUrl = urls[data['index']];
-
-    console.log('dataIndex', useUrl)
-    console.log('data', data)
-    //const response = await axiosinstance.post(useUrl, data)
+export const add_prop = async(data: {}) => {    
+    try {
+        const response = await axiosinstance.post('utils/add', data)
+        const re = response.data
+        console.log('re', re.data)
+        return re.data
+        
+    } catch (error) {
+        console.log('err', error.response)
+    }
 }

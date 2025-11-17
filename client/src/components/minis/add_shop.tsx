@@ -7,6 +7,7 @@ import { add_prop } from "../../api/userApi";
 function AddShopMini() {
 
  /* variable */
+    
     const [searchParams, setSearchParams] = useSearchParams()
     const [pageData, setPageData] = useState({})
     const view = searchParams.get('view')
@@ -27,13 +28,13 @@ function AddShopMini() {
  /* append data */
     const [mega, setMega] = useState([
         ['Store Name', 'Shop Manager', 'Contact', 'Location'], 
-        ['Manager Name', 'Email', 'Manager Phone', 'Sortee', 'Sortee Contact'],
+        ['Manager Name', 'Email', 'Manager Phone', 'Guarantor', 'Guarantor Contact'],
         ['Product Name', 'Price', 'Quantity',]
     ])
     
     const [ids, setIds] = useState([
         ['name', 'manager', 'contact', 'location'],
-        ['name', 'managerEmail', 'managerPhone', 'sortee', 'sorteePhone'],
+        ['name', 'managerEmail', 'managerPhone', 'guarantor', 'guarantorPhone'],
         ['name', 'price', 'quantity']
     ])
 
@@ -56,9 +57,12 @@ function AddShopMini() {
     }// handleInputs
 
     function handleBtn(e: BaseSyntheticEvent) {
-        pageData['index'] = index
+        const sendData = {
+            index,
+            data: {...pageData}
+        }
 
-        const ADDFN = add_prop(pageData)
+        const ADDFN = add_prop(sendData)
         .then(resp => console.log('fon'))
     }// hanldeBtns
 
