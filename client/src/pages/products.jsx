@@ -1,65 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../components/utils/sideBar";
-import { appendErrors } from "react-hook-form";
+import {getProducts } from '../api/productApi'
 
 function ProductsPage() {
  /* variables */
 
  /* Append Data */
-    const [productsData, setProductsData] = useState([
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-        {name: 'Indomie -90g', quantity: '50', access: 'L0, L1'},
-        {name: 'Indomie -90g', quantity: '500', access: 'L0'},
-    ])
+    const [productsData, setProductsData] = useState([])
 
  /* Append */
     const AppendProducts = productsData.map((it, id) => {
@@ -75,16 +22,28 @@ function ProductsPage() {
     } )
     
 
- /* functions */
+ /* FUNCTIONS */
 
+ /* USE EFFECTS */
+    useEffect(() => {
+        const GETPRODUCTSFN = getProducts()
+        .then(resp => resp ? setProductsData(p => (resp)) : console.log('failure'))
+    }, [])
 
  /* return */
     return(
+    <>
+        <div id="sidebar_container_div">
+            <SideBar header = 'Products'/>
+        </div>
+
+      { productsData.length == 0 &&
+        <h1>Loading</h1>
+
+      }
+
+      { productsData.length >= 1 &&
         <main id="products_page_main">
-            <div id="sidebar_container_div">
-                <SideBar header = 'Products'/>
-            </div>
-           
 
             <section id="products_first_sec">
 
@@ -101,6 +60,9 @@ function ProductsPage() {
             </section>
 
         </main>
+      }
+     </>
+
     )
 }
 

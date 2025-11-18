@@ -8,24 +8,30 @@ const {storeModel} = require('./models/models')
 
 console.log(storeModel)
 
-/* variables */
+/* VARIABLES */
 const mongoURL = process.env.MONGO_URL;
 const Port = process.env.PORT;
 
 const app = express();
 
-/* import routes */
-const userRoutes = require('./routes/userRoutes')
-const utilRoutes = require('./routes/utilRoutes')
+/* IMPORT ROUTES */
+const managerRoutes = require('./routes/managerRoute');
+const producRoutes = require('./routes/productRoutes');
+const storesRoutes = require('./routes/storeRoutes');
+const userRoutes = require('./routes/userRoutes');
+const utilRoutes = require('./routes/utilRoutes');
 
-/* use */
+/* USE */
 app.use(express.json())
 app.use(cors({
     origin: '*',
     method: ['POST', 'GET']
 }))
 
-/* use routes */
+/* USE ROUTES */
+app.use('/manager', managerRoutes);
+app.use('/product', producRoutes);
+app.use('/store', storesRoutes);
 app.use('/user', userRoutes);
 app.use('/utils', utilRoutes);
 

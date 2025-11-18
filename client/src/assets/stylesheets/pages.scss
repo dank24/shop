@@ -217,7 +217,7 @@
 
                 #img_div {
                     @include basic-layout(10vh, 10vh, black, 50%, white );
-                    @include pos(relative, 0, 0, 4vh, )
+                    @include pos(relative, 0, 0, 4.5vh, )
                 }
             }
 

@@ -34,7 +34,7 @@ function AddShopMini() {
     
     const [ids, setIds] = useState([
         ['name', 'manager', 'contact', 'location'],
-        ['name', 'managerEmail', 'managerPhone', 'guarantor', 'guarantorPhone'],
+        ['name', 'email', 'phone', 'guarantor', 'guarantorPhone'],
         ['name', 'price', 'quantity']
     ])
 

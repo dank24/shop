@@ -24,7 +24,7 @@ export const isAuthenticated = () => {
 
 export const register = async(registerData: userDataTy) => {
     try {
-        const resp = await axiosinstance.post('/user/register', registerData);
+        const resp = await axiosinstance.post('user/register', registerData);
         return resp.data.token
         
     } catch (error) {

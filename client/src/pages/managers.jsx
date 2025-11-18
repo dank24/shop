@@ -1,49 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../components/utils/sideBar";
 
-function ManagersPage() {
- /* variables */
+import { getManagers } from "../api/managersApi";
 
- /* Append Data */
-    const [managersData, setManagersData] = useState([
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-        {name: 'Michele Olise', email: 'olise@gmail.com', phone: '07069403945', guarantor: 'MR. Okike', guarantorPhone: '07038495839'},
-    ])
+function ManagersPage() {
+ /* VARIABLES */
+
+ /* APPEND DATA */
+    const [managersData, setManagersData] = useState([])
 
  /* Append */
     const appendManagersData = managersData.map((it, id) => {
@@ -79,11 +43,19 @@ function ManagersPage() {
         )
     })
 
- /* functions */
+ /* FUNCTIONS */
 
+ /* USE EFFECTs */
+    useEffect(() => {
+        const GETMANAGERSDATAFN = getManagers()
+        .then(resp => resp ? setManagersData(p => (resp)) : console.log('failure') )
+    }, [])
+    console.log(managersData)
 
- /* return */
+ /* RETURN */
     return(
+     <>
+     { managersData.length >= 1 &&
         <main id="managers_page_main">
             <div id="sidebar_container_div">
                 < SideBar header='Managers' />
@@ -95,6 +67,14 @@ function ManagersPage() {
                 }
             </section>
         </main>
+     }
+
+     { managersData.length == 0 && 
+        <h1>Loading Data</h1>
+
+     }
+     </>
+
     )
 }
 

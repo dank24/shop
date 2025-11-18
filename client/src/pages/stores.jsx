@@ -1,30 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getStores } from "../api/storeApi";
 
 import SideBar from "../components/utils/sideBar";
 
 function StoresPage() {
  /* variables */
+    const [storesData, setStoresData] = useState([])
 
- /*  Append Data */
-    const [storesData, setStoreData] = useState([
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-        {name: 'Main Shop', id: 'SHP01', manager: 'Micheal', contact: '07061071398', location: 'ogidi', access: 'L0', status: 'red' },
-    ])
+ /* functions */
+    function getStoresData() {
+        const GETDATAFN = getStores()
+        .then(resp => resp ? setStoresData(p => (resp )) : console.log('failure') )
+    }// get_stores_data_fn
+
+    console.log(storesData.length)
 
  /* Append */
     const AppendStores = storesData.map((it,id) => {
@@ -51,32 +40,46 @@ function StoresPage() {
                
                <section>
                     <p>ID: {it.id}</p>
-                    <p>Access: {it.access}</p>
-                    <p>Status: {it.status}</p>
+                    <p>Access: L0</p>
+                    <p>Status: Blue</p>
                </section>
 
                <button>Click Me</button>
             </div>
         )
-    })
+    }) 
 
- /* functions */
-
+ /* use Effect */
+    useEffect(() => {
+        getStoresData()
+    }, [])
 
  /* return */
     return(
+     <>
+        <div id="sidebar_container_div">
+            < SideBar  header ='Stores' />
+        </div>
+
+     { storesData.length >= 1 &&
         <main id="stores_page_main">
-            <div id="sidebar_container_div">
-                < SideBar  header ='Stores' />
-            </div>
             
-            
+
+                    
             <section id="stores_first_sec">
                 {
                     AppendStores
                 }
             </section>
         </main>
+     }
+
+     {  storesData.length == 0 &&
+        <h4>Loading</h4>
+
+     }
+     </>
+
     )
 }
 
