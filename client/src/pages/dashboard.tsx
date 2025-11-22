@@ -1,9 +1,9 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import React, { BaseSyntheticEvent, useEffect, useState, useContext } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
+import { MainContextEx } from "./context/mainContext";
 import AddShopMini from "../components/minis/add_shop";
 import SideBar from "../components/utils/sideBar";
-import { ta } from "zod/v4/locales";
 
 interface infoCardsSecTy {
     main: string,  secondary?: string, btn1?: string, btn2?: string
@@ -18,9 +18,10 @@ interface historyDivTy {
 }
 
 function DashBoardPage() {
- /* react hoookw */
+ /* react hoook */
     const navigate = useNavigate();
-
+    const {addAlert} = useContext(MainContextEx)
+    
  /* variable */
     const [inDisplay, setInDisplay] = useState<string>('utilities')
     const [searchParams, setSearchParams] = useSearchParams()
@@ -105,7 +106,6 @@ function DashBoardPage() {
     })
 
 
-    console.log('cV:', currentView)
  /* Useeffect */
 
  /* return */

@@ -19,6 +19,34 @@
 
 
 /* mobile first view              */
+#alerts_div {
+    @include basic-layout(fit-content, 70vw,);
+    @include flex(center, center, column, 5px);
+    @include pos(absolute, 15vw, 0, 3vh );
+    font-size: 2vh;
+
+    .alert {
+        @include basic-layout(8vh, 70vw, black, 0.4rem, rgb(77, 102, 114), 4px);
+        @include flex(center, center, column, 2px);
+        box-shadow: 2px 2px black;
+        color: white;
+
+        .close_x {
+            @include basic-layout(25px, 25px, black, 50%, black, 2px);
+            @include flex(center, center);
+            @include pos(relative, 52%, 0, -30%);
+            justify-self: flex-end; 
+        }
+
+        #alert_body {
+            @include pos(relative, 0, 0, -15%, )
+        }
+
+        #indicator {
+            @include basic-layout(0.1px, 90%, red, )
+        }
+    }
+}
 
 #input_comp_main {
     @include basic-layout(fit-content, 100%, 0, 0, 0, 4px);
@@ -40,7 +68,6 @@
         color: white 
     }
 }
-
 
 #button_comp_main {
     @include basic-layout(38px, 80px, 0, 0.0, 0, 0);
@@ -72,6 +99,63 @@
 
 
  /*  Minis                                    */
+ #preview_sec {
+    @include basic-layout(96dvh, 100%, 0red,  );
+    @include flex(center, center, column, 5px);
+    font-size: 1.8vh;
+    
+    #back_btn {
+        @include basic-layout(32px, 20%, black, 0.2rem,);
+        margin-left: 4vw;
+        align-self: flex-start
+
+    }
+
+    #preview_div1 {
+        @include basic-layout(78%, 92%, black, 0.2rem, rgb(180, 61, 61), 5px);
+        @include flex(flex-start, center, column, 3px);
+        overflow: scroll;
+
+        #preview_descr_div {
+            @include pos(sticky, 0, 0, 1px, );
+            height: 35px; background-color: rgb(59, 48, 48);  color: white;
+        }
+
+        .preview_divs {
+            @include basic-layout(46px, 98%, black);
+            @include flex(flex-start, center, row, );
+
+            > * {
+                height: 100%;  padding: 10px;
+                border-right: 1px solid  black;
+                @include flex(center, center, row, );
+            }
+
+            >:first-child {
+                width: 8%;
+            }
+
+            >:nth-child(2) {
+                width: 70%;
+                justify-content: flex-start;
+            }
+
+            >:nth-child(3) {
+                width: 27%; 
+                border-right: none;
+            }
+
+        }
+    }
+
+    #submit_btn {
+        @include basic-layout(32px, 25%, black, 0.2rem,);
+        margin-right: 4vw;
+        align-self: flex-end;
+
+    }
+    
+}
 
 #dashboard_add_mini {
     @include basic-layout(100%, 100%);
@@ -127,6 +211,285 @@
     
 }
 
+#instore_mini_main {
+    @include basic-layout(fit-content, 100vw );
+
+    #instore_first_sec {
+        @include basic-layout(fit-content, 100%, 0);
+        @include flex(center, center, column, 8px);
+        margin-top: 5px;
+
+        .fn_btn_div {
+            @include basic-layout(65px, 95%, black, 0.3rem, rgb(134, 123, 123), 4px);
+            @include flex(flex-start, center, row, );
+            box-shadow: 2px 2px black;  color: rgb(255, 255, 255);
+
+            div {
+                @include flex(center, flex-start, column, 5px );
+                width: 65%
+            }
+
+            button {
+                @include basic-layout(100%, 35%, black, 0.2rem);
+            }
+        }
+    }
+
+}
+
+#viewprd_mini_main {
+    @include basic-layout(fit-content, 100vw, );
+
+    #viewprd_first_sec {
+        @include basic-layout(fit-content, 100%,);
+        @include flex(flex-start, center, column, 5px);
+        margin-top: 5px;
+
+        .viewprd_prd_card {
+            @include basic-layout(50px, 96%, black, );
+            @include flex(flex-start, center, row, 5px);
+
+            > * {
+                @include flex(flex-start, center,);
+                border-right: 1px solid black;
+                height: 100%;  
+
+            }
+
+            >:first-child {
+                justify-content: center;
+                width: 8%;
+                padding: none;
+            }
+
+            >:nth-child(2) {
+                width: 44%;
+            }
+
+            >:nth-child(3) {
+                width: 25%;
+            }
+
+            >:nth-child(4) {
+                width: 25%;
+                border-right: none;
+            }
+        }
+        #prdview_sec1div1 {
+            @include pos(sticky, 0, 0, 4.3vh);  font-size: 1.6vh;
+            height: 35px;  background-color: rgb(175, 105, 105);
+        }
+
+        #prd_card {
+            height: 45px;
+            font-size: 2.1vh;
+        }
+    }
+
+}
+
+#inout_mini_main {
+    @include basic-layout(fit-content, 100vw,);
+    @include  flex(center, center, column, 1px);
+
+    #inout_first_sec {
+        @include basic-layout(100%, 100%, 0.3rem);
+        @include flex(center, center, row, 4%);
+        margin-top: 5px;  font-size: 2vh;
+
+        .ini {
+            @include basic-layout(35px, 30%,);
+
+            .picked {
+                @include basic-layout(30px, 90%, black, 0.5rem,);
+                @include flex(center, center)
+            }
+
+            #options_div {
+                @include basic-layout(fit-content, 88%, black, $bgc: rgb(163, 123, 123));
+                position: relative;
+                z-index: 1000;
+                margin-top: 3px;
+
+                p {
+                    @include basic-layout(35px, 100%, black,);
+                    @include flex(center, center, column, 5% );
+                }
+            
+            }
+        }
+
+    }
+
+    #inout_second_sec {
+        @include basic-layout(fit-content, 100%,  );
+        @include flex(center, center, column, 5px);
+
+        .inout_divs {
+            @include basic-layout(40px, 85%, black, );
+            @include flex(flex-start, center, row, 5px);
+            font-size: 1.8vh;
+
+            > * {
+                height: 100%;
+                border-right: 1px solid black;
+                @include flex(flex-start, center, 0, );
+            }
+
+            >:first-child {
+                justify-content: center;
+                width: 10%;
+            }
+
+            >:nth-child(2) {
+                width: 70%;
+                border-right: none;
+            }
+
+            >:nth-child(3) {
+                @include basic-layout(100%, 30%, );  padding: 5px;
+                border: none; border-left: 1px solid black;
+            }
+
+        }
+
+        #inout_desc_div {
+            @include pos(sticky, 0, 0, 6.1vh, );
+            background-color: rgb(226, 147, 147);
+            height: 35px;
+        }
+
+        #inout_card_div {
+
+            >:nth-child(2) {
+                border-right: none;
+            }
+
+            input {
+                text-align: center;
+            }
+        }
+
+        #submit_btn {
+            @include basic-layout(35px, 60px,)
+        }
+
+        #footer_div {
+            @include basic-layout(20px, 100%, )
+        }
+    }
+
+
+}
+
+#stock_mini_main {
+    @include basic-layout(fit-content, 100%, );
+    @include flex(center, center, column, 5px);
+
+    #stock_decrc_div {
+        @include pos(sticky, 0, 0, 4.1vh, );
+        height: 38px; margin-top: 5px; color: white;
+        background-color: rgb(129, 70, 70);
+    }
+
+    .stock_divs {
+        @include basic-layout(43px, 95%, black, );
+        @include flex(flex-start, center, row, );
+
+        >* {
+            @include flex(center, center,);
+            height: 100%; width: 15%;  border-right: 1px solid black;
+        }
+
+        >:first-child {
+            width: 7%;
+        }
+
+        >:nth-child(2) {
+            width: 45%;
+            margin: 5px;
+            justify-content: flex-start;
+        }
+
+        >:last-child {
+            width: 18%;  text-align: center;
+            border: none; 
+        }
+    }
+
+    button {
+        @include basic-layout(40px, 30%, 0.2rem );
+        align-self: flex-end;  margin-right: 4%;
+    }
+
+    #footer_div {
+        height: 15px;  width: 100%;
+    }
+    
+}
+
+#cash_mini_main {
+    @include basic-layout(96dvh, 100%, );
+    @include flex(flex-start, center, column, );
+    font-size: 1.8vh;
+
+    #cash_first_sec {
+        @include basic-layout(35px, 100%, 0);
+        @include flex(center, center, row, 25px);
+        margin-top: 10px;
+        
+        #selected_date {
+            @include basic-layout(35px, 35%, rgb(95, 58, 58), 0.4rem );
+            @include flex(center, center, );
+        }
+
+        #options_div {
+            @include basic-layout(fit-content, 35%, $bgc: brown);
+            position: absolute; right: 5vw;  top: 10.5vh;
+
+            .date_options {
+                @include basic-layout(35px, 100%, black, );
+                border-top: none;
+                @include flex(center, center, column, 1px);
+                
+            }
+        }
+    }
+
+    #cash_second_sec {
+        @include basic-layout(73vh, 95%, black, 0.2rem );
+        @include flex(center, center, column, 10px);
+        margin-top: 20px;
+
+        .input_divs {
+            @include basic-layout(58px, 95%, black, 0rem, $pad: 5px );
+            @include flex(center, center, row, 10px);
+
+            label {
+                width: 50%;
+            }
+
+            input {
+                text-align: center; border-radius: 0.2rem;
+                height: 95%;  width: 30%;
+            }
+        }
+
+        #total_div {
+            @include basic-layout(60px, 80%, 0 );
+            @include flex(center, center, row, 15px);
+
+            input {
+                height: 70%;
+            }
+        }
+
+        button {
+            @include basic-layout(45px, 90%, black, 0.4rem,  );
+            @include pos(relative, 0, 0, 15px, );
+        }
+    }
+}
 @media (min-width: 600px) {
     
 }

@@ -10,3 +10,14 @@ export const getProducts = async() => {
 
     }
 }
+
+export const getProductsViaAccess = async(access) => {
+    try {
+        const response = await axiosInstance.get(`/products/getproduct${access}`);
+        console.log(response.data);
+        
+    } catch (error) {
+        console.log(error);
+
+    }
+}

@@ -7,6 +7,7 @@ import ProductsPage from './pages/products.jsx'
 import ManagersPage from './pages/managers.jsx'
 import StoresPage from "./pages/stores.jsx";
 import LandingPage from "./pages/landing";
+import InStore from "./components/minis/inStore.tsx";
 
 import MainContext from "./pages/context/mainContext.tsx";
 import ProtectRoutes from './components/protectRoute.tsx'
@@ -30,6 +31,9 @@ function App() {
           </Route>
           <Route
             path="/home/products" element={<ProductsPage /> }>
+          </Route>
+          <Route
+            path="/home/stores/:storeid" element={<InStore /> }>
           </Route>
 
         </Routes>

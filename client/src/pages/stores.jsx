@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { getStores } from "../api/storeApi";
 
 import SideBar from "../components/utils/sideBar";
 
 function StoresPage() {
- /* variables */
-    const [storesData, setStoresData] = useState([])
+ /* HOOKS */
+    const navigate = useNavigate();
 
- /* functions */
+ /* VARIABLES */
+    const [storesData, setStoresData] = useState([]);
+    const [id, setId] = useSearchParams();
+
+
+ /* FUNCTIONS */
     function getStoresData() {
         const GETDATAFN = getStores()
         .then(resp => resp ? setStoresData(p => (resp )) : console.log('failure') )
     }// get_stores_data_fn
 
-    console.log(storesData.length)
+    function navToStore(lnk) {
+        navigate('/home/stores/' + lnk.toLowerCase())
+    }// navto_store_fn
+
 
  /* Append */
     const AppendStores = storesData.map((it,id) => {
@@ -40,21 +49,25 @@ function StoresPage() {
                
                <section>
                     <p>ID: {it.id}</p>
-                    <p>Access: L0</p>
+                    <p>Access: {it.access[0]}</p>
                     <p>Status: Blue</p>
                </section>
 
-               <button>Click Me</button>
+               <button onClick={e => navToStore(it.id)}>Click Me</button>
             </div>
         )
     }) 
+
 
  /* use Effect */
     useEffect(() => {
         getStoresData()
     }, [])
 
+    console.log(storesData)
+
  /* return */
+ 
     return(
      <>
         <div id="sidebar_container_div">
