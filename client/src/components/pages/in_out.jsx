@@ -1,18 +1,22 @@
-import React, { useState , useRef} from "react";
+import React, { useState , useRef, useEffect} from "react";
+import { useParams } from "react-router-dom";
+import { getStoresMin } from "../../api/storeApi";
+import { prdMovement } from "../../api/productApi";
 
 function In_Out() {
  /* HOOKS */
+    const storeId = useParams().storeid 
     const secondDivRef = useRef(null);
 
  /* VARIABLES */
-    const [selectDivTxt, setSelectDivTxt] = useState('Receive');
+    const [selectDivTxt, setSelectDivTxt] = useState('RECEIVE');
     const [peerDivTxt, setPeerDivTxt] = useState('choose');
     const [togglePeer, setTogglePeer] = useState(false);
     const [submitData, setSubmitData] = useState({});
     const [toggleType, setType] = useState(false);
-    const [preview, setPreview] = useState(true);
+    const [preview, setPreview] = useState(false);
 
- /* FUNCTIONS */
+ /* FUNCTIONS           */
     function handleSelect(e) {
         const {id, className, innerHTML} = e.target
 
@@ -31,25 +35,62 @@ function In_Out() {
 
     function handleInputs(e) {
         const {value, id} = e.target;
+        setSubmitData(p => ({...p, [id]: value} ));
 
-        setSubmitData(p => ({...p, [id]: value} ))
     }// handle_inputs_fn
 
     function handlePreview(e) {
         const {tagName, id, innerHTML} = e.target
 
         if(tagName == 'BUTTON') {
-            if(innerHTML == 'Back') setPreview(p => (false));
+            if(innerHTML == 'Back') setPreview(p => (false));;
 
-            if(innerHTML == 'submit') {
-                //submit function
-            }
+            if(innerHTML == 'Submit') {
+                const sData = {
+                    type: selectDivTxt,
+                    parties: [storeId, peerDivTxt],
+                    data: submitData
+                };
+
+                console.log(sData)
+                const TRANSFEROPER = prdMovement(sData);
+
+            };
+
         }
     }// handle_preview_fn
     
+    function handleBtn(e) {
+        function test(str, val) {
+            if(str == 'TRANSFER' && val[0] !== '-' && peerDivTxt !== 'Offload') return `-${val}`;
+            return val
+        }
+
+        if(peerDivTxt !== 'choose')  {
+            const arr = [];
+            const useObj = {};
+
+            for(let it in submitData){
+                const obj = {name: it, amount: submitData[it]}
+                useObj[it] = test(selectDivTxt, submitData[it])
+
+                arr.push(obj)
+            };
+
+            console.log('this:', useObj);
+            setPreviewData(p => (arr));
+            setSubmitData(p => (useObj));
+            setPreview(true);
+
+        }
+    }// handle_btn_fn
 
 
- /* APPEND DATA */
+ /* APPEND DATA          */
+    const [previewData, setPreviewData] = useState([])
+
+    const [peerData, setPeerData] = useState([])
+
     const [pageData, setPageData] = useState([
         {name: 'test', id: 'PRD01'},
         {name: 'test', id: 'PRD02'},
@@ -69,22 +110,20 @@ function In_Out() {
         {name: 'test', id: 'PRD15'},
         {name: 'test', id: 'PRD17'},
         {name: 'test', id: 'PRD18'},
-   
 
     ])
 
-    const [previewData, setPreviewData] = useState([
-        {name: 'testprd', quantity: '100'},
-     
-    ])
-
- /* APPEND */
+ /* APPEND               */
     const AppendPageData = pageData.map((it,id) => {
         return(
             <div key={id} className="inout_divs" id="inout_card_div">
                 <p>{id + 1}</p>
                 <p>{it.name}</p>
-                <input id={it.id} type="number" placeholder="0" onChange={handleInputs} />
+                <input id={it.id} type="number" value={submitData[it.id]} 
+                    onChange={handleInputs} disabled={peerDivTxt == 'choose' ? true : false}
+                    placeholder={selectDivTxt == 'RECEIVE' ? '+' : '-' } 
+                    
+                />
             </div>
         )
     })
@@ -94,10 +133,25 @@ function In_Out() {
             <div key={id} className="preview_divs">
                 <p>{id + 1}</p>
                 <p>{it.name}</p>
-                <p>{it.quantity}</p>
+                <p>{it.amount}</p>
             </div>
         )
     })
+
+    const AppendPeerData = peerData.map((it,id) => {
+        return(
+            <p key={id} className="option peer">{it.name}</p>
+        )
+    })
+
+ /* USE EFFECTS          */
+    useEffect(() => {
+        const GETSTORESFN = getStoresMin()
+        .then(res => res && setPeerData(p => (res)))
+        .catch(err => console.log(err));
+    }, [])
+
+    console.log(submitData)
 
  /* RETURN */
     return(
@@ -118,8 +172,8 @@ function In_Out() {
     
                             { toggleType &&
                                 <div id="options_div">
-                                    <p className="option type">Receive</p>
-                                    <p className="option type">Transfer</p>
+                                    <p className="option type">RECEIVE</p>
+                                    <p className="option type">TRANSFER</p>
                                 </div>
                             }
                         </div> 
@@ -131,9 +185,10 @@ function In_Out() {
     
                             { togglePeer &&
                                 <div id="options_div">
-                                    <p className="option peer">Main Shop</p>
-                                    <p className="option peer">Peak Shop</p>
-                                    <p className="option peer">Powa Shop</p>
+                                    <p className="option peer">Offload</p>
+                                    {
+                                        AppendPeerData
+                                    }
                                 </div>
                             }
                         </div> 
@@ -150,7 +205,9 @@ function In_Out() {
                         {
                             AppendPageData
                         }
-                        <button id="submit_btn" onClick={e => setPreview(true)}>Continue</button>
+                        <button id="submit_btn" onClick={handleBtn}>
+                            Continue
+                        </button>
 
                         <div id="footer_div"></div>
                     </section>
@@ -173,7 +230,6 @@ function In_Out() {
 
 export default In_Out
 
-console.log('fuck')
 export function PreviewCard(p) {
     return(
         <section id="preview_sec" onClick={p.fn}>

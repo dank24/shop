@@ -13,11 +13,22 @@ export const getProducts = async() => {
 
 export const getProductsViaAccess = async(access) => {
     try {
-        const response = await axiosInstance.get(`/products/getproduct${access}`);
+        const response = await axiosInstance.get(`/product/getproductsviaaccess/${access}`);
         console.log(response.data);
         
     } catch (error) {
         console.log(error);
 
+    }
+}
+
+export const prdMovement = async(sData) => {
+    try {
+        const response = axiosInstance.post('/product/prdmovement', sData);
+        console.log((await response).statusText);
+
+    } catch (error) {
+        console.log(error.response)
+        
     }
 }

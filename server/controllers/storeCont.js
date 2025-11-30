@@ -13,3 +13,32 @@ exports.getStores = asyncHandler(
         return re(res, 200, 'success', 'resource located', stores)
     }
 )
+
+exports.getstoresMininmal = asyncHandler(
+    async(req, res, next) => {
+        const Stores = await storeModel.find().select('name -_id');
+        if(!Stores) return re(res, 404, 'failure', 'resource not found');
+        
+        return re(res, 200, 'success', 'resource found', Stores);
+    }
+)
+
+exports.getStore = asyncHandler(
+    async(req, res, next) => {
+        const storeId = req.params.storeid.toUpperCase();
+        console.log(storeId)
+        
+        const Store = await storeModel.findOne({id: storeId}).select("-s_id");
+        if(!Store) return re(res, 404, 'failure', 'store not found');
+
+        return re(res, 200, 'success', 'store found', Store)
+    }
+)
+
+exports.in_out = asyncHandler(
+    async(req, res, next) => {
+        const {type, intra, data} = req.body
+
+        console.log(data)
+    }
+)

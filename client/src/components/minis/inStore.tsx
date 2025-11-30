@@ -1,5 +1,6 @@
-import React, { BaseSyntheticEvent, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { getStore } from "../../api/storeApi";
 
 import '../../assets/stylesheets/comps.css'
 import ViewProducts from "../pages/viewPrds";
@@ -11,11 +12,16 @@ import SideBar from '../utils/sideBar'
 interface storeFnBtnsTy {
     btnTxt: string,  prelTxt?: string,  id?: string
 }
+interface storeDetailsTy {
+    name: string, id?: string, access?: [], contact?: string, location?: string, manager?: string
+}
 
 function InStore() {
+ /* HOOKS */
+    const storeId = useParams().storeid
 
  /* VARIABLES */
-    const [storeDetails, setStoreDetails] = useState(['s']);
+    const [storeDetails, setStoreDetails] = useState<storeDetailsTy>({name: ''});
     const [searchParams, setSearchParams] = useSearchParams();
     const view = searchParams.get('view')
 
@@ -53,6 +59,15 @@ function InStore() {
         )
     }) 
 
+ /* USE EFFECTS */
+    useEffect(() => {
+        const GETSTOREFN = getStore(storeId)
+        .then(res => res && setStoreDetails(p => ({...p, ...res} )) )
+        .catch(err => console.log(err))
+    }, [])
+
+    console.log(storeDetails)
+
  /* RETURN */
     return(
      <>
@@ -60,12 +75,12 @@ function InStore() {
             < SideBar  header ='Store Name' />
         </div>
 
-     { storeDetails.length == 0 &&
+     { storeDetails.name === '' &&
         <h2>Loading store details</h2>
 
      }
 
-     { storeDetails.length >= 1 &&
+     { storeDetails.name !== '' &&
         <main id="instore_mini_main">
 
             { !view &&
@@ -77,7 +92,7 @@ function InStore() {
             }
 
             { view == 'overview' &&
-                <ViewProducts />
+                <ViewProducts access = {storeDetails.access} />
             }
 
             { view == 'in_out' &&

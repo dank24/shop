@@ -4,8 +4,11 @@ import { getProductsViaAccess } from "../../api/productApi";
 
 import '../../assets/stylesheets/comps.css'
 
-function ViewProducts() {
+function ViewProducts(props) {
     const storeId = useParams().storeid;
+
+    const access = props.access
+    console.log('this:', access)
 
  /* APPEND DATA */
     const [productsData, setProductsData] = useState([
@@ -64,7 +67,7 @@ function ViewProducts() {
 
  /* USE EFFECTS */
     useEffect(() => {
-        console.log('ran')
+        const GETPRDSFN = getProductsViaAccess(access[0])
     }, [])
 
  /* Return */

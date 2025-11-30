@@ -1,5 +1,6 @@
 import React, { BaseSyntheticEvent, useEffect, useState, useContext } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { getCurrentMktWeek, createNewMkt } from "../api/userApi";
 
 import { MainContextEx } from "./context/mainContext";
 import AddShopMini from "../components/minis/add_shop";
@@ -23,12 +24,15 @@ function DashBoardPage() {
     const {addAlert} = useContext(MainContextEx)
     
  /* variable */
-    const [inDisplay, setInDisplay] = useState<string>('utilities')
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [inDisplay, setInDisplay] = useState<string>('utilities');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [mktWeek, setMktWeek] = useState('')
     let currentView = searchParams.get('view');
+    
 
 
- /* function */
+ /* FUNCTIONS */
+
     function handleSecOne(e: BaseSyntheticEvent) {
         const {tagName, className, id, innerHTML} = e.target;
 
@@ -40,7 +44,9 @@ function DashBoardPage() {
         if(tagName == 'BUTTON' && innerHTML == 'Manage') {
             navigate(`/home/${id.toLowerCase()}s`)
         }
-        
+
+        if(tagName == 'BUTTON' && innerHTML == 'Set') {
+        }
 
     }// first_sec_fn
 
@@ -54,13 +60,12 @@ function DashBoardPage() {
 
     }// second_sec_fn
 
-
- /* append Data */
+ /* APPEND DATE */
     const [infoCardsSec, setInfoCardsSec] = useState<infoCardsSecTy[]>([
         {main: 'Store', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
         {main: 'Manager', secondary: 'count: 4', btn1: 'Add', btn2: 'Manage'  },
         {main: 'Product', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
-        {main: 'Current Date', btn1: 'Set', btn2: 'View'  },
+        {main: 'Market Week', btn1: 'Set', btn2: 'View'  },
     ])
     const [utilityBtns, setUtilityBtns] = useState<utiliiesBtnTy[]>([
         {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'},
@@ -72,8 +77,7 @@ function DashBoardPage() {
         {header: 'Stock update', main: 'Main Shop update Stock', date: '12/10/25'},
     ])
 
-
- /* Append */
+ /* APPEND */
     const AppendSec1 = infoCardsSec.map((it, id) => {
         return(
             <div key={id} className="sec1_divs" > 
@@ -86,6 +90,7 @@ function DashBoardPage() {
             </div>
         )
     })
+
 
     const AppendUtils = utilityBtns.map((it, id) => {
         return(
@@ -107,6 +112,23 @@ function DashBoardPage() {
 
 
  /* Useeffect */
+    useEffect(() => {
+        const GETMKTWEEKFN = getCurrentMktWeek()
+        .then(res => {
+            const cmpDate = new Date(Date.now()).getDate()
+            const use = new Date().setDate(cmpDate)
+
+            if(Date.parse(res.endDate) < use ) {
+                const NEWWEEK = createNewMkt(Number(res.weekId) + 1 )
+                return;
+            }
+
+            infoCardsSec[3]['secondary'] = `Week: ${res.weekId}`
+            setInfoCardsSec(p => ([...p]))
+            return;
+            
+        })
+    }, [])
 
  /* return */
     return(

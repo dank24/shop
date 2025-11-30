@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosInstance } from './genApi'
 
 interface userDataTy { name: string, email: string, password: string }
 
@@ -44,4 +45,26 @@ export const add_prop = async(data: {}) => {
     } catch (error) {
         console.log('err', error.response)
     }
+}// add mng,prd,store_ FN
+
+export const createNewMkt = async(id: Number) => {
+    const sData = {weekId: id}
+    try {
+        const response = await axiosInstance.post('utils/createmktweek', sData)
+        console.log('this', response.statusText)
+
+    } catch (error) {
+        
+    }
 }
+
+export const getCurrentMktWeek = async() => {
+    try {
+        const response = await axiosInstance.get('/utils/getcurrentweek');
+        if(response.statusText == 'OK') return response.data.data
+
+    } catch (error) {
+        console.log(error)
+    }
+}// get_mkt_week
+
