@@ -4,20 +4,31 @@ const models = [storeModel, managerModel, productModel];
 const strArr = ['STR', 'MNG', 'PRD']
 const asyncHandler = require('express-async-handler');
 
+function re(res, code, status, message, data) {
+    res.status(code).json({status: status, message: message, data: data})
+}
+
 async function createDate(dateId) {
-    dateId = String(dateId).padStart(2, 0)
-    const newDate = new Date(Date.now());
-    const dateDiff = newDate.getDate() - newDate.getDay();
-    const startDateId = newDate.setDate(dateDiff);
-    const startDate = new Date(startDateId).toDateString();
-    const endDateId = newDate.setDate(dateDiff + 6)
-    const endDate = new Date(endDateId).toDateString()
-    const year = newDate.getFullYear()
+    try {
+        const useDate = String(dateId).padStart(2, 0)
+        const newDate = new Date(Date.now());
+        const dateDiff = newDate.getDate() - newDate.getDay();
+        const startDateId = newDate.setDate(dateDiff);
+        const startDate = new Date(startDateId).toDateString();
+        const endDateId = newDate.setDate(dateDiff + 6)
+        const endDate = new Date(endDateId).toDateString()
+        const year = newDate.getFullYear()
+    
+        const saveDate = await datesModel.create({weekId: useDate, year, endDate, startDate});
+        if(!saveDate) return {status: 'failure', message: 'failed to create date'}
+    
+        return {status: 'success', message: 'created date', data: saveDate}
+        
+    } catch (error) {
+        return {status: 'error', message: 'failed to create date', errLog: error}
 
-    const save = await datesModel.create({weekId: dateId, year, endDate, startDate});
-    if(!save) return false
-
-    return {weekId: save.weekId, startDate: save.startDate, endDate: save.endDate}
+    }
+   
 }
 
 exports.addGen = asyncHandler(
@@ -40,6 +51,16 @@ exports.addGen = asyncHandler(
     }
 )
 
+exports.deleteGen = asyncHandler(
+    async(req, res, next) => {
+        const useModel = models[Number(req.params.in)];
+        const ID = req.params.id;
+
+        const DELETEOPER = await useModel.deleteOne({id: ID})
+        return re(res, 200, 'success', `Item Deleted` , DELETEOPER)
+    }
+)
+
 exports.mktDates = asyncHandler(
     async(req, res, next) => {
         const {year, week, start, end} = req.body;
@@ -54,13 +75,12 @@ exports.mktDates = asyncHandler(
     }
 )
 
-
 exports.createNewMktWeek = asyncHandler(
     async(req,res,next) => {
-        const weekId = req.body;
+        const {weekId} = req.body;
 
         const CREATEDATEFN = await createDate(weekId);
-        if(!CREATEDATEFN) return res.status(500).json({status: 'failure', message: 'server erro'})
+        if(!CREATEDATEFN) return res.status(500).json({status: 'failure', message: 'server error'})
         
         return res.status(200).json({status: 'success', message: 'mkt week added', data: CREATEDATEFN})
     }
@@ -68,15 +88,53 @@ exports.createNewMktWeek = asyncHandler(
 
 exports.getCurrentMktDate = asyncHandler(
     async(req, res, next) => {
-        const lastEntry = await datesModel.findOne().sort({_id: -1}).select("weekId endDate -_id");
-        if(lastEntry == null) {
-            const CREATEDATEFN = await createDate('01')
+        const lastEntry = await datesModel.findOne().sort({_id: -1}).select('weekId endDate -_id');
 
-            if(!CREATEDATEFN) return res.status(404).json({status: 'failure', message: 'server error'})
-            
-            return res.status(200).json({status: 'success', message: 'mkt week added', data: CREATEDATEFN});
+        if(lastEntry == null) {
+            const CREATEDATEFN = await createDate('01');
+
+            if(CREATEDATEFN.status !== 'success') {
+                console.log(CREATEDATEFN)
+                return res.status(404).json({status: 'failure', message: CREATEDATEFN.message})
+            }
+            return res.status(200).json(CREATEDATEFN);
+
         }
 
-        return res.status(200).json({status: 'success', message: 'found', data: lastEntry})
+        const parsedCurrentDate = Date.parse(new Date(Date.now()));
+        const parsedEndDate = Date.parse(lastEntry.endDate);
+        const check = parsedCurrentDate < parsedEndDate;
+
+        if(!check) {
+            const weekId = Number(lastEntry.weekId) + 1;
+            
+            const CREATEDATEFN = await createDate(weekId);
+            if(CREATEDATEFN.status !== 'success') {
+                console.log(CREATEDATEFN);
+                return re(res, 400, 'failure', 'server error');
+            }
+            return re(res, 200, 'success', 'date created', CREATEDATEFN.data);
+
+        }
+
+        return re(res, 200, 'success', 'found date', lastEntry);
+    }
+)
+
+exports.getMktWeeks = asyncHandler(
+    async(req, res, next) => {
+        const MKTWEEKS = await datesModel.find().select('-_id -createdAt');
+
+        const useData = MKTWEEKS.map(it => {
+            const obj = {
+                week: it.weekId, year: it.year, 
+                starts: it.startDate.toDateString().substring(4), 
+                ends: it.endDate.toDateString().substring(4)
+            };
+
+            return obj;
+        });
+
+        return re(res, 200, 'success', 'found market weeks', useData);
     }
 )

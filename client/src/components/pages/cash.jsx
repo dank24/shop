@@ -8,9 +8,9 @@ function CashMini() {
     const [displayDates, setDisplayDates] = useState(false);
     const [dateData, setDateData] = useState([]);
     const [inputData, setInputData] = useState([
-        {name: 'One Thousand (1000)', id: '1000s'},  {name: 'Five Hundred (500)', id: '500s'},
-        {name: 'Two Hundred (200) ', id: '200s'},   {name: 'One Hundred (100)', id: '100s'},
-        {name: 'Fifty (50)', id: '50s'},
+        {name: 'Monday', id: 'monday'},  {name: 'Tuesday', id: 'tuesday'},
+        {name: 'Wednessday', id: 'wednessday'},   {name: 'Thursday', id: 'thursday'},
+        {name: 'Friday', id: 'friday'},
     ])
 
 
@@ -79,7 +79,7 @@ function CashMini() {
     const AppendSecTwo = inputData.map((it,id) => {
         return(
             <div key={id} className="input_divs">
-                <label>{it.name}:</label>
+                <label><u>{it.name}:</u></label>
                 <input id={it.id} placeholder="0" type="number" onChange={handleInputs} />
             </div>
         )

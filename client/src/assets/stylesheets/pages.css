@@ -10,7 +10,7 @@
   left: 0;
   right: 0;
   top: 0px;
-  bottom: 0;
+  bottom: none;
   z-index: 200;
 }
 
@@ -31,9 +31,9 @@
 #login_page_main h2 {
   position: relative;
   left: 2px;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  right: none;
+  top: none;
+  bottom: none;
   align-self: flex-start;
 }
 #login_page_main #error_msg {
@@ -68,35 +68,36 @@
 }
 
 #dashboard_page_main {
-  height: fit-content;
+  height: 100vh;
   width: 100dvw;
   border: 1px solid 0;
   border-radius: 0;
-  background-color: black;
+  background-color: rgb(191, 193, 221);
   padding: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  gap: 1px;
-  background-color: rgb(88, 88, 86);
+  gap: 5px;
 }
 #dashboard_page_main #dashboard_first_sec {
-  height: 36dvh;
-  width: 99%;
-  border: 1px solid 0;
+  height: 40dvh;
+  width: 97%;
+  border: 1px solid black;
   border-radius: 0;
-  background-color: 0;
+  background-color: grey;
   padding: 0;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 0;
+  gap: 2.5px;
+  box-shadow: 2px 1px 2px 0px black;
+  margin-top: 1px;
 }
 #dashboard_page_main #dashboard_first_sec .sec1_divs {
-  height: 24%;
-  width: 99%;
+  height: 23%;
+  width: 97%;
   border: 1px solid black;
   border-radius: 0.4rem;
   background-color: 0;
@@ -106,8 +107,8 @@
   align-items: center;
   flex-direction: row;
   gap: 2%;
+  box-shadow: 1px 1px 0px 1.5px black;
   margin-top: 0.5%;
-  box-shadow: 2px 2px 2px rgb(87, 82, 82);
 }
 #dashboard_page_main #dashboard_first_sec .sec1_divs > :first-child {
   height: 97%;
@@ -152,34 +153,35 @@
   border-left: 1px solid rgb(104, 151, 189);
 }
 #dashboard_page_main #dashboard_second_sec {
-  height: 55dvh;
-  width: 99%;
-  border: 1px solid 0;
+  height: 53.6dvh;
+  width: 97%;
+  border: 1px solid black;
   border-radius: 0;
-  background-color: 0;
+  background-color: grey;
   padding: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   gap: 1px;
+  box-shadow: 1px 1px 0px 2px black;
   margin-top: 4px;
 }
 #dashboard_page_main #dashboard_second_sec button {
   background-color: blue;
 }
 #dashboard_page_main #dashboard_second_sec #sec2div1 {
-  height: 3.5dvh;
-  width: 40%;
-  border: 1px solid black;
+  height: 4dvh;
+  width: 52%;
+  border: 1px solid 0;
   border-radius: 0rem;
-  background-color: black;
+  background-color: 0;
   padding: 0;
   position: relative;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  left: none;
+  right: none;
+  top: none;
+  bottom: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,6 +189,8 @@
   gap: 3%;
   align-self: flex-end;
   color: white;
+  margin-bottom: 2px;
+  margin-top: 2px;
 }
 #dashboard_page_main #dashboard_second_sec #sec2div1 p {
   height: 80%;
@@ -212,14 +216,14 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 3px;
+  gap: 7px;
   margin-top: 3px;
 }
 #dashboard_page_main #dashboard_second_sec #sec2div2 .util_btns {
-  height: 60px;
-  width: 98%;
+  height: 63px;
+  width: 96%;
   border: 1px solid black;
-  border-radius: 0;
+  border-radius: 0.5rem;
   background-color: rgb(99, 94, 94);
   padding: 0;
   box-shadow: 1.5px 1px black;
@@ -267,6 +271,77 @@
   background-color: 0;
   padding: 0;
 }
+#stores_page_main #main_prompt {
+  height: 95.6vh;
+  width: 100vw;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgba(48, 34, 34, 0.849);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: 0;
+  gap: 0;
+  border: 2px solid black;
+  position: absolute;
+  left: none;
+  right: none;
+  top: none;
+  bottom: none;
+  z-index: 10;
+}
+#stores_page_main #main_prompt #promp_cont_div {
+  height: 14%;
+  width: 92%;
+  border: 1px solid white;
+  border-radius: 0.8rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgb(24, 24, 24);
+  margin-top: 50%;
+  color: white;
+  font-size: 1.8vh;
+}
+#stores_page_main #main_prompt #promp_cont_div > div {
+  height: 50%;
+  width: 80%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+#stores_page_main #main_prompt #promp_cont_div > div > * {
+  height: 80%;
+  width: 45%;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: center;
+  gap: 0;
+}
+#stores_page_main #main_prompt #promp_cont_div > div > :first-child {
+  background-color: red;
+  color: rgb(170, 175, 177);
+}
+#stores_page_main #main_prompt #promp_cont_div > div > :last-child {
+  background-color: blue;
+  color: white;
+}
 #stores_page_main #stores_first_sec {
   height: fit-content;
   width: 100%;
@@ -278,22 +353,45 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   margin-top: 0.4vh;
 }
 #stores_page_main #stores_first_sec .stores_divs {
-  height: 200px;
+  height: 210px;
   width: 96%;
   border: 1px solid black;
   border-radius: 0rem;
   background-color: rgb(56, 43, 43);
   padding: 0;
   box-shadow: 2px 2px 2px black;
+  position: relative;
   font-size: 1.7vh;
   color: rgb(221, 212, 212);
 }
-#stores_page_main #stores_first_sec .stores_divs > H2 {
-  text-align: center;
+#stores_page_main #stores_first_sec .stores_divs #header_div > H2 {
+  width: 100px;
+  font-size: 2.5vh;
+  color: rgb(243, 31, 31);
+  margin-left: 20px;
+}
+#stores_page_main #stores_first_sec .stores_divs #header_div #edit_div {
+  height: 34px;
+  width: 90px;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: rgb(235, 224, 224);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 15%;
+  position: absolute;
+  left: none;
+  right: 1px;
+  top: -1px;
+  bottom: none;
+  border: none;
 }
 #stores_page_main #stores_first_sec .stores_divs > div {
   height: 35px;
@@ -407,7 +505,7 @@
   left: 0;
   right: 0;
   top: 4.5vh;
-  bottom: 0;
+  bottom: none;
 }
 #managers_page_main #managers_first_sec .managers_card_divs div {
   height: 20%;
@@ -513,6 +611,163 @@
   align-items: center;
   flex-direction: 0;
   gap: 0;
+}
+
+#dates_page_main {
+  height: 100vh;
+  width: 100vw;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 1.9vh;
+}
+#dates_page_main .header_div {
+  height: 30px;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 5px;
+}
+#dates_page_main .header_div p {
+  width: 18%;
+  border: 1px solid rgb(51, 46, 46);
+  text-align: center;
+  font-size: 1.9vh;
+}
+#dates_page_main .header_div div {
+  height: 1px;
+  width: 38%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+}
+#dates_page_main #dates_first_sec {
+  height: fit-content;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+#dates_page_main #dates_first_sec #year_div {
+  height: 32px;
+  width: 40%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 5px;
+  padding-right: 10px;
+  position: relative;
+  left: 29%;
+}
+#dates_page_main #dates_first_sec #year_div #year_dropdown {
+  height: 70%;
+  width: 55%;
+  border: 1px solid red;
+  border-radius: 0.5rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#dates_page_main #dates_first_sec #year_div #drop {
+  height: 120px;
+  width: 85px;
+  border: 1px solid brown;
+  border-radius: none;
+  background-color: brown;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1px;
+  position: absolute;
+  left: none;
+  right: 8px;
+  top: 31px;
+  bottom: none;
+}
+#dates_page_main #dates_first_sec .mktweek_divs {
+  height: 70px;
+  width: 94%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: rgb(77, 69, 69);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+  color: white;
+}
+#dates_page_main #dates_first_sec .mktweek_divs #check_div {
+  height: 18px;
+  width: 18px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: 0;
+  padding: 0;
+  position: absolute;
+  left: none;
+  right: 25px;
+  top: none;
+  bottom: none;
+}
+#dates_page_main #dates_first_sec .mktweek_divs > :first-child {
+  height: 47%;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#dates_page_main #dates_first_sec .mktweek_divs div {
+  height: 53%;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 35px;
+  border-top: 1px solid black;
 }
 
 /*# sourceMappingURL=pages.css.map */

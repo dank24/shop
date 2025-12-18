@@ -61,10 +61,13 @@ const productSchema = new schema({
 })//    prd_schema
 
 const prdStockSchema = new schema({
-    Id: {
+    id: {
         type: String,
         unique: true,
         required: true
+    },
+    quantity: {
+        type: Number,
     },
     storeId: {
         type: String,
@@ -78,7 +81,7 @@ const prdStockSchema = new schema({
         type: Date,
         default: Date.now
     },
-    quantity: String,
+
 })//    product_stock_schema
 
 const prdMovementSchema = new schema({
@@ -87,16 +90,17 @@ const prdMovementSchema = new schema({
         required: true,
         unique: true
     },
-    type: {
+    data: {
+        type: Object,
+        required: true
+    },
+    sender: {
         type: String,
         required: true
     },
-    changeAmount: {
-        type: Number,
+    reciever: {
+        type: String,
         required: true
-    },
-    party: {
-        type: String
     },
     approval: {
         type: String,
@@ -124,9 +128,30 @@ const datesSchema = new schema({
         type: Date,
         default: Date.now
     }
+})//    date_schema
+
+const inventorySchema = new schema({
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    storeId: {
+        type: String,
+        required: true
+    },
+    inventoryCount: {
+        type: Object,
+        required: true
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 const prdMovementModel = mongoose.model('movements', prdMovementSchema);
+const inventoryModel = mongoose.model('inventort_counts', inventorySchema)
 const prdStockModel = mongoose.model('stocks', prdStockSchema);
 const managerModel = mongoose.model('managers', managerSchema);
 const productModel = mongoose.model('products', productSchema);
@@ -134,4 +159,7 @@ const storeModel = mongoose.model('stores', storeSchema);
 const datesModel = mongoose.model('dates', datesSchema)
 
 
-module.exports = {storeModel, managerModel, productModel, prdStockModel, prdMovementModel, datesModel}
+module.exports = {
+    storeModel, managerModel, productModel, prdStockModel, prdMovementModel, datesModel,
+    inventoryModel
+}

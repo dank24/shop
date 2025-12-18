@@ -1,41 +1,48 @@
-import React, { useState , useRef, useEffect} from "react";
+import React, { useState , useRef, useEffect, useContext} from "react";
+import { MainContextEx } from "../../pages/context/mainContext";
+
 import { useParams } from "react-router-dom";
+import { getMktWeek } from "../../api/genApi";
 import { getStoresMin } from "../../api/storeApi";
 import { prdMovement } from "../../api/productApi";
 
 function In_Out() {
+    const {addAlert} = useContext(MainContextEx)
  /* HOOKS */
     const storeId = useParams().storeid 
     const secondDivRef = useRef(null);
 
  /* VARIABLES */
-    const [selectDivTxt, setSelectDivTxt] = useState('RECEIVE');
-    const [peerDivTxt, setPeerDivTxt] = useState('choose');
-    const [togglePeer, setTogglePeer] = useState(false);
+    const [senderDivTxt, setSenderDivTxt] = useState('OFFLOAD');
+    const [toggleReciever, setToggleReceiver] = useState(false);
+    const [toggleSender, setToggleSender] = useState(false);
+    const [recieverDivTxt, setPeerDivTxt] = useState('choose');
     const [submitData, setSubmitData] = useState({});
-    const [toggleType, setType] = useState(false);
     const [preview, setPreview] = useState(false);
 
  /* FUNCTIONS           */
     function handleSelect(e) {
         const {id, className, innerHTML} = e.target
+        console.log('this:', id)
 
-        if(id == 'select_div') setType(p => (!p));
-        if(id == 'peer_div') setTogglePeer(p => (!p));
+        if(id == 'select_div') setToggleSender(p => (!p));
+        if(id == 'peer_div') setToggleReceiver(p => (!p));
 
-        if(className.includes('peer')) {
-            setPeerDivTxt(p => (innerHTML));
-            setTogglePeer(p => (false))
-        }
-        if(className.includes('type')) {
-            setSelectDivTxt(p => (innerHTML));
-            setType(p => (false))
+        if(className.includes('sender')) {
+            setSenderDivTxt(p => (innerHTML));
+            setToggleSender(p => (false))
         };
+
+        if(className.includes('receiver')) {
+            setPeerDivTxt(p => (innerHTML));
+            setToggleReceiver(p => (false))
+        };
+
     }// first_sec_fn
 
     function handleInputs(e) {
         const {value, id} = e.target;
-        setSubmitData(p => ({...p, [id]: value} ));
+        setSubmitData(p => ({...p, [id]: Number(value)} ));
 
     }// handle_inputs_fn
 
@@ -47,32 +54,38 @@ function In_Out() {
 
             if(innerHTML == 'Submit') {
                 const sData = {
-                    type: selectDivTxt,
-                    parties: [storeId, peerDivTxt],
+                    parties: [senderDivTxt, recieverDivTxt],
                     data: submitData
                 };
 
-                console.log(sData)
-                const TRANSFEROPER = prdMovement(sData);
-
+                const GETMKTWEEKFN = getMktWeek()
+                .then(res => sData['weekId'] = res.weekId)
+                .then(ct => prdMovement(sData) )
+                .then(ct => {
+                    addAlert(ct.message);
+                    if(ct.status == 'success') location.reload()
+                } )
+                .catch(err => console.log(err)) 
+                 
             };
 
         }
     }// handle_preview_fn
-    
+
+
     function handleBtn(e) {
         function test(str, val) {
-            if(str == 'TRANSFER' && val[0] !== '-' && peerDivTxt !== 'Offload') return `-${val}`;
+            if(str == 'TRANSFER' && val[0] !== '-' && recieverDivTxt !== 'Offload') return `-${val}`;
             return val
         }
 
-        if(peerDivTxt !== 'choose')  {
+        if(recieverDivTxt !== 'choose')  {
             const arr = [];
             const useObj = {};
 
             for(let it in submitData){
                 const obj = {name: it, amount: submitData[it]}
-                useObj[it] = test(selectDivTxt, submitData[it])
+                useObj[it] = test(senderDivTxt, submitData[it])
 
                 arr.push(obj)
             };
@@ -84,7 +97,6 @@ function In_Out() {
 
         }
     }// handle_btn_fn
-
 
  /* APPEND DATA          */
     const [previewData, setPreviewData] = useState([])
@@ -119,9 +131,8 @@ function In_Out() {
             <div key={id} className="inout_divs" id="inout_card_div">
                 <p>{id + 1}</p>
                 <p>{it.name}</p>
-                <input id={it.id} type="number" value={submitData[it.id]} 
-                    onChange={handleInputs} disabled={peerDivTxt == 'choose' ? true : false}
-                    placeholder={selectDivTxt == 'RECEIVE' ? '+' : '-' } 
+                <input id={it.id} type="number" value={submitData[it.id]} placeholder='0' 
+                    onChange={handleInputs} disabled={recieverDivTxt == 'choose' ? true : false}   
                     
                 />
             </div>
@@ -138,9 +149,14 @@ function In_Out() {
         )
     })
 
-    const AppendPeerData = peerData.map((it,id) => {
+    const AppendDropDown1 = peerData.map((it,id) => {
         return(
-            <p key={id} className="option peer">{it.name}</p>
+            <p key={id} className="option sender">{it.name}</p>
+        )
+    })
+    const AppendDropDown2 = peerData.map((it,id) => {
+        return(
+            <p key={id} className="option receiver">{it.name}</p>
         )
     })
 
@@ -151,7 +167,7 @@ function In_Out() {
         .catch(err => console.log(err));
     }, [])
 
-    console.log(submitData)
+    console.log(peerData)
 
  /* RETURN */
     return(
@@ -168,26 +184,27 @@ function In_Out() {
                  <>
                     <section id="inout_first_sec" onClick={handleSelect}>
                         <div className="ini">
-                            <div id="select_div" className="picked">{selectDivTxt}</div>
+                            <div id="select_div" className="picked">{senderDivTxt}</div>
     
-                            { toggleType &&
+                            { toggleSender &&
                                 <div id="options_div">
-                                    <p className="option type">RECEIVE</p>
-                                    <p className="option type">TRANSFER</p>
+                                    <p className="option sender">OFFLOAD</p>
+                                    {
+                                        AppendDropDown1
+                                    }
                                 </div>
                             }
                         </div> 
                             
-                        <div>From</div>
+                        <div>To</div>
     
                         <div className="ini">
-                            <div id="peer_div" className="picked" >{peerDivTxt}</div>
+                            <div id="peer_div" className="picked" >{recieverDivTxt}</div>
     
-                            { togglePeer &&
+                            { toggleReciever &&
                                 <div id="options_div">
-                                    <p className="option peer">Offload</p>
                                     {
-                                        AppendPeerData
+                                        AppendDropDown2
                                     }
                                 </div>
                             }

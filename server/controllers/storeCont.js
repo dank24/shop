@@ -1,4 +1,4 @@
-const {storeModel } = require('../models/models');
+const {storeModel, inventoryModel } = require('../models/models');
 const asyncHandler = require('express-async-handler')
 
 function re(res, code, status, msg, data ) {
@@ -26,7 +26,6 @@ exports.getstoresMininmal = asyncHandler(
 exports.getStore = asyncHandler(
     async(req, res, next) => {
         const storeId = req.params.storeid.toUpperCase();
-        console.log(storeId)
         
         const Store = await storeModel.findOne({id: storeId}).select("-s_id");
         if(!Store) return re(res, 404, 'failure', 'store not found');
@@ -35,10 +34,76 @@ exports.getStore = asyncHandler(
     }
 )
 
-exports.in_out = asyncHandler(
+exports.prdMovement = asyncHandler(
     async(req, res, next) => {
         const {type, intra, data} = req.body
 
         console.log(data)
     }
 )
+
+exports.inventoryCount = asyncHandler(
+    async(req, res, next) => {
+        const {data, storeId, weekId} = req.body
+        const id = 'INV-' + storeId.toUpperCase() + '-' + `WK${weekId}`
+
+        const InventoryCount = await inventoryModel.findOne({id: id})
+        if(InventoryCount) return re(res, 409, 'failure', 'count for this week exists')
+
+        const newInventoryCount = await inventoryModel.create({id, storeId, inventoryCount: data,})
+        return re(res, 201, 'success', 'counted added', newInventoryCount)
+
+        //console.log(data, storeId, weekId)
+    }
+)
+
+exports.getInventoryStoreCounts = asyncHandler(
+    async(req, res, next) => {
+        const storeId = req.params.storeid
+
+        function transform(arr) {
+            if(arr.length <1) return []
+            const arr1 = []
+
+            const weekIds = arr.reduce(
+                (acc, current) => {
+                    acc = [...acc, current['id'].substring(12, 14)]
+                    return acc
+                }, []
+            )
+
+            console.log('obj1', weekIds)
+
+            const products = Object.keys(arr[0].inventoryCount)
+            products.map(prd => {
+                const obj = {name: prd, counts: []}
+
+                for(let data of arr) {
+                    const valueForWeek = data.inventoryCount[prd]
+                    
+                    let useValue;
+                    valueForWeek !== undefined ? useValue = Number(valueForWeek) :
+                    useValue = 0
+                    
+                    obj.counts.push(useValue)
+                }
+                arr1.push(obj)
+            })
+
+            return {weeks: weekIds, prdCounts: arr1}
+        } 
+
+        if(storeId === undefined) {
+            const InventoryCounts = await inventoryModel.find().select('-_id -dateCreated')
+            return re(res, 200, 'success', 'found inventory', InventoryCounts);
+
+        }
+
+        const InventoryForStore = await inventoryModel.find({storeId: storeId}).select('-storeId -createdAt -_id')
+        //console.log('storecont:', storeId, InventoryForStore)
+        return re(res, 200, 'success', 'found inventory count fot store', transform(InventoryForStore))
+
+
+    }
+)
+

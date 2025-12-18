@@ -12,4 +12,26 @@ axiosInstance.interceptors.request.use(config => {
 })
 
 
-export {axiosInstance}
+const getMktWeek = async() => {
+    try {
+        const res = await axiosInstance.get('/utils/getcurrentweek')
+        if(res.statusText == 'OK') return res.data.data
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getMktWeeks = async() => {
+    try {
+        const response = await axiosInstance('/utils/getmktweeks');
+        if(response.statusText == 'OK' ) return response.data.data
+
+    } catch (error) {
+        console.log(error)
+        return {message: error}
+    }
+
+}
+
+export {axiosInstance, getMktWeek, getMktWeeks}

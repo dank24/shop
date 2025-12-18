@@ -16,7 +16,7 @@
 }
 
 
-@mixin pos($pos: 0, $l: 0, $r: 0, $t: 0, $b: 0) {
+@mixin pos($pos: 0, $l: none, $r: none, $t: none, $b: none) {
     position: $pos;  left: $l; right: $r;  top: $t;  bottom: $b;
 }
 
@@ -53,19 +53,20 @@
 }   
 
 #dashboard_page_main {
-    @include basic-layout(fit-content, 100dvw, 0, 0, black, );
-    @include flex(flex-start, center, column, 1px);
-    background-color: rgb(88, 88, 86);
+    @include basic-layout(100vh, 100dvw, 0, 0, rgb(191, 193, 221),  );
+    @include flex(flex-start, center, column, 5px);
 
     #dashboard_first_sec {
-        @include basic-layout(36dvh, 99%);
-        @include flex(flex-start, center, column);
+        @include basic-layout(40dvh, 97%, black, 0, grey);
+        @include flex(center, center, column, 2.5px);
+        box-shadow: 2px 1px 2px 0px black;
+        margin-top: 1px;
 
         .sec1_divs {
-            @include basic-layout(24%, 99%, black, 0.4rem);
+            @include basic-layout(23%, 97%, black, 0.4rem);
             @include flex(flex-start, center, row, 2%);
+            box-shadow: 1px 1px 0px 1.5px black;
             margin-top: 0.5%;
-            box-shadow: 2px 2px 2px rgb(87, 82, 82);
 
             >:first-child {
                 @include basic-layout(97%, 10%, $bgc: rgb(100, 156, 100));
@@ -90,8 +91,9 @@
     }
 
     #dashboard_second_sec {
-        @include basic-layout(55dvh, 99%);
+        @include basic-layout(53.6dvh, 97%, black, 0, grey);
         @include flex(flex-start, center, column, 1px);
+        box-shadow: 1px 1px 0px 2px black;
         margin-top: 4px;
 
         button {
@@ -99,10 +101,11 @@
         }
 
         #sec2div1 {
-            @include basic-layout(3.5dvh, 40%, black, 0rem, black);
+            @include basic-layout(4dvh, 52%, 0, 0rem, 0);
             @include pos(relative); 
             @include flex(center, center, row, 3%);
             align-self: flex-end; color: white;
+            margin-bottom: 2px ;  margin-top: 2px;
 
             p {
                 @include basic-layout(80%, 46%, white, 0.5rem, transparent );
@@ -113,11 +116,11 @@
 
         #sec2div2 {
             @include basic-layout(fit-content, 100%, 0 );
-            @include flex(center, center, column, 3px);
+            @include flex(center, center, column, 7px);
             margin-top: 3px;
             
             .util_btns {
-                @include basic-layout(60px, 98%, black, 0, rgb(99, 94, 94));
+                @include basic-layout(63px, 96%, black, 0.5rem, rgb(99, 94, 94));
                 box-shadow: 1.5px 1px black;  font-size: 2dvh;
             }
 
@@ -150,19 +153,64 @@
 
 #stores_page_main {
     @include basic-layout(fit-content, 100dvw );
+
+    #main_prompt {
+        @include basic-layout(95.6vh, 100vw, 0, $bgc: rgba(48, 34, 34, 0.849));
+        @include flex(center, flex-start,  );
+        border: 2px solid black;
+        @include pos(absolute,); z-index: 10;
+
+        #promp_cont_div {
+            @include basic-layout(14%, 92%, white, 0.8rem,);
+            @include flex(center, center, column, 5px );
+            background-color: rgb(24, 24, 24);
+            margin-top: 50%; color: white;  font-size: 1.8vh;
+
+            >div {
+                @include basic-layout(50%, 80%, 0 );
+                @include flex(center, center, row, 8px);
+
+                >* {
+                    @include basic-layout(80%, 45%, black, 0.5rem );
+                    @include flex(center, center, center, );
+                }
+
+                >:first-child {
+                    background-color: red;
+                    color: rgb(170, 175, 177);
+                }
+
+                >:last-child {
+                    background-color: blue;
+                    color: white;
+                }
+            }
+        }
+    }
     
     #stores_first_sec {
         @include basic-layout(fit-content, 100% );
-        @include flex(center, center, column, 6px);
+        @include flex(center, center, column, 10px);
         margin-top: 0.4vh;
 
         .stores_divs{
-            @include basic-layout(200px, 96%, black, 0rem, rgb(56, 43, 43),);
-            box-shadow: 2px 2px 2px black;
+            @include basic-layout(210px, 96%, black, 0rem, rgb(56, 43, 43),);
+            box-shadow: 2px 2px 2px black;  position: relative;
             font-size: 1.7vh;  color: rgb(221, 212, 212);
 
-            >H2 {
-                text-align: center;
+            #header_div {
+                >H2 {
+                    width: 100px; font-size: 2.5vh;
+                    color: rgb(243, 31, 31); margin-left: 20px;
+                }
+
+                #edit_div {
+                    @include basic-layout(34px, 90px, black, 0.3rem, $bgc: rgb(235, 224, 224) );
+                    @include flex(center, center, row, 15%);
+                    @include pos(absolute, none, 1px, -1px); 
+                    border: none;
+                }
+    
             }
 
             >div {
@@ -281,4 +329,71 @@
             }
         }
     }
+}
+
+#dates_page_main {
+    @include basic-layout(100vh, 100vw, 0, 0, 0, );
+    @include flex(flex-start, center, column, 7px);
+    font-size: 1.9vh;
+
+    .header_div {
+        @include basic-layout(30px, 100%, 0,);
+        @include flex(center, center, row, 5px);
+
+        p {
+            width: 18%; border: 1px solid rgb(51, 46, 46);
+            text-align: center;  font-size: 1.9vh;
+        }
+
+        div {   
+            @include basic-layout(1px, 38%, black, );
+        }
+    }
+
+    #dates_first_sec {
+        @include basic-layout(fit-content, 100%,);
+        @include flex(center, center, column, 5px);
+
+        #year_div {
+            @include basic-layout(32px, 40%, black, );
+            @include flex(flex-end, center, row, 15px);
+            margin-top: 5px; padding-right: 10px;
+            position: relative; left: 29%;
+
+            #year_dropdown {
+                @include basic-layout(70%, 55%, red, 0.5rem, );
+                @include flex(center, center)
+            }
+
+            #drop {
+                @include basic-layout(120px, 85px, brown, none, brown );
+                @include flex(center, center, column, 1px);
+                @include pos(absolute, none, 8px, 31px, none);
+
+            }
+        }
+        
+        .mktweek_divs {
+            @include basic-layout(70px, 94%, black, 0, rgb(77, 69, 69), );
+            @include flex(center, center, column, 0 );
+            color: white;
+    
+            #check_div {
+                @include basic-layout(18px, 18px, white, 50%, );
+                @include pos(absolute, $r: 25px, )
+            }
+    
+            >:first-child {
+                @include basic-layout(47%, 100%, );
+                @include flex(center, center);
+            }
+            
+            div {
+                @include basic-layout(53%, 100%, 0);
+                @include flex(center, center, row, 35px );
+                border-top: 1px solid black;
+            }
+        }
+    }
+
 }

@@ -47,24 +47,37 @@ export const add_prop = async(data: {}) => {
     }
 }// add mng,prd,store_ FN
 
+export const deleteItem = async(id: string, i: Number) => {
+    try {
+        const res = await axiosInstance.delete('/utils/delete/' + id + '/' + i)
+        if(res.statusText == 'OK') return res.data
+        
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 export const createNewMkt = async(id: Number) => {
     const sData = {weekId: id}
+    console.log(id)
     try {
         const response = await axiosInstance.post('utils/createmktweek', sData)
         console.log('this', response.statusText)
 
     } catch (error) {
-        
+        console.log(error)
     }
 }
 
 export const getCurrentMktWeek = async() => {
     try {
         const response = await axiosInstance.get('/utils/getcurrentweek');
-        if(response.statusText == 'OK') return response.data.data
+        if(response.statusText == 'OK') return response.data
 
     } catch (error) {
         console.log(error)
+        return {message: error.response.data}
     }
 }// get_mkt_week
 

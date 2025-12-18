@@ -7,6 +7,7 @@ function ProductsPage() {
 
  /* Append Data */
     const [productsData, setProductsData] = useState([])
+    const [loading, setLoading] = useState(true)
 
  /* Append */
     const AppendProducts = productsData.map((it, id) => {
@@ -27,7 +28,8 @@ function ProductsPage() {
  /* USE EFFECTS */
     useEffect(() => {
         const GETPRODUCTSFN = getProducts()
-        .then(resp => resp ? setProductsData(p => (resp)) : console.log('failure'))
+        .then(res => {setProductsData(p => (res)); setLoading(false) })
+        .catch(err => console.log(err));
     }, [])
 
  /* return */
@@ -37,12 +39,15 @@ function ProductsPage() {
             <SideBar header = 'Products'/>
         </div>
 
-      { productsData.length == 0 &&
-        <h1>Loading</h1>
-
+      { loading &&
+            <h1>Loading</h1>
       }
 
-      { productsData.length >= 1 &&
+      { !loading && productsData.length == 0 &&
+            <h4>Nothing to see here</h4>
+      }
+
+      { !loading && productsData.length >= 1 &&
         <main id="products_page_main">
 
             <section id="products_first_sec">

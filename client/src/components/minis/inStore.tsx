@@ -4,8 +4,9 @@ import { getStore } from "../../api/storeApi";
 
 import '../../assets/stylesheets/comps.css'
 import ViewProducts from "../pages/viewPrds";
+import ViewStockCounts from "../pages/viewStk";
 import CashMini from "../pages/cash";
-import Stock from "../pages/stock";
+import Stock from "../pages/invCount";
 import In_Out from "../pages/in_out";
 import SideBar from '../utils/sideBar'
 
@@ -14,6 +15,9 @@ interface storeFnBtnsTy {
 }
 interface storeDetailsTy {
     name: string, id?: string, access?: [], contact?: string, location?: string, manager?: string
+}
+interface divsTy {
+    name: string, mid?: string, btn?: string 
 }
 
 function InStore() {
@@ -42,6 +46,11 @@ function InStore() {
         {btnTxt: 'View Stocks', prelTxt: 'This', id: 'view_stock'},
         {btnTxt: 'Cash', prelTxt: 'This', id: 'cash'},
     ])
+    const [divs, setDivs] = useState<divsTy[]>([
+        {name: 'Sales', mid: 'this', btn: 'calculate Sales'},
+        {name: 'Smething1', mid: 'this', btn: 'calculate Sales'},
+        {name: 'Smething3', mid: 'this', btn: 'calculate Sales'},
+    ])
 
  /* APPEND */
     const AppendFnBtns = storeFnBtns.map((it,id) => {
@@ -58,6 +67,16 @@ function InStore() {
             </div>
         )
     }) 
+
+    const AppendDivs = divs.map((it, id) => {
+        return(
+            <div key={id} className="firstsec_divs">
+                <h3>{it.name}</h3>
+                <div>{it.mid}</div>
+                <button>{it.btn}</button>
+            </div>
+        )
+    })
 
  /* USE EFFECTS */
     useEffect(() => {
@@ -84,11 +103,24 @@ function InStore() {
         <main id="instore_mini_main">
 
             { !view &&
+             <>
                 <section id="instore_first_sec">
-                {
-                    AppendFnBtns
-                }
+                    <h4>Nathaniel</h4>
                 </section>
+
+                <section id="instore_second_sec">
+                    {
+                        AppendDivs
+                    }
+                </section>
+
+                <section id="instore_third_sec">
+                    {
+                        AppendFnBtns
+                    }
+                </section>
+             </>
+
             }
 
             { view == 'overview' &&
@@ -100,12 +132,12 @@ function InStore() {
             }
 
             { view == 'stock' &&
-                < Stock />
+                < Stock storeId = {storeDetails.id} />
 
             }
 
-            { view == 'view_stock'
-
+            { view == 'view_stock' &&
+                < ViewStockCounts />
             }
 
             { view == 'cash' &&

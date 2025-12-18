@@ -41,3 +41,26 @@ export const prdMovement = async(data) => {
         console.log(error.response)
     }
 }
+
+export const inventoryCount = async(sData) => {
+    try {
+        const response = await axiosInstance.post('/store/inventorycount', sData);
+        if(response.statusText == 'Created') return {...response.data}
+        
+    } catch (error) {
+        console.log(error)
+        return {status: 'error', message: error.response.data.message}
+    }
+}
+
+export const getInventoryCounts = async() => {
+    try {
+        const response = await axiosInstance('/store/getinventorycounts/STR01');
+        if(response.statusText == 'OK') return response.data.data
+
+    } catch (error) {
+        console.log(error)
+        return {status: 'error', message: error.response.data.message }
+    }
+
+}

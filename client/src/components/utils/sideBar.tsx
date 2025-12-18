@@ -13,7 +13,9 @@ function SideBar(props) {
     return(
         <main id="sidebar_comp_main">
             <p onClick={handleHamburg}>☰</p>
-            <h3>{props.header}</h3>
+            <div id="header_div">
+                <h3>{props.header}</h3>
+            </div>
             
             { sideBarOn &&
              <section id="sidebar_sec">
@@ -21,6 +23,11 @@ function SideBar(props) {
              </section>
 
             }
+
+            <div id="side_fn_div">
+                <h3 onClick={props.fn1}>{props.fn1Btn}</h3>
+                <p onClick={props.fn2}>{props.fn2Btn}</p>
+            </div>
         </main>
     )
 }

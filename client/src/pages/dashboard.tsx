@@ -4,35 +4,33 @@ import { getCurrentMktWeek, createNewMkt } from "../api/userApi";
 
 import { MainContextEx } from "./context/mainContext";
 import AddShopMini from "../components/minis/add_shop";
+import In_Out from "../components/pages/in_out";
 import SideBar from "../components/utils/sideBar";
 
 interface infoCardsSecTy {
     main: string,  secondary?: string, btn1?: string, btn2?: string
 }
-
 interface utiliiesBtnTy {
     name: string,  link: string,  type?: string
 }
-
 interface historyDivTy {
     header: string,  main: string,  date: string
 }
 
 function DashBoardPage() {
- /* react hoook */
+ /* REACT HOOKS */
     const navigate = useNavigate();
     const {addAlert} = useContext(MainContextEx)
     
- /* variable */
+
+ /* VARIABLES */
     const [inDisplay, setInDisplay] = useState<string>('utilities');
     const [searchParams, setSearchParams] = useSearchParams();
     const [mktWeek, setMktWeek] = useState('')
     let currentView = searchParams.get('view');
     
 
-
  /* FUNCTIONS */
-
     function handleSecOne(e: BaseSyntheticEvent) {
         const {tagName, className, id, innerHTML} = e.target;
 
@@ -48,11 +46,15 @@ function DashBoardPage() {
         if(tagName == 'BUTTON' && innerHTML == 'Set') {
         }
 
+        if(id == 'Market Week' && innerHTML == 'View') {
+            navigate('/home/dates')
+        }
+
     }// first_sec_fn
 
     function handleSecTwo(e: BaseSyntheticEvent) {
         let {tagName, id, className, innerHTML} = e.target;
-        innerHTML = innerHTML.toLowerCase()
+        innerHTML = innerHTML.toLowerCase();
 
         if(className == 'sec2div1_toggle') {
             setInDisplay(p => (innerHTML ))
@@ -60,7 +62,15 @@ function DashBoardPage() {
 
     }// second_sec_fn
 
- /* APPEND DATE */
+    function handleUtilsBtn(e: BaseSyntheticEvent) {
+        const {className, id, innerHTML} = e.target
+
+        if(className.includes('inpage')) {
+            setSearchParams(p => ({...p, view: id}))
+        }
+    }// handle_utils_fn
+
+ /* APPEND DATA */
     const [infoCardsSec, setInfoCardsSec] = useState<infoCardsSecTy[]>([
         {main: 'Store', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
         {main: 'Manager', secondary: 'count: 4', btn1: 'Add', btn2: 'Manage'  },
@@ -68,9 +78,12 @@ function DashBoardPage() {
         {main: 'Market Week', btn1: 'Set', btn2: 'View'  },
     ])
     const [utilityBtns, setUtilityBtns] = useState<utiliiesBtnTy[]>([
-        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'},
-        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'},
-        {name: 'Update Date', link: 'https://www.google.com', type: 'inpage'}
+        {name: 'Product Transfers', link: 'prdmovement', type: 'inpage'},
+        {name: 'Update Prices', link: 'prices', type: 'inpage'},
+        {name: 'View Stocks', link: 'stock', type: 'inpage'},
+        {name: 'Order', link: 'order', type: 'inpage'},
+        {name: 'Cash', link: 'cash', type: 'inpage'},
+
     ])
     const [historyData, setHistoryData] = useState<historyDivTy[]>([
         {header: 'Stock update', main: 'Main Shop update Stock', date: '12/10/25'},
@@ -91,10 +104,9 @@ function DashBoardPage() {
         )
     })
 
-
     const AppendUtils = utilityBtns.map((it, id) => {
         return(
-            <button key={id} className={`util_btns ${it.type}`} id={it.link}>
+            <button key={id} className={`util_btns ${it.type}`} id={it.link} onClick={handleUtilsBtn}>
                 {it.name}
             </button>
         )
@@ -115,19 +127,13 @@ function DashBoardPage() {
     useEffect(() => {
         const GETMKTWEEKFN = getCurrentMktWeek()
         .then(res => {
-            const cmpDate = new Date(Date.now()).getDate()
-            const use = new Date().setDate(cmpDate)
-
-            if(Date.parse(res.endDate) < use ) {
-                const NEWWEEK = createNewMkt(Number(res.weekId) + 1 )
-                return;
+            if(res.status == 'success') {
+                infoCardsSec[3].secondary = `${res.data.weekId}`
+                setInfoCardsSec(p => ([...infoCardsSec]))
             }
-
-            infoCardsSec[3]['secondary'] = `Week: ${res.weekId}`
-            setInfoCardsSec(p => ([...p]))
-            return;
-            
         })
+        .catch(err => console.log(err))
+          
     }, [])
 
  /* return */
@@ -163,9 +169,13 @@ function DashBoardPage() {
              </>
             }
 
-            { currentView &&
-                < AddShopMini />
+            { currentView?.startsWith('add') &&
+                <AddShopMini />
 
+            }
+
+            { currentView == 'prdmovement' &&
+                <In_Out />
             }
 
 
