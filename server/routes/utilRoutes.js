@@ -9,8 +9,9 @@ router.get('/getmktweeks', utilCont.getMktWeeks);
 router.post('/add', utilCont.addGen)
 router.post('/createmktweek', utilCont.createNewMktWeek)
 
-/* DELETE */
+/* UPDATE */
 router.delete('/delete/:id?/:in', utilCont.deleteGen);
+router.put('/edit/:id/:in', utilCont.editGen);
 
 /* EXPORT */
 module.exports = router

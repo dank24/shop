@@ -56,6 +56,16 @@ export const deleteItem = async(id: string, i: Number) => {
         console.log(error)
     }
 
+}// delete mng,prd,store _fn
+
+export const editItem = async(id: String, i: String, data: Object) => {
+    try {
+        const res = await axiosInstance.put('/utils/edit/' + id + '/' + i, data );
+        if(res.statusText == 'OK') return res.data.message
+        
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export const createNewMkt = async(id: Number) => {

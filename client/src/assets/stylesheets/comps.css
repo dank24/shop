@@ -20,7 +20,7 @@
   left: 15vw;
   right: 0;
   top: 3vh;
-  bottom: 0;
+  bottom: none;
   font-size: 2vh;
   z-index: 1000;
 }
@@ -55,7 +55,7 @@
   left: 52%;
   right: 0;
   top: -30%;
-  bottom: 0;
+  bottom: none;
   justify-self: flex-end;
 }
 #alerts_div .alert #alert_body {
@@ -63,7 +63,7 @@
   left: 0;
   right: 0;
   top: -15%;
-  bottom: 0;
+  bottom: none;
 }
 #alerts_div .alert #indicator {
   height: 0.1px;
@@ -72,6 +72,181 @@
   border-radius: 0;
   background-color: 0;
   padding: 0;
+}
+
+#edit_comp_main #main_prompt {
+  height: 96vh;
+  width: 100vw;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: rgba(48, 34, 34, 0.849);
+  padding: 0;
+  position: absolute;
+  left: none;
+  right: 0vw;
+  top: 4vh;
+  bottom: none;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: 0;
+  gap: 0;
+}
+#edit_comp_main #main_prompt #promp_delete_div {
+  height: 14%;
+  width: 92%;
+  border: 1px solid white;
+  border-radius: 0.8rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgb(24, 24, 24);
+  margin-top: 50%;
+  color: white;
+  font-size: 1.8vh;
+}
+#edit_comp_main #main_prompt #promp_delete_div > div {
+  height: 50%;
+  width: 80%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+#edit_comp_main #main_prompt #promp_delete_div > div > * {
+  height: 80%;
+  width: 45%;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: center;
+  gap: 0;
+}
+#edit_comp_main #main_prompt #promp_delete_div > div > :first-child {
+  background-color: red;
+  color: rgb(170, 175, 177);
+}
+#edit_comp_main #main_prompt #promp_delete_div > div > :last-child {
+  background-color: blue;
+  color: white;
+}
+#edit_comp_main #main_prompt #editinfo_div {
+  height: 78%;
+  width: 95%;
+  border: 1px solid black;
+  border-radius: 0.8rem;
+  background-color: rgb(219, 199, 161);
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 12vh;
+  font-size: 1.9vh;
+}
+#edit_comp_main #main_prompt #editinfo_div > :first-child {
+  margin-top: 45px;
+}
+#edit_comp_main #main_prompt #editinfo_div #edit_div {
+  height: 57px;
+  width: 92%;
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  background-color: rgb(206, 200, 200);
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 0px;
+  padding-left: 10px;
+}
+#edit_comp_main #main_prompt #editinfo_div #edit_div > label {
+  height: 30%;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  margin-top: 2.5px;
+  font-size: 2vh;
+}
+#edit_comp_main #main_prompt #editinfo_div #edit_div > input {
+  height: 70%;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  font-size: 2.1vh;
+  padding-right: 10px;
+}
+#edit_comp_main #main_prompt #editinfo_div #btn_div {
+  height: 45px;
+  width: 90%;
+  border: 1px solid 0red;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 15px;
+  margin-top: 15px;
+}
+#edit_comp_main #main_prompt #editinfo_div #btn_div > :first-child {
+  background-color: rgb(165, 27, 27);
+  color: rgb(170, 175, 177);
+}
+#edit_comp_main #main_prompt #editinfo_div #btn_div > :last-child {
+  background-color: rgb(45, 45, 122);
+  color: white;
+}
+#edit_comp_main #main_prompt #editinfo_div #btn_div > button {
+  height: 95%;
+  width: 38%;
+  border: 1px solid black;
+  border-radius: 0.6rem;
+  background-color: 0;
+  padding: 0;
+}
+
+#editdelet_btn_div {
+  height: 100%;
+  width: 100%;
+  border: 1px solid grey;
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 15px;
+  gap: 10px;
 }
 
 #input_comp_main {
@@ -187,9 +362,9 @@
   padding: 0;
   position: absolute;
   left: 0.1px;
-  right: 0;
+  right: none;
   top: 4vh;
-  bottom: 0;
+  bottom: none;
   z-index: 200;
 }
 #sidebar_comp_main #side_fn_div {
@@ -250,7 +425,7 @@
   left: 0;
   right: 0;
   top: 1px;
-  bottom: 0;
+  bottom: none;
   height: 35px;
   background-color: rgb(59, 48, 48);
   color: white;
@@ -581,7 +756,7 @@
   left: 0;
   right: 0;
   top: 4.3vh;
-  bottom: 0;
+  bottom: none;
   font-size: 1.6vh;
   height: 35px;
   background-color: rgb(175, 105, 105);
@@ -724,7 +899,7 @@
   left: 0;
   right: 0;
   top: 6.1vh;
-  bottom: 0;
+  bottom: none;
   background-color: rgb(226, 147, 147);
   height: 35px;
 }
@@ -769,7 +944,7 @@
   left: 0;
   right: 0;
   top: 4.1vh;
-  bottom: 0;
+  bottom: none;
   height: 38px;
   margin-top: 5px;
   color: white;
@@ -962,7 +1137,7 @@
   left: 0;
   right: 0;
   top: 15px;
-  bottom: 0;
+  bottom: none;
 }
 
 #viewstkcount_mini_main {

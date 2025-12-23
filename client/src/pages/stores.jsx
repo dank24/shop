@@ -4,8 +4,8 @@ import { MainContextEx } from "./context/mainContext";
 import { getStores } from "../api/storeApi";
 import {deleteItem} from '../api/userApi'
 
-import deleteIcon from '../assets/images/icons/delete02.svg' 
-import editIcon from '../assets/images/icons/edit02.svg'
+import {EditBtnsComp } from "../components/utils/editComp";
+import EditComp from "../components/utils/editComp";
 import SideBar from "../components/utils/sideBar";
 
 function StoresPage() {
@@ -14,8 +14,9 @@ function StoresPage() {
     const {addAlert} = useContext(MainContextEx)
 
  /* VARIABLES */
-    const [delItemInfo, setDelItemInfo] = useState({del: false, name: 'StoreName', });
+    const [isPromptVisible, setIsPromptVisible] = useState(false);
     const [isEditVisible, setIsEditVisible] = useState(false);
+    const [EditData, setEditData] = useState(null)
     const [storesData, setStoresData] = useState([]);
 
  /* FUNCTIONS */
@@ -27,41 +28,25 @@ function StoresPage() {
 
     function getStoresData() {
         const GETDATAFN = getStores()
-        .then(resp => resp ? setStoresData(p => (resp )) : console.log('failure') )
+        .then(resp => resp ? setStoresData(p => ([...resp] )) : console.log('failure') )
     }// get_stores_data_fn
 
     function navToStore(lnk) {
         navigate('/home/stores/' + lnk.toLowerCase())
     }// navto_store_fn
 
-    function handleEditOpers(e) {
-        let [id, cla, html] = [e.target.id, e.target.className, e.target.innerHTML]
-        console.log('i', id)
-
-
-        if(cla == 'delete') {
-            setDelItemInfo(p => ({del: true, name: id}));
- 
-        }
-        
-        if(html == 'Cancel') {
-            setDelItemInfo(p => ({...p, del: false} ))
+    function handleEdit(clas, re, cate) {
+        if(clas == 'edit_btn') {
+            setEditData(p => ({...re, cate}))
+            console.log(clas)
         }
 
-        if(html == 'Continue') {
-            const DELETFN = deleteItem(delItemInfo.name, 0)
-            .then(res => {
-                console.log('res:', res)
-                if(res.status == 'success') {
-                    addAlert(res.message);
-                    setDelItemInfo(p => ({del: false}))
-                    getStoresData();
-                }
-            } )
-            .catch(err => console.log(err)) 
+        if(clas == 'edit_comp'){
+            setEditData(re);
+            getStoresData()
         }
 
-    }// handle_edit_btns
+    }// handle_edit_fn
 
  /* Append */
     const AppendStores = storesData.map((it,id) => {
@@ -73,14 +58,13 @@ function StoresPage() {
                     </h2>
 
                     { isEditVisible &&
-                        <div id="edit_div">
-                            <img alt="edit" id={it.id} src={editIcon} className="edit" width='30px' 
-                                onClick={handleEditOpers}
-                            />
-                            <img alt='del' id={it.id} src={deleteIcon} width='30px' 
-                                onClick={handleEditOpers} className="delete"
+                        <div id= 'edit_btns_cont'>
+                            < EditBtnsComp 
+                                id = {it.id} data = {it}
+                                fn = {handleEdit}
                             />
                         </div>
+
                     }
                 </div>
                 
@@ -105,56 +89,42 @@ function StoresPage() {
                     <p>Status: Blue</p>
                </section>
 
-               <button onClick={e => navToStore(it.id)}>Click Me</button>
+               <button onClick={e => navToStore(it.id)}>Go to...</button>
             </div>
         )
-    }) 
-
-    const AppendDeletePrompt = () => {
-        return(
-            <div id="main_prompt" onClick={handleEditOpers}>
-                <div id="promp_cont_div">
-                    <h4>
-                        This Will PERMANENTLY <b style={{color: 'red'}}>DELETE</b> {delItemInfo.name}
-                    </h4>
-
-                    <div>
-                        <h4>Continue</h4>
-                        <h4>Cancel</h4>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
+    })
 
  /* use Effect */
     useEffect(() => {
         getStoresData()
     }, [])
 
-
  /* return */
- 
     return(
-     <>
+     <> 
+        { EditData !== null && 
+            <EditComp 
+                name = {EditData.name}  fn = {handleEdit}
+                cate = {EditData.cate}  data = {EditData}
+                useIn = {0} height = '500px'
+            />
+        }
+
         <div id="sidebar_container_div">
             < SideBar  header ='Stores' 
                 fn1Btn = 'Edit'  fn1 = {sideBarFns.FN1}      
             />
         </div>
 
-        { storesData.length >= 1 &&
+        { storesData.length >= 1 && 
             <main id="stores_page_main">
 
-                { delItemInfo.del && 
-                    <AppendDeletePrompt />
-                }                
-     
-                <section id="stores_first_sec">
-                    {
+                <section id="stores_first_sec" >
+                    { EditData == null &&
                         AppendStores
                     }
+
+                    <div id="sec_footer"></div>
                 </section>
             </main>
         }

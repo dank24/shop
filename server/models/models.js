@@ -3,6 +3,19 @@ const schema = mongoose.Schema;
 
 /* Schemas       */
 
+const IDCounterSchema = new schema({
+    name: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    count: {
+        type: Number,
+        default: 0
+    }
+
+})
+
 const storeSchema = new schema({
     name: {
         type: String,
@@ -152,6 +165,7 @@ const inventorySchema = new schema({
 
 const prdMovementModel = mongoose.model('movements', prdMovementSchema);
 const inventoryModel = mongoose.model('inventort_counts', inventorySchema)
+const IDCounterModel = mongoose.model('counter', IDCounterSchema)
 const prdStockModel = mongoose.model('stocks', prdStockSchema);
 const managerModel = mongoose.model('managers', managerSchema);
 const productModel = mongoose.model('products', productSchema);
@@ -159,7 +173,8 @@ const storeModel = mongoose.model('stores', storeSchema);
 const datesModel = mongoose.model('dates', datesSchema)
 
 
+
 module.exports = {
     storeModel, managerModel, productModel, prdStockModel, prdMovementModel, datesModel,
-    inventoryModel
+    inventoryModel, IDCounterModel
 }

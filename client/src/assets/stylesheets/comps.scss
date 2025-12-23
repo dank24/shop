@@ -13,7 +13,7 @@
     flex-direction: $fdir;  gap: $gap;
 }
 
-@mixin pos($pos: 0, $l: 0, $r: 0, $t: 0, $b: 0) {
+@mixin pos($pos: 0, $l: none, $r: none, $t: none, $b: none) {
     position: $pos;  left: $l; right: $r;  top: $t;  bottom: $b;
 }
 
@@ -47,6 +47,97 @@
         }
     }
 }
+
+#edit_comp_main {
+    #main_prompt {
+        @include basic-layout(96vh, 100vw, black, $bgc: rgba(48, 34, 34, 0.849));
+        @include pos(absolute, none, 0vw, 4vh); z-index: 20;
+        @include flex(center, flex-start,  ); 
+    
+        #promp_delete_div {
+            @include basic-layout(14%, 92%, white, 0.8rem,);
+            @include flex(center, center, column, 5px );
+            background-color: rgb(24, 24, 24);
+            margin-top: 50%; color: white;  font-size: 1.8vh;
+    
+            >div {
+                @include basic-layout(50%, 80%, 0 );
+                @include flex(center, center, row, 8px);
+    
+                >* {
+                    @include basic-layout(80%, 45%, black, 0.5rem );
+                    @include flex(center, center, center, );
+                }
+    
+                >:first-child {
+                    background-color: red;
+                    color: rgb(170, 175, 177);
+                }
+    
+                >:last-child {
+                    background-color: blue;
+                    color: white;
+                }
+            }
+        }
+
+        #editinfo_div {
+            @include basic-layout(78%, 95%, black, 0.8rem, rgb(219, 199, 161) );
+            @include flex(flex-start, center, column, 15px);
+            margin-top: 12vh; font-size: 1.9vh;
+
+            >:first-child {
+                margin-top: 45px;
+            }
+
+            #edit_div {
+                @include basic-layout(57px, 92%, black, 0.4rem, rgb(206, 200, 200), );
+                @include flex(flex-start, center, column, 0px);
+                padding-left: 10px;
+
+                >label {
+                    @include basic-layout(30%, 100%, 0);
+                    @include flex(flex-start, center,  );
+                    margin-top: 2.5px ; font-size: 2vh;
+                }
+
+                >input {
+                    @include basic-layout(70%, 100% );
+                    border: none; background-color: transparent;
+                    outline: none;  font-size: 2.1vh; padding-right: 10px;
+                }
+
+            }
+
+            #btn_div {
+                @include basic-layout(45px, 90%, 0red, );
+                @include flex(center, center, $gap: 15px);
+                margin-top: 15px;
+
+                >:first-child {
+                    background-color: rgb(165, 27, 27);
+                    color: rgb(170, 175, 177);
+                }
+    
+                >:last-child {
+                    background-color: rgb(45, 45, 122);
+                    color: white;
+                }
+
+                >button {
+                    @include basic-layout(95%, 38%, black, 0.6rem)
+                }
+            }
+        }
+    }
+    
+}   
+
+#editdelet_btn_div {
+    @include basic-layout(100%,  100%, grey, 0.5rem, white, );
+    @include flex(center, center, 15px, 10px);
+}
+
 
 #input_comp_main {
     @include basic-layout(fit-content, 100%, 0, 0, 0, 4px);

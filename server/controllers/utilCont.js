@@ -1,11 +1,31 @@
 const { default: mongoose } = require('mongoose');
-const {storeModel, productModel, managerModel, datesModel} = require('../models/models');
+const {storeModel, productModel, managerModel, datesModel, IDCounterModel} = require('../models/models');
 const models = [storeModel, managerModel, productModel];
 const strArr = ['STR', 'MNG', 'PRD']
 const asyncHandler = require('express-async-handler');
 
 function re(res, code, status, message, data) {
     res.status(code).json({status: status, message: message, data: data})
+}
+
+async function IDCounter(na) {
+    try {
+        const GETID = await IDCounterModel.findOneAndUpdate(
+            {name: na},
+            {$inc: {count: 1} },
+            {
+                upsert: true,
+                lean: true,
+                new: true
+            }
+        )
+        return GETID.count
+
+    } catch (error) {
+        return {status: 'error', error: error}
+    }
+
+
 }
 
 async function createDate(dateId) {
@@ -31,6 +51,7 @@ async function createDate(dateId) {
    
 }
 
+/* ADD, DELETE, EDIT _GEN */
 exports.addGen = asyncHandler(
     async(req, res, next) => {
         const addData = req.body
@@ -39,8 +60,8 @@ exports.addGen = asyncHandler(
         const checkExisting = await useModel.findOne({name: addData.data.name}).select('_id');
         if(checkExisting) return res.status(409).json({status: 'failure', message: 'duplicate data'});
 
-        const count = await useModel.countDocuments({});
-        const id = strArr[addData.index] + String(count + 1).padStart(2, 0);
+        const useId = await IDCounter(strArr[addData.index]);
+        const id = String(useId).padStart(2, 0)
 
         const newCollection = await useModel.create({...addData.data, id});
         if(!newCollection){
@@ -57,10 +78,31 @@ exports.deleteGen = asyncHandler(
         const ID = req.params.id;
 
         const DELETEOPER = await useModel.deleteOne({id: ID})
-        return re(res, 200, 'success', `Item Deleted` , DELETEOPER)
+        return re(res, 200, 'success', `Deleted` , DELETEOPER)
     }
 )
 
+exports.editGen = asyncHandler(
+    async(req, res, next) => {
+        const useModel = models[Number(req.params.in)];
+        const id = req.params.id;
+        const data = req.body;
+
+        console.log('data:', data)
+        const UPDOPER = await useModel.findOneAndUpdate(
+            {id: id},
+            {$set: {...data}},
+            {new: true}
+        )
+
+        return re(res, 200, 'success', 'updated', UPDOPER)
+        console.log('index x id:', useModel, data)
+
+    }
+)
+//
+
+/* OTHER UTILS */
 exports.mktDates = asyncHandler(
     async(req, res, next) => {
         const {year, week, start, end} = req.body;

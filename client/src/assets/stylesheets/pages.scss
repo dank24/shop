@@ -153,64 +153,34 @@
 
 #stores_page_main {
     @include basic-layout(fit-content, 100dvw );
-
-    #main_prompt {
-        @include basic-layout(95.6vh, 100vw, 0, $bgc: rgba(48, 34, 34, 0.849));
-        @include flex(center, flex-start,  );
-        border: 2px solid black;
-        @include pos(absolute,); z-index: 10;
-
-        #promp_cont_div {
-            @include basic-layout(14%, 92%, white, 0.8rem,);
-            @include flex(center, center, column, 5px );
-            background-color: rgb(24, 24, 24);
-            margin-top: 50%; color: white;  font-size: 1.8vh;
-
-            >div {
-                @include basic-layout(50%, 80%, 0 );
-                @include flex(center, center, row, 8px);
-
-                >* {
-                    @include basic-layout(80%, 45%, black, 0.5rem );
-                    @include flex(center, center, center, );
-                }
-
-                >:first-child {
-                    background-color: red;
-                    color: rgb(170, 175, 177);
-                }
-
-                >:last-child {
-                    background-color: blue;
-                    color: white;
-                }
-            }
-        }
-    }
     
     #stores_first_sec {
         @include basic-layout(fit-content, 100% );
         @include flex(center, center, column, 10px);
         margin-top: 0.4vh;
 
+        >:first-child {
+            margin-top: 5px;
+        }
+        
         .stores_divs{
-            @include basic-layout(210px, 96%, black, 0rem, rgb(56, 43, 43),);
-            box-shadow: 2px 2px 2px black;  position: relative;
+            @include basic-layout(200px, 96%, black, 0.2rem, rgb(56, 43, 43),);
+            box-shadow: 2px 2px 2px black;  
             font-size: 1.7vh;  color: rgb(221, 212, 212);
 
             #header_div {
                 >H2 {
-                    width: 100px; font-size: 2.5vh;
+                    width: 55%; font-size: 2.5vh;
                     color: rgb(243, 31, 31); margin-left: 20px;
                 }
 
-                #edit_div {
-                    @include basic-layout(34px, 90px, black, 0.3rem, $bgc: rgb(235, 224, 224) );
-                    @include flex(center, center, row, 15%);
-                    @include pos(absolute, none, 1px, -1px); 
-                    border: none;
+                #edit_btns_cont{
+                    @include basic-layout(35px, 95px, none );
+                    @include flex(center, center,);
+                    @include pos(relative, 14%, none, );
                 }
-    
+
+
             }
 
             >div {
@@ -223,7 +193,7 @@
             }
 
             section {
-                @include basic-layout(35px, 100%, rgb(156, 88, 88), );
+                @include basic-layout(30px, 100%, rgb(156, 88, 88), );
                 @include flex(center, center, row, 0% );
 
                 p {
@@ -235,8 +205,12 @@
             }
 
             button {
-                @include basic-layout(35px, 100%, 0, 0, rgb(243, 233, 233) )
+                @include basic-layout(30px, 100%, 0, 0, rgb(243, 233, 233) )
             }
+        }
+
+        #sec_footer {
+            height: 12px
         }
     }
 }
@@ -246,12 +220,16 @@
 
     #managers_first_sec {
         @include basic-layout(fit-content, 100%,);
-        @include flex(center, center, column, 4px);
+        @include flex(center, center, column, 6px);
         margin-top: 4px;
 
+        >:first-child {
+            margin-top: 5px;
+        }
+
         .managers_card_divs {
-            @include basic-layout(160px, 96%, black, $bgc: rgb(150, 148, 148) );
-            color: rgb(44, 33, 33);
+            @include basic-layout(160px, 96%, black, $bgc: rgb(105, 93, 72));
+            color: rgb(44, 33, 33); position: relative;
             font-size: 2vh;
 
             #profile_sec {
@@ -259,7 +237,7 @@
                 @include flex(flex-start, center, row, 0%);
                 border-bottom: 1px solid black;
 
-                :first-child {
+                >:first-child {
                     width: 75%;
                 }
 
@@ -269,13 +247,18 @@
                 }
             }
 
-            div {
+            >div {
                 @include basic-layout(20%, 100%, 0, $pad: 5px );
                 @include flex(flex-start, center, row, );
                 border-bottom: 1px solid grey;
 
-                :first-child {
+                >:first-child {
                     width: 30%;
+                }
+
+                #edit_btns_cont{
+                    @include basic-layout(35px, 100px, 0, );
+                    @include pos(absolute, none, 2px, )
                 }
             }
 
@@ -288,25 +271,36 @@
     @include basic-layout(fit-content, 100dvw, );
     position: relative;
 
-
     #products_first_sec {
         @include basic-layout(fit-content, 100%, );
         @include flex(center, center, column, 4px );
+        position: relative;
 
         .prd_div {
             >* {
                 @include flex(flex-start, center, );
-                width: 17%;
+                width: 15%; 
                 padding: 1px;  height: 90%;
                 border-right: 1px solid rgb(211, 181, 181);
             }
 
-            :first-child {
+            >:first-child {
                 width: 30%;
+            }
+
+            >:nth-child(4) {
+                width: 20%;
+            }
+
+            #editbtns_cont {
+                @include basic-layout(40px, 22%, 0 );
+                @include pos(absolute, none, 5px )
             }
 
             >:last-child {
                 border-right: none;
+                width: 12%;  overflow: hidden;
+                justify-content: center
             }
         }
 
