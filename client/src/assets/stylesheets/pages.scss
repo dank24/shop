@@ -326,7 +326,7 @@
 }
 
 #dates_page_main {
-    @include basic-layout(100vh, 100vw, 0, 0, 0, );
+    @include basic-layout(fit-content, 100vw, 0, 0, 0, );
     @include flex(flex-start, center, column, 7px);
     font-size: 1.9vh;
 
@@ -334,38 +334,58 @@
         @include basic-layout(30px, 100%, 0,);
         @include flex(center, center, row, 5px);
 
-        p {
+        >p {
             width: 18%; border: 1px solid rgb(51, 46, 46);
             text-align: center;  font-size: 1.9vh;
         }
 
-        div {   
+        >div {   
             @include basic-layout(1px, 38%, black, );
+        }
+    }
+
+    #year_div {
+        @include basic-layout(40px, 40%, black, 0.2rem, $bgc: white );
+        @include flex(flex-end, center, row, 15px);
+        @include pos(sticky, none, none, 40px, );
+        margin-top: 5px; padding-right: 10px;
+
+        #year_dropdown_btn {
+            @include basic-layout(75%, 58%, grey, 0.4rem, );
+            border: 2px solid grey;
+            @include flex(center, center)
+        }
+
+        #drop {
+            @include basic-layout(fit-content, 130px, none, 0.5rem, rgba(255, 255, 255, 0.815),);
+            @include flex(center, center, column, 3px);
+            @include pos(absolute, none, 1px, 42px, none);
+            padding-bottom: 5px; padding-top: 5px; z-index: 20;
+
+            >P {
+                @include basic-layout(35px, 97%, black, 0.5rem, $bgc: white );
+                @include flex(center, center, )
+            }
+
+            >div {
+                @include basic-layout(40px, 95%, black, 0.3rem);
+                @include flex(center, center, row, );
+
+                >input {
+                    width: 85%;
+                    height: 100%; text-align: center;
+                }
+
+                >button {
+                    height: 100%
+                }
+            }
         }
     }
 
     #dates_first_sec {
         @include basic-layout(fit-content, 100%,);
         @include flex(center, center, column, 5px);
-
-        #year_div {
-            @include basic-layout(32px, 40%, black, );
-            @include flex(flex-end, center, row, 15px);
-            margin-top: 5px; padding-right: 10px;
-            position: relative; left: 29%;
-
-            #year_dropdown {
-                @include basic-layout(70%, 55%, red, 0.5rem, );
-                @include flex(center, center)
-            }
-
-            #drop {
-                @include basic-layout(120px, 85px, brown, none, brown );
-                @include flex(center, center, column, 1px);
-                @include pos(absolute, none, 8px, 31px, none);
-
-            }
-        }
         
         .mktweek_divs {
             @include basic-layout(70px, 94%, black, 0, rgb(77, 69, 69), );

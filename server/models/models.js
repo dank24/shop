@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { type } = require('os');
 const schema = mongoose.Schema;
 
 /* Schemas       */
@@ -14,7 +15,7 @@ const IDCounterSchema = new schema({
         default: 0
     }
 
-})
+})//    Idcounter_schema
 
 const storeSchema = new schema({
     name: {
@@ -94,6 +95,8 @@ const prdStockSchema = new schema({
         type: Date,
         default: Date.now
     },
+    year: String,
+    weekId: String
 
 })//    product_stock_schema
 
@@ -122,25 +125,28 @@ const prdMovementSchema = new schema({
     time:{
         type: Date,
         default: Date.now
-    }
+    },
+    year: String,
+    weekId: String
 })//    product_movemet_schema
 
-const datesSchema = new schema({
-    weekId: {
+const mktWeek = new schema({
+    id: {
         type: String,
         unique: true,
+        required: true
+    },
+    weekNo: {
+        type: String,
         required: true,
     },
     year: {
-        type: String,
+        type: Number,
         required: true,
     },
     startDate: Date,
     endDate: Date,
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
+
 })//    date_schema
 
 const inventorySchema = new schema({
@@ -160,21 +166,50 @@ const inventorySchema = new schema({
     dateCreated: {
         type: Date,
         default: Date.now
+    },
+    weekId: String,
+    year: String,
+})//    inventory_schema
+
+const yearSchema = new schema({
+    name: {
+        type: Number,
+        required: true,
+        unique: true,
     }
+})//    year_schema
+
+const balanceSchema = new schema({
+    id: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    modifyCount: {
+        type: Number,
+        default: 0
+    },
+    weekInventoryId: String,
+    WeekCashTotal: Number,
+    data: Object,
+    storeId: String,
+    year: String,
+    weekId: String,
 })
 
 const prdMovementModel = mongoose.model('movements', prdMovementSchema);
-const inventoryModel = mongoose.model('inventort_counts', inventorySchema)
+const inventoryModel = mongoose.model('inventory_counts', inventorySchema)
 const IDCounterModel = mongoose.model('counter', IDCounterSchema)
 const prdStockModel = mongoose.model('stocks', prdStockSchema);
 const managerModel = mongoose.model('managers', managerSchema);
 const productModel = mongoose.model('products', productSchema);
 const storeModel = mongoose.model('stores', storeSchema);
-const datesModel = mongoose.model('dates', datesSchema)
-
+const mktWeekModel = mongoose.model('mkt_weeks', mktWeek)
+const balanceModel = mongoose.model('weekly_balances', balanceSchema);
+const yearModel = mongoose.model('years', yearSchema);
 
 
 module.exports = {
-    storeModel, managerModel, productModel, prdStockModel, prdMovementModel, datesModel,
-    inventoryModel, IDCounterModel
+    storeModel, managerModel, productModel, prdStockModel, prdMovementModel, mktWeekModel,
+    inventoryModel, IDCounterModel, yearModel, balanceModel
 }

@@ -8,7 +8,7 @@ import In_Out from "../components/pages/in_out";
 import SideBar from "../components/utils/sideBar";
 
 interface infoCardsSecTy {
-    main: string,  secondary?: string, btn1?: string, btn2?: string
+    main: string,  secondary?: string | null, btn1?: string, btn2?: string
 }
 interface utiliiesBtnTy {
     name: string,  link: string,  type?: string
@@ -20,8 +20,7 @@ interface historyDivTy {
 function DashBoardPage() {
  /* REACT HOOKS */
     const navigate = useNavigate();
-    const {addAlert} = useContext(MainContextEx)
-    
+    const {addAlert, week} = useContext(MainContextEx)
 
  /* VARIABLES */
     const [inDisplay, setInDisplay] = useState<string>('utilities');
@@ -75,7 +74,7 @@ function DashBoardPage() {
         {main: 'Store', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
         {main: 'Manager', secondary: 'count: 4', btn1: 'Add', btn2: 'Manage'  },
         {main: 'Product', secondary: 'count: 20', btn1: 'Add', btn2: 'Manage' },
-        {main: 'Market Week', btn1: 'Set', btn2: 'View'  },
+        {main: 'Market Week', secondary: week?.display, btn1: 'Set', btn2: 'View'  },
     ])
     const [utilityBtns, setUtilityBtns] = useState<utiliiesBtnTy[]>([
         {name: 'Product Transfers', link: 'prdmovement', type: 'inpage'},
@@ -122,24 +121,15 @@ function DashBoardPage() {
         )
     })
 
-
  /* Useeffect */
-    useEffect(() => {
-        const GETMKTWEEKFN = getCurrentMktWeek()
-        .then(res => {
-            if(res.status == 'success') {
-                infoCardsSec[3].secondary = `${res.data.weekId}`
-                setInfoCardsSec(p => ([...infoCardsSec]))
-            }
-        })
-        .catch(err => console.log(err))
-          
-    }, [])
+
 
  /* return */
     return(
         <main id="dashboard_page_main">
-            < SideBar />
+            < SideBar 
+                
+            />
 
             { !currentView &&
              <>

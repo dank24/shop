@@ -426,28 +426,32 @@
 #inout_mini_main {
     @include basic-layout(fit-content, 100vw,);
     @include  flex(center, center, column, 1px);
+    position: relative;
 
     #inout_first_sec {
-        @include basic-layout(100%, 100%, 0.3rem);
+        @include basic-layout(100%, 95%, 0red, 0.3rem, $bgc: white);
         @include flex(center, center, row, 4%);
+        @include pos(sticky, none, none, 4.5vh, );
         margin-top: 5px;  font-size: 2vh;
+        z-index: 34;
 
         .ini {
-            @include basic-layout(35px, 30%,);
+            @include basic-layout(35px, 30%, none);
+            @include flex(center, center,);
 
             .picked {
-                @include basic-layout(30px, 90%, black, 0.5rem,);
+                @include basic-layout(28px, 85%, black, 0.3rem,);
                 @include flex(center, center)
             }
 
             #options_div {
-                @include basic-layout(fit-content, 88%, black, $bgc: rgb(163, 123, 123));
-                position: relative;
-                z-index: 1000;
+                @include basic-layout(fit-content, 32%, none, 0.5rem, none, 2px );
+                @include pos(absolute, none, none, 33px, );
+                @include flex(center, center, column, 3px);
                 margin-top: 3px;
 
                 p {
-                    @include basic-layout(35px, 100%, black,);
+                    @include basic-layout(35px, 97%, black, 0.4rem, $bgc: white);
                     @include flex(center, center, column, 5% );
                 }
             
@@ -489,7 +493,7 @@
         }
 
         #inout_desc_div {
-            @include pos(sticky, 0, 0, 6.1vh, );
+            @include pos(sticky, 0, 0, 8.5vh, );
             background-color: rgb(226, 147, 147);
             height: 35px;
         }
@@ -514,6 +518,38 @@
         }
     }
 
+    #confirm_reupload_sec {
+        @include basic-layout(96vh, 100vw, black, 0.3rem, rgba(248, 240, 240, 0.432), );
+        @include pos(absolute, 0px, 0px, 0vh, );
+        z-index: 1;  font-size: 1.6vh;
+        text-align: justify;
+
+        >div {
+            @include basic-layout(15%, 96%, black, 0.4rem, rgba(224, 218, 207, 0.959), 10px);
+            @include flex(center, center, column, 10px);
+            @include pos(relative, 2%, 0, 20vh, );
+        box-shadow: 2px 3px  black;
+            
+            #b1 {
+                color: red;
+            }
+            #b2 {
+                color: green;
+            }
+            #b3 {
+                color: blue;
+            }
+
+            #btn_div {
+                @include basic-layout(35%, 100%,);
+                @include flex(center, center, row, 8px);
+
+                button {
+                    @include basic-layout(95%, 30%, black, 0.4rem, )
+                }
+            }
+        }
+    }
 
 }
 
@@ -696,6 +732,149 @@
 
     }
 
+
+}
+
+#calcsales_mini_main {
+    @include basic-layout(96vh, 100vw, none, none, 0red, );
+    @include flex(flex-start, center, column, ); position: relative;
+
+    #dropdown_div {
+        @include basic-layout(100%, 100%, black, $bgc: rgba(36, 35, 33, 0.438) );
+        @include  flex(center, center, );
+        z-index: 50;
+
+        >section {
+            @include basic-layout(72vh, 87%, black, 0.8rem, rgba(37, 36, 36, 0.911), $pad: 5px );
+            @include flex(flex-start, center, column, 5px);
+            @include pos(absolute, );  
+            padding-bottom: 10px;  padding-top: 10px;
+
+            #close_x {
+                @include basic-layout(25px, 25px, black, 50%, $bgc: blue );
+                @include flex(center, center,); font-size: 1.9vh;
+                @include pos(absolute, none, -12px, -18px )
+            }
+
+            #header_sec {
+                @include basic-layout(45px, 99%, );
+                @include flex(flex, center, row, 40px);
+                padding-left: 6px;  flex-shrink: none;
+                color: white;
+
+                >div {
+                    @include basic-layout(90%, 20%, black, 0.2rem, $bgc: white );
+                    @include flex(center, center,);  color: black;
+                    font-weight: bolder;
+                }
+
+                #year_dropdown {
+                    @include basic-layout(fit-content, 40%, black, $pad: 2px ); 
+                    @include pos(absolute, 2px, none, 50px);
+                    @include flex(center, center, column, 2px);
+
+                    >p {
+                        @include basic-layout(35px, 100%, black, );
+                        @include flex(center, center,);
+                    }
+                }
+            }
+
+            >div {
+                @include basic-layout(45px, 97%, black, 0.3rem, $bgc: rgb(245, 236, 236) );
+                @include flex(flex-start, center, row, 15px );
+                box-shadow: 1px 1px 1px rgb(43, 37, 37);
+                padding-left: 10px; flex-shrink: 0;
+
+                >:first-child {
+                    width: 22%;
+                }
+
+                >:nth-child(2) {
+                    margin-left: 10px;
+                }
+
+                .date_p {
+                    align-self: flex-end;
+                    font-size: 1.7vh;
+                }
+
+            }
+
+            #paging_div {
+                @include basic-layout(40px, fit-content, $bgc: transparent, );
+                @include flex(center, center, row, 1px); 
+                @include pos(absolute, none, none, none, 2px);
+                align-self: flex-start;  margin-left: 5px;
+
+                >* {
+                    @include basic-layout(27px, 45px, black, $bgc: wheat );
+                    @include flex(center, center, ); 
+                }
+            }
+        }
+
+    }
+
+    #calcsales_first_sec {
+        @include basic-layout(40%, 100%, black, none, wheat, );
+        @include flex(center, center, column, 10px);
+        @include pos(absolute, $b: 0px );
+        border-top-left-radius: 2rem;
+
+        >div {
+            @include basic-layout(60px, 85%, black, 0.5rem, $pad: 5px );
+            @include flex(flex-start, center, row, );
+
+            >:first-child {
+                width: 30%;
+            }
+            .display_date_div {
+                @include basic-layout(80%, 66%, $bgc: rgba(25, 0, 255, 0.123) );
+                @include flex(center, center, row, );
+            }   
+        }
+
+        #submit_btn {
+            @include basic-layout(32px, 75px, black, 0.3rem, );
+            @include pos(relative, 135px, )
+        }
+    }
+
+    #calculate_sec {
+        @include basic-layout(fit-content, 100%, 0black, none, );
+        @include flex(center, center, column, 5px);
+
+        >div {
+            @include basic-layout(3.5vh, 98%,  black, );
+            @include flex(flex-start, center, row, 0px);
+
+            >* {
+                @include basic-layout(100%, 21%, $pad: 6px );
+                @include flex(flex-start, center, );
+                border-right: 1px solid black;
+                font-size: 1.7vh;
+            }
+            
+            >:first-child {
+                width: 6%;  justify-content: center;
+                background-color: red;
+                padding: 0; 
+            }
+
+            >:nth-child(2) {
+                justify-content: flex-start;
+                width: 30%;
+            }
+
+            :last-child {
+                border-right: none;
+                width: 22%;
+            }
+
+        }
+
+    }
 
 }
 

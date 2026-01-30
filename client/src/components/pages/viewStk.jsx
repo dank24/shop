@@ -183,7 +183,7 @@ function ViewStockCounts() {
     useEffect(() => {
         const GETCOUNTS = getInventoryCounts()
         .then(res => {
-            setHeaders(p => ([...p, ...res.weeks]));
+            console.log(res)
             //setPrdsCountData(p => ([...p, ...res.prdCounts] ));
         })
     

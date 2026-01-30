@@ -2,31 +2,98 @@ import { useState, useRef, useEffect, useContext } from "react"
 import '../assets/stylesheets/pages.css'
 import SideBar from "../components/utils/sideBar"
 import { MainContextEx } from "./context/mainContext"
-import { getMktWeeks } from "../api/genApi"
+import { getMktWeeks, getYears, createYear } from "../api/genApi"
 
 function DatesPage() {
  /* HOOKS */
+     const {mktWeek, setWeek} = useContext(MainContextEx)
     const checkRefs = useRef({})
-    const {mktWeek} = useContext(MainContextEx)
 
  /* VARIABLES */
+    const [isDropdownVisi, setIsDropdownVisi] = useState(false);
+    const [dropdownTxt, setDropDownTxt] = useState('--select');
+    const [currentWeek, setCurrentWeek] = useState({});
+    const [inputValue, setInputValue] = useState('')
     const [Loading, setLoading] = useState(false);
-    const [isVisible, setIsvisible] = useState(false);
 
-    const [mktWeeks, setMktWeeks] = useState([
-        {week: '01', starts: '01-07-2025', ends: '07-07-2025'},
-        {week: '02', starts: '01-07-2025', ends: '07-07-2025'},
-        {week: '03', starts: '01-07-2025', ends: '07-07-2025'}
+ /* FUNCTIONS */
+    function getWeeksFN(year) {
+        const OPER = getMktWeeks(year)
+        .then(res => {
+            res.status == 'success' && (
+                setMktWeeksData(p => (res.data)),
+                setDropDownTxt(year), 
+                setIsDropdownVisi(false)
+            )
+        })
+        .catch(err => console.log(err))
+        
+    }//
+
+    function handleCheck(week, it) {
+        for(let c in checkRefs.current) {
+            const div = checkRefs.current[c];
+
+            if(div.className == week) {
+                div.style.backgroundColor = 'red'
+            } else {
+                div.style.backgroundColor = 'transparent'
+            }
+        }
+        localStorage.setItem('currentWeek', JSON.stringify(it))
+        setCurrentWeek(p => (it ));
+        setWeek(p => (it.id.substring(3) ))
+
+    }//
+
+    function handleYearSele(e) {
+        const {id, className, innerHTML} = e.target;
+
+        if(className == 'option') {
+            getWeeksFN(innerHTML);
+        }
+
+        switch(id) {
+            case ('year_dropdown_btn'):
+                setIsDropdownVisi(p => (!p ))
+            break;
+
+            case ('add_btn'): 
+                const CREATEYEAROPER = createYear(inputValue)
+                .then(res => res.status == 'success' && (
+                    setDropDownTxt(inputValue), setIsDropdownVisi(false),
+                    getWeeksFN()
+                ) )
+            break;
+
+            default:
+                null;
+            break
+        }
+    }//
+
+ /* APPEND DATA */
+    const [yearsData, setYearsData] = useState([]);
+
+    const [mktWeeksData, setMktWeeksData] = useState([
+        //{week: '03', starts: '01-07-2025', ends: '07-07-2025'}
     ])
 
- /* APPEND */
-    const AppendMktWeeks = mktWeeks.map((it, id) => {
+
+  /* APPEND */
+    const AppendYears = yearsData.map((it, id) => {
+        return(
+            <p key={id} className="option" >{it}</p>
+        )
+    })
+
+    const AppendMktWeeks = mktWeeksData.map((it, id) => {
         return(
             <div key={id} className="mktweek_divs">
                 <div>
-                    <h4>Week: {it.week}</h4>
+                    <h4>{it.week}</h4>
                     <div id="check_div" className={it.week} 
-                        onClick={e => handleCheck(it.week)} ref={el => checkRefs.current[id] = el}
+                        onClick={e => handleCheck(it.week, it)} ref={el => checkRefs.current[id] = el}
                     ></div>
 
                 </div>
@@ -38,20 +105,16 @@ function DatesPage() {
         )
     })
 
- /* FUNCTIONS */
-    function handleCheck(name) {
-        for(let c in checkRefs.current) {
-            const div = checkRefs.current[c];
-
-            if(div.className == name) {
-                div.style.backgroundColor = 'red'
-            } else {
-                div.style.backgroundColor = 'transparent'
-            }
-
-        }
-    }
-
+    const AppendCurrent = (
+        <div className="mktweek_divs">
+            <h4>{currentWeek.week}</h4>
+            <div>
+                <p>Starts: {currentWeek.starts}</p>
+                <p>Ends: {currentWeek.ends}</p>
+            </div>
+        </div>
+    )
+    
     function HeaderMini(prps) {
         return(
             <div className="header_div">
@@ -62,13 +125,18 @@ function DatesPage() {
         )
     }// header_comp
 
+
  /* USEEFFECT */
     useEffect(() => {   
-        const GETMKTWEEKS = getMktWeeks()
-        .then(res => setMktWeeks(p => (res)))
-        .catch(err =>  console.log(err))
+        const currentWK = localStorage.getItem('currentWeek')
+        currentWK !== null && setCurrentWeek(p => (JSON.parse(currentWK) ))
+
+        const GETYEARS = getYears()
+        .then(res => res.status == 'success' && ( setYearsData(p => (res.data )) ))
+        .catch(err => console.log('err'));
         
     }, [])
+
 
  /* RETURN */
     return(
@@ -82,38 +150,44 @@ function DatesPage() {
               <h3>Loading</h3>
 
             }
+            
+            { !Loading &&
+                <div id="year_div" onClick={handleYearSele}>
+                    <h4>Year</h4>
+                    <div id="year_dropdown_btn">{dropdownTxt}</div>
 
-            { !Loading && mktWeeks.length == 0 && 
+                    { isDropdownVisi && 
+                        <div id="drop">
+                            {
+                                AppendYears
+                            }
+                            <div>
+                                <input placeholder="Add" value={inputValue} onChange={e => {
+                                    setInputValue(p => (e.target.value))
+                                }}  id="add_input"
+                                /> 
+                                <button id="add_btn">Add</button> 
+                            </div>
+                            
+                        </div>
+                    }
+
+                </div>
+
+            }
+
+            { !Loading && mktWeeksData.length == 0 && 
                 <h4>Nothing to see here</h4> 
 
             }
 
-            { !Loading && mktWeeks.length > 0 && 
-              <section id="dates_first_sec">
-                    <div id="year_div">
-                        <h4>Year</h4>
-                        <div id="year_dropdown">--select</div>
-
-                        { isVisible && 
-                            <div id="drop">
-                                <p>2023</p>
-                                <p>2024</p>
-                                <p>2025</p>
-                                <p>2026</p>
-                            </div>
-                        }
-
-                    </div>
-
+            { !Loading && mktWeeksData.length > 0 && 
+              <section id="dates_first_sec" >
                     < HeaderMini txt = 'Current'/>
 
-                    <div className="mktweek_divs">
-                        <h4>Week: {mktWeeks[mktWeeks.length - 1].week}</h4>
-                        <div>
-                            <p>Starts: {mktWeeks[mktWeeks.length - 1].starts}</p>
-                            <p>Ends: {mktWeeks[mktWeeks.length - 1].ends}</p>
-                        </div>
-                    </div>
+                    {
+                        AppendCurrent
+                    }
 
                     < HeaderMini txt = 'All' />
 
@@ -123,6 +197,8 @@ function DatesPage() {
                     {
                         AppendMktWeeks
                     }
+
+                    <div style={{height: '10px'}} id='footer_div'></div>
               </section>
             }
         </main>

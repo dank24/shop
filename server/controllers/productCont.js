@@ -1,8 +1,9 @@
 const { default: mongoose } = require('mongoose');
 const {productModel, prdMovementModel, prdStockModel} = require('../models/models');
+const {handleBalance } = require('./utilCont') 
 const asyncHandler = require('express-async-handler');
 
-async function ChangeShopPrdStk(storeId, data) {
+async function ChangeShopPrdStk(storeId, data, op) {
     try {
         const compositeIds = Object.keys(data)
         const operations = compositeIds.map( prd => {
@@ -37,7 +38,7 @@ async function ChangeShopPrdStk(storeId, data) {
 }
 
 async function checkshopPrdStk(data, storeId) {
-    if(data !== typeof(Object)) return {status: 'error', message: 'invalid data provided'}
+    if(typeof(data) !== 'object') return {status: 'error', message: 'invalid data provided'}
 
     try {
         const idsArr = Object.keys(data);
@@ -47,7 +48,7 @@ async function checkshopPrdStk(data, storeId) {
             {id: {$in: compositeIds }}
         ).select('quantity id');
     
-        if(!getCheckDocs || getCheckDocs.length == 0) return {status: 'error', message: 'server error'}
+        if(!getCheckDocs || getCheckDocs.length == 0) return {status: 'error', message: 'No stock entry for product in store'}
     
         const compositeDocs = getCheckDocs.reduce(
             (acc, current) => {
@@ -59,7 +60,7 @@ async function checkshopPrdStk(data, storeId) {
         for(let prd in compositeDocs) {
             let id = prd.substring(4,9);
             let quantityInStore = compositeDocs[prd];
-            let changeAmount = useObj[id];
+            let changeAmount = data[id];
     
             if(quantityInStore < changeAmount) {
                 return {status: 'failure', message: `request amount greater than availabe on product: ${id}` };
@@ -101,12 +102,37 @@ exports.getProductsViaAccess = asyncHandler(
 
 exports.prdMovements = asyncHandler(
     async(req, res, next) => {
-        const {parties, data, weekId} = req.body;
-        const docCount = await prdMovementModel.countDocuments({});
-        const id = 'PMV-' + parties[0].toUpperCase() + '-' + parties[1].toUpperCase() + '-WK' + weekId; 
+        const {parties, data, weekId, year, confirm} = req.body;
 
-        const PMV = await prdMovementModel.findOne({id: id}).select('_id')
-        if(PMV) return re(res, 409, {status: 'failure', message: 'entry for this week exists'});
+        console.log('parties:', parties, '\n', 'data:', data, )
+
+        if(parties[0] === parties[1]) return re(res, 400, {status: 'failure', message: 'cant transfer to same store'})
+
+        const docCount = await prdMovementModel.countDocuments({});
+        const id = 'PMV-' + parties[0].toUpperCase() + '-' + parties[1].toUpperCase() + '-' + weekId; 
+
+        const PMV = await prdMovementModel.findOne({id: id}).select('_id data');
+        if(PMV && confirm == undefined ) {
+            return re(res, 409, {status: 'duplicate', message: 'entry for this week exists'});
+        };
+
+        if(PMV && confirm == true){
+            let data2 = {}
+            for(let prd in PMV.data) {
+                let negNum = '-' + PMV.data[prd]
+                data2[prd] = Number(negNum);
+            }
+
+            const RMFRMSTK = await ChangeShopPrdStk(parties[1], data2);
+            if(RMFRMSTK.status == 'success' && parties[0] !== 'OFFLOAD' ) {
+                let ADDTOSTK = await ChangeShopPrdStk(PMV.data)
+            };
+
+            // MAYBE CODE TO BACKUP THE PMV DATA TO BE OVERWRITTEN HERE?
+            const RMPMV = await prdMovementModel.findOneAndDelete({id: id});
+
+        };
+
 
         async function createPrdMVDoc() {
             try {
@@ -114,7 +140,9 @@ exports.prdMovements = asyncHandler(
                     id: id,
                     sender: parties[0],
                     reciever: parties[1],
-                    data: data
+                    data: data,
+                    weekId: weekId,
+                    year: year
                 });
                 return {status: 'success', message: 'transfer successfull'};
                 
@@ -136,7 +164,7 @@ exports.prdMovements = asyncHandler(
 
         } else {
             const check = await checkshopPrdStk(data, parties[0]);
-            if(check.status !== 'success') return console.log(check.message);
+            if(check.status !== 'success') {console.log('CHECKPRDQUANT:', check); return re(res, 400, check) };
 
             const dataObj = {}
             for(prd in data) {
@@ -154,13 +182,21 @@ exports.prdMovements = asyncHandler(
                 re(res, 500, {status: ADDTOSTK.message, message: ADDTOSTK.message});
                 return console.log(ADDTOSTK);   
             }    
-        } 
+        };
             
         const CREATEMV = await createPrdMVDoc()
         if(CREATEMV.status !== 'success') {
             re(res, 409, {status: CREATEMV.status, message: CREATEMV.message});
             return console.log(CREATEMV);
+
+        };
+
+        if(parties[0] !== 'OFFLOAD') {
+            const BALANCEOPER01 = await handleBalance(parties[0], weekId, year);
         }
+
+        const BALANCEOPER02 = await handleBalance(parties[1], weekId, year);
+        if(BALANCEOPER02.status !=='success' ) return re(res, 400, {status: 'failure', message: 'balance operation failed'})
 
         return re(res, 200, {status: 'success', message: 'transfer operations successfull'} );
     }

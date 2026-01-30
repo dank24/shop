@@ -64,3 +64,11 @@ export const getInventoryCounts = async() => {
     }
 
 }
+
+export const calcSales = async(wk01, wk02) => {
+    try {
+        const res = await axiosInstance.get('/store/' + wk01 + '/' + wk02 )
+    } catch (error) {
+        console.log(err)
+    }
+}

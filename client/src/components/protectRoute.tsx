@@ -5,7 +5,7 @@ import { isAuthenticated } from "../api/userApi";
 
 function ProtectRoutes({children}) {
     if(!isAuthenticated() ) {
-        return < Navigate to='/register' replace/>
+        return < Navigate to='/signup' replace/>
     }
 
     return children

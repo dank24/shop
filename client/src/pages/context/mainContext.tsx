@@ -1,20 +1,21 @@
-import React, { Children, ReactElement, useEffect, useState } from "react";
+import React, { Children, Dispatch, ReactElement, useEffect, useState } from "react";
 import '../../assets/stylesheets/comps.css'
 import { getMktWeek } from "../../api/genApi";
 import { createContext } from "react";
 
 interface contextTy {
     addAlert?: (msg: string) => void
-    mktWeek?: String
+    week?: {display?: string, id?: string, year?: string}
+    setWeek?: any
 }
 
 export const MainContextEx = createContext<contextTy>({});
 
 function MainContext({children}) {
  /* VARIABLES*/
-    const [alertMsgs, setAlertMsg] = useState<string[]>([])
+    const [week, setWeek] = useState<{display?: string, id?: string, year?: string}>({})
+    const [alertMsgs, setAlertMsg] = useState<string[]>([]); 
     const [operating, setOperating] = useState(false);
-    const [mktWeek, setMktWeek] = useState<String>('')
     let IID;
 
  /* FUNCTIONS */
@@ -48,12 +49,13 @@ function MainContext({children}) {
         )
     });
 
-
  /* USE EFFECT */
-    useEffect(() => {
-        const GETMKTWEEK = getMktWeek()
-        .then(res => setMktWeek(p => (res.weekId )))
-        .catch(err => console.log(err));
+    useEffect(() => {   
+        const selectedWeek = JSON.parse(localStorage.getItem('currentWeek') || '')
+        setWeek(p => ({
+            ...p, display: selectedWeek.id.substring(3), id: selectedWeek.id, 
+            year: selectedWeek.ends.substring(11)
+        } ))
 
     }, [])
 
@@ -76,7 +78,8 @@ function MainContext({children}) {
  /* return */
     return(
         <MainContextEx.Provider value={
-            { addAlert: AlertFNS.NEWALERT, mktWeek}}>
+            { addAlert: AlertFNS.NEWALERT, week, setWeek: setWeek}
+        }>
             <div id="alerts_div">
                 {
                     AppendAlerts

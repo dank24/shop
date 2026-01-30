@@ -30,7 +30,7 @@ export const prdMovement = async(sData) => {
 
     } catch (error) {
         console.log(error.response.data)
-        return {message: error.response.data.message}
+        return {status: error.response.data.status, message: error.response.data.message}
         
     }
 }

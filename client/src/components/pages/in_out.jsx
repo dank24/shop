@@ -2,25 +2,53 @@ import React, { useState , useRef, useEffect, useContext} from "react";
 import { MainContextEx } from "../../pages/context/mainContext";
 
 import { useParams } from "react-router-dom";
-import { getMktWeek } from "../../api/genApi";
+import { getGen } from "../../api/genApi";
 import { getStoresMin } from "../../api/storeApi";
 import { prdMovement } from "../../api/productApi";
 
 function In_Out() {
-    const {addAlert} = useContext(MainContextEx)
  /* HOOKS */
+     const {addAlert, week} = useContext(MainContextEx);
     const storeId = useParams().storeid 
     const secondDivRef = useRef(null);
 
+    console.log(week)
+
  /* VARIABLES */
-    const [senderDivTxt, setSenderDivTxt] = useState('OFFLOAD');
+     const [confirmReupload, setConfirmReupload] = useState(false);
     const [toggleReciever, setToggleReceiver] = useState(false);
+    const [senderDivTxt, setSenderDivTxt] = useState({name: 'OFFLOAD', id: 'OFFLOAD'});
+    const [recieverDivTxt, setPeerDivTxt] = useState({name: 'choose', id: ''});
     const [toggleSender, setToggleSender] = useState(false);
-    const [recieverDivTxt, setPeerDivTxt] = useState('choose');
+
     const [submitData, setSubmitData] = useState({});
     const [preview, setPreview] = useState(false);
 
  /* FUNCTIONS           */
+    function CREATEPRDMOVEMENTOPER(confirm) {
+        const sData = {
+            parties: [senderDivTxt.id, recieverDivTxt.id],
+            data: submitData,
+            weekId: week.id,
+            year: week.year,
+            confirm
+        };
+
+        const CREATEPRDMVM = prdMovement(sData)
+        .then(res => {
+            addAlert(res.message);
+            if(res.status == 'success') {
+                location.reload()
+            };
+
+            if(res.status == 'duplicate') {
+                setConfirmReupload(p => (true ))
+            }
+        })
+        .catch(err => console.log(err))
+        
+    }
+
     function handleSelect(e) {
         const {id, className, innerHTML} = e.target
         console.log('this:', id)
@@ -29,13 +57,14 @@ function In_Out() {
         if(id == 'peer_div') setToggleReceiver(p => (!p));
 
         if(className.includes('sender')) {
-            setSenderDivTxt(p => (innerHTML));
+            setSenderDivTxt(p => ({name: innerHTML, id}));
             setToggleSender(p => (false))
         };
 
         if(className.includes('receiver')) {
-            setPeerDivTxt(p => (innerHTML));
+            setPeerDivTxt(p => ({name: innerHTML, id}));
             setToggleReceiver(p => (false))
+            console.log('reciever:', id)
         };
 
     }// first_sec_fn
@@ -53,50 +82,50 @@ function In_Out() {
             if(innerHTML == 'Back') setPreview(p => (false));;
 
             if(innerHTML == 'Submit') {
-                const sData = {
-                    parties: [senderDivTxt, recieverDivTxt],
-                    data: submitData
-                };
-
-                const GETMKTWEEKFN = getMktWeek()
-                .then(res => sData['weekId'] = res.weekId)
-                .then(ct => prdMovement(sData) )
-                .then(ct => {
-                    addAlert(ct.message);
-                    if(ct.status == 'success') location.reload()
-                } )
-                .catch(err => console.log(err)) 
-                 
+                CREATEPRDMOVEMENTOPER()
             };
 
         }
     }// handle_preview_fn
 
+    function handleReupload(e) {
+        const {id, className} = e.target;
 
-    function handleBtn(e) {
-        function test(str, val) {
-            if(str == 'TRANSFER' && val[0] !== '-' && recieverDivTxt !== 'Offload') return `-${val}`;
-            return val
+        switch(id) {
+            case('yes_btn'):
+                CREATEPRDMOVEMENTOPER(true)
+            break;
+
+            case('no_btn'):
+                setConfirmReupload(p => false);
+            break;
+
+            default:
+                null;
+            break
         }
 
-        if(recieverDivTxt !== 'choose')  {
+    }// handlereupload_fn
+
+    function handleBtn(e) {
+        if(recieverDivTxt.name !== 'choose')  {
             const arr = [];
-            const useObj = {};
 
             for(let it in submitData){
                 const obj = {name: it, amount: submitData[it]}
-                useObj[it] = test(senderDivTxt, submitData[it])
 
                 arr.push(obj)
+                console.log('item')
             };
 
-            console.log('this:', useObj);
             setPreviewData(p => (arr));
-            setSubmitData(p => (useObj));
             setPreview(true);
 
         }
     }// handle_btn_fn
+
+    console.log('this:', submitData);
+    
 
  /* APPEND DATA          */
     const [previewData, setPreviewData] = useState([])
@@ -104,25 +133,7 @@ function In_Out() {
     const [peerData, setPeerData] = useState([])
 
     const [pageData, setPageData] = useState([
-        {name: 'test', id: 'PRD01'},
-        {name: 'test', id: 'PRD02'},
-        {name: 'test', id: 'PRD03'},
-        {name: 'test', id: 'PRD04'},
-        {name: 'test', id: 'PRD05'},
-        {name: 'test', id: 'PRD06'},
-        {name: 'test', id: 'PRD07'},
-        {name: 'test', id: 'PRD08'},
-        {name: 'test', id: 'PRD09'},
-        {name: 'test', id: 'PRD10'},
-        {name: 'test', id: 'PRD11'},
-        {name: 'test', id: 'PRD12'},
-        {name: 'test', id: 'PRD12'},
-        {name: 'test', id: 'PRD13'},
-        {name: 'test', id: 'PRD14'},
-        {name: 'test', id: 'PRD15'},
-        {name: 'test', id: 'PRD17'},
-        {name: 'test', id: 'PRD18'},
-
+        //{name: 'test', id: 'PRD01'},
     ])
 
  /* APPEND               */
@@ -132,7 +143,7 @@ function In_Out() {
                 <p>{id + 1}</p>
                 <p>{it.name}</p>
                 <input id={it.id} type="number" value={submitData[it.id]} placeholder='0' 
-                    onChange={handleInputs} disabled={recieverDivTxt == 'choose' ? true : false}   
+                    onChange={handleInputs} disabled={recieverDivTxt.name == 'choose' ? true : false}   
                     
                 />
             </div>
@@ -151,12 +162,13 @@ function In_Out() {
 
     const AppendDropDown1 = peerData.map((it,id) => {
         return(
-            <p key={id} className="option sender">{it.name}</p>
+            <p key={id} className="option sender" id={it.id}>{it.name}</p>
         )
     })
+
     const AppendDropDown2 = peerData.map((it,id) => {
         return(
-            <p key={id} className="option receiver">{it.name}</p>
+            <p key={id} className="option receiver" id={it.id}>{it.name}</p>
         )
     })
 
@@ -165,9 +177,12 @@ function In_Out() {
         const GETSTORESFN = getStoresMin()
         .then(res => res && setPeerData(p => (res)))
         .catch(err => console.log(err));
+ 
+        const GETPRODUCTSFN = getGen(2)
+        .then(res => setPageData(res))
+        .catch(err => console.log(err))
     }, [])
 
-    console.log(peerData)
 
  /* RETURN */
     return(
@@ -184,11 +199,11 @@ function In_Out() {
                  <>
                     <section id="inout_first_sec" onClick={handleSelect}>
                         <div className="ini">
-                            <div id="select_div" className="picked">{senderDivTxt}</div>
+                            <div id="select_div" className="picked">{senderDivTxt.name}</div>
     
                             { toggleSender &&
                                 <div id="options_div">
-                                    <p className="option sender">OFFLOAD</p>
+                                    <p className="option sender" id='OFFLOAD'>OFFLOAD</p>
                                     {
                                         AppendDropDown1
                                     }
@@ -199,7 +214,7 @@ function In_Out() {
                         <div>To</div>
     
                         <div className="ini">
-                            <div id="peer_div" className="picked" >{recieverDivTxt}</div>
+                            <div id="peer_div" className="picked" >{recieverDivTxt.name}</div>
     
                             { toggleReciever &&
                                 <div id="options_div">
@@ -233,7 +248,24 @@ function In_Out() {
                 }
 
                 { preview &&
-                   < PreviewCard fn = {handlePreview} append = {AppendPreview}/>
+                <>
+                    { confirmReupload && 
+                        <section id="confirm_reupload_sec" onClick={handleReupload}> 
+                            <div>
+                                <h4>
+                                    A Product Movement Entry From <b id="b1">{senderDivTxt.name}</b> To <b id='b2'>{recieverDivTxt.name.toUpperCase()}</b> for This Week Exists, <b id='b3'>OVERWRITE?</b>
+                                </h4>
+
+                                <div id="btn_div">
+                                    <button id='yes_btn'>YES</button>
+                                    <button id="no_btn">NO</button>
+                                </div>         
+                                </div>
+   
+                        </section>
+                    }
+                    < PreviewCard fn = {handlePreview} append = {AppendPreview}/>   
+                </>
                 }
 
 

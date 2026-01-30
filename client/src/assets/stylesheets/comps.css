@@ -778,35 +778,47 @@
   align-items: center;
   flex-direction: column;
   gap: 1px;
+  position: relative;
 }
 #inout_mini_main #inout_first_sec {
   height: 100%;
-  width: 100%;
-  border: 1px solid 0.3rem;
-  border-radius: 0;
-  background-color: 0;
+  width: 95%;
+  border: 1px solid 0red;
+  border-radius: 0.3rem;
+  background-color: white;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   gap: 4%;
+  position: sticky;
+  left: none;
+  right: none;
+  top: 4.5vh;
+  bottom: none;
   margin-top: 5px;
   font-size: 2vh;
+  z-index: 34;
 }
 #inout_mini_main #inout_first_sec .ini {
   height: 35px;
   width: 30%;
-  border: 1px solid 0;
+  border: 1px solid none;
   border-radius: 0;
   background-color: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
 }
 #inout_mini_main #inout_first_sec .ini .picked {
-  height: 30px;
-  width: 90%;
+  height: 28px;
+  width: 85%;
   border: 1px solid black;
-  border-radius: 0.5rem;
+  border-radius: 0.3rem;
   background-color: 0;
   padding: 0;
   display: flex;
@@ -817,21 +829,29 @@
 }
 #inout_mini_main #inout_first_sec .ini #options_div {
   height: fit-content;
-  width: 88%;
-  border: 1px solid black;
-  border-radius: 0;
-  background-color: rgb(163, 123, 123);
-  padding: 0;
-  position: relative;
-  z-index: 1000;
+  width: 32%;
+  border: 1px solid none;
+  border-radius: 0.5rem;
+  background-color: none;
+  padding: 2px;
+  position: absolute;
+  left: none;
+  right: none;
+  top: 33px;
+  bottom: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
   margin-top: 3px;
 }
 #inout_mini_main #inout_first_sec .ini #options_div p {
   height: 35px;
-  width: 100%;
+  width: 97%;
   border: 1px solid black;
-  border-radius: 0;
-  background-color: 0;
+  border-radius: 0.4rem;
+  background-color: white;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -898,7 +918,7 @@
   position: sticky;
   left: 0;
   right: 0;
-  top: 6.1vh;
+  top: 8.5vh;
   bottom: none;
   background-color: rgb(226, 147, 147);
   height: 35px;
@@ -922,6 +942,71 @@
   width: 100%;
   border: 1px solid 0;
   border-radius: 0;
+  background-color: 0;
+  padding: 0;
+}
+#inout_mini_main #confirm_reupload_sec {
+  height: 96vh;
+  width: 100vw;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: rgba(248, 240, 240, 0.432);
+  padding: 0;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0vh;
+  bottom: none;
+  z-index: 1;
+  font-size: 1.6vh;
+  text-align: justify;
+}
+#inout_mini_main #confirm_reupload_sec > div {
+  height: 15%;
+  width: 96%;
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  background-color: rgba(224, 218, 207, 0.959);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  left: 2%;
+  right: 0;
+  top: 20vh;
+  bottom: none;
+  box-shadow: 2px 3px black;
+}
+#inout_mini_main #confirm_reupload_sec > div #b1 {
+  color: red;
+}
+#inout_mini_main #confirm_reupload_sec > div #b2 {
+  color: green;
+}
+#inout_mini_main #confirm_reupload_sec > div #b3 {
+  color: blue;
+}
+#inout_mini_main #confirm_reupload_sec > div #btn_div {
+  height: 35%;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+#inout_mini_main #confirm_reupload_sec > div #btn_div button {
+  height: 95%;
+  width: 30%;
+  border: 1px solid black;
+  border-radius: 0.4rem;
   background-color: 0;
   padding: 0;
 }
@@ -1238,6 +1323,311 @@
 #viewstkcount_mini_main #viewstk_first_sec #footer_div {
   height: 50px;
   width: 100vw;
+}
+
+#calcsales_mini_main {
+  height: 96vh;
+  width: 100vw;
+  border: 1px solid none;
+  border-radius: none;
+  background-color: 0red;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+#calcsales_mini_main #dropdown_div {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: rgba(36, 35, 33, 0.438);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  z-index: 50;
+}
+#calcsales_mini_main #dropdown_div > section {
+  height: 72vh;
+  width: 87%;
+  border: 1px solid black;
+  border-radius: 0.8rem;
+  background-color: rgba(37, 36, 36, 0.911);
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  position: absolute;
+  left: none;
+  right: none;
+  top: none;
+  bottom: none;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+#calcsales_mini_main #dropdown_div > section #close_x {
+  height: 25px;
+  width: 25px;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: blue;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  font-size: 1.9vh;
+  position: absolute;
+  left: none;
+  right: -12px;
+  top: -18px;
+  bottom: none;
+}
+#calcsales_mini_main #dropdown_div > section #header_sec {
+  height: 45px;
+  width: 99%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 40px;
+  padding-left: 6px;
+  flex-shrink: none;
+  color: white;
+}
+#calcsales_mini_main #dropdown_div > section #header_sec > div {
+  height: 90%;
+  width: 20%;
+  border: 1px solid black;
+  border-radius: 0.2rem;
+  background-color: white;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  color: black;
+  font-weight: bolder;
+}
+#calcsales_mini_main #dropdown_div > section #header_sec #year_dropdown {
+  height: fit-content;
+  width: 40%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: 0;
+  padding: 2px;
+  position: absolute;
+  left: 2px;
+  right: none;
+  top: 50px;
+  bottom: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+}
+#calcsales_mini_main #dropdown_div > section #header_sec #year_dropdown > p {
+  height: 35px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#calcsales_mini_main #dropdown_div > section > div {
+  height: 45px;
+  width: 97%;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: rgb(245, 236, 236);
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  box-shadow: 1px 1px 1px rgb(43, 37, 37);
+  padding-left: 10px;
+  flex-shrink: 0;
+}
+#calcsales_mini_main #dropdown_div > section > div > :first-child {
+  width: 22%;
+}
+#calcsales_mini_main #dropdown_div > section > div > :nth-child(2) {
+  margin-left: 10px;
+}
+#calcsales_mini_main #dropdown_div > section > div .date_p {
+  align-self: flex-end;
+  font-size: 1.7vh;
+}
+#calcsales_mini_main #dropdown_div > section #paging_div {
+  height: 40px;
+  width: fit-content;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 1px;
+  position: absolute;
+  left: none;
+  right: none;
+  top: none;
+  bottom: 2px;
+  align-self: flex-start;
+  margin-left: 5px;
+}
+#calcsales_mini_main #dropdown_div > section #paging_div > * {
+  height: 27px;
+  width: 45px;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: wheat;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#calcsales_mini_main #calcsales_first_sec {
+  height: 40%;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: none;
+  background-color: wheat;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  left: none;
+  right: none;
+  top: none;
+  bottom: 0px;
+  border-top-left-radius: 2rem;
+}
+#calcsales_mini_main #calcsales_first_sec > div {
+  height: 60px;
+  width: 85%;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  background-color: 0;
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 0;
+}
+#calcsales_mini_main #calcsales_first_sec > div > :first-child {
+  width: 30%;
+}
+#calcsales_mini_main #calcsales_first_sec > div .display_date_div {
+  height: 80%;
+  width: 66%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgba(25, 0, 255, 0.123);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 0;
+}
+#calcsales_mini_main #calcsales_first_sec #submit_btn {
+  height: 32px;
+  width: 75px;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: 0;
+  padding: 0;
+  position: relative;
+  left: 135px;
+  right: none;
+  top: none;
+  bottom: none;
+}
+#calcsales_mini_main #calculate_sec {
+  height: fit-content;
+  width: 100%;
+  border: 1px solid 0black;
+  border-radius: none;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+#calcsales_mini_main #calculate_sec > div {
+  height: 3.5vh;
+  width: 98%;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 0px;
+}
+#calcsales_mini_main #calculate_sec > div > * {
+  height: 100%;
+  width: 21%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+  border-right: 1px solid black;
+  font-size: 1.7vh;
+}
+#calcsales_mini_main #calculate_sec > div > :first-child {
+  width: 6%;
+  justify-content: center;
+  background-color: red;
+  padding: 0;
+}
+#calcsales_mini_main #calculate_sec > div > :nth-child(2) {
+  justify-content: flex-start;
+  width: 30%;
+}
+#calcsales_mini_main #calculate_sec > div :last-child {
+  border-right: none;
+  width: 22%;
 }
 
 /*# sourceMappingURL=comps.css.map */

@@ -584,7 +584,7 @@
 }
 
 #dates_page_main {
-  height: 100vh;
+  height: fit-content;
   width: 100vw;
   border: 1px solid 0;
   border-radius: 0;
@@ -610,19 +610,108 @@
   flex-direction: row;
   gap: 5px;
 }
-#dates_page_main .header_div p {
+#dates_page_main .header_div > p {
   width: 18%;
   border: 1px solid rgb(51, 46, 46);
   text-align: center;
   font-size: 1.9vh;
 }
-#dates_page_main .header_div div {
+#dates_page_main .header_div > div {
   height: 1px;
   width: 38%;
   border: 1px solid black;
   border-radius: 0;
   background-color: 0;
   padding: 0;
+}
+#dates_page_main #year_div {
+  height: 40px;
+  width: 40%;
+  border: 1px solid black;
+  border-radius: 0.2rem;
+  background-color: white;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  position: sticky;
+  left: none;
+  right: none;
+  top: 40px;
+  bottom: none;
+  margin-top: 5px;
+  padding-right: 10px;
+}
+#dates_page_main #year_div #year_dropdown_btn {
+  height: 75%;
+  width: 58%;
+  border: 1px solid grey;
+  border-radius: 0.4rem;
+  background-color: 0;
+  padding: 0;
+  border: 2px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#dates_page_main #year_div #drop {
+  height: fit-content;
+  width: 130px;
+  border: 1px solid none;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.815);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+  position: absolute;
+  left: none;
+  right: 1px;
+  top: 42px;
+  bottom: none;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  z-index: 20;
+}
+#dates_page_main #year_div #drop > P {
+  height: 35px;
+  width: 97%;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#dates_page_main #year_div #drop > div {
+  height: 40px;
+  width: 95%;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 0;
+}
+#dates_page_main #year_div #drop > div > input {
+  width: 85%;
+  height: 100%;
+  text-align: center;
+}
+#dates_page_main #year_div #drop > div > button {
+  height: 100%;
 }
 #dates_page_main #dates_first_sec {
   height: fit-content;
@@ -636,54 +725,6 @@
   align-items: center;
   flex-direction: column;
   gap: 5px;
-}
-#dates_page_main #dates_first_sec #year_div {
-  height: 32px;
-  width: 40%;
-  border: 1px solid black;
-  border-radius: 0;
-  background-color: 0;
-  padding: 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-direction: row;
-  gap: 15px;
-  margin-top: 5px;
-  padding-right: 10px;
-  position: relative;
-  left: 29%;
-}
-#dates_page_main #dates_first_sec #year_div #year_dropdown {
-  height: 70%;
-  width: 55%;
-  border: 1px solid red;
-  border-radius: 0.5rem;
-  background-color: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: 0;
-  gap: 0;
-}
-#dates_page_main #dates_first_sec #year_div #drop {
-  height: 120px;
-  width: 85px;
-  border: 1px solid brown;
-  border-radius: none;
-  background-color: brown;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 1px;
-  position: absolute;
-  left: none;
-  right: 8px;
-  top: 31px;
-  bottom: none;
 }
 #dates_page_main #dates_first_sec .mktweek_divs {
   height: 70px;

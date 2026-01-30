@@ -1,4 +1,6 @@
-const {storeModel, inventoryModel } = require('../models/models');
+const { stat } = require('fs');
+const {storeModel, inventoryModel, balanceModel, prdMovementModel } = require('../models/models');
+const {handleBalance} = require('./utilCont')
 const asyncHandler = require('express-async-handler')
 
 function re(res, code, status, msg, data ) {
@@ -10,15 +12,17 @@ exports.getStores = asyncHandler(
         const stores = await storeModel.find().select('name manager contact location id access status -_id');
         if(!stores) return re(res, 404, 'failure', 'resource not found');
 
-        return re(res, 200, 'success', 'resource located', stores)
+        return re(res, 200, 'success', 'resource located', stores);
     }
 )
 
 exports.getstoresMininmal = asyncHandler(
     async(req, res, next) => {
-        const Stores = await storeModel.find().select('name -_id');
+        const Stores = await storeModel.find().select('id name -_id');
         if(!Stores) return re(res, 404, 'failure', 'resource not found');
         
+        console.log('fen:', Stores)
+
         return re(res, 200, 'success', 'resource found', Stores);
     }
 )
@@ -44,13 +48,15 @@ exports.prdMovement = asyncHandler(
 
 exports.inventoryCount = asyncHandler(
     async(req, res, next) => {
-        const {data, storeId, weekId} = req.body
-        const id = 'INV-' + storeId.toUpperCase() + '-' + `WK${weekId}`
+        const {data, storeId, weekId, year} = req.body
+        const id = 'INV-' + storeId.toUpperCase() + '-' + weekId
 
         const InventoryCount = await inventoryModel.findOne({id: id})
         if(InventoryCount) return re(res, 409, 'failure', 'count for this week exists')
 
-        const newInventoryCount = await inventoryModel.create({id, storeId, inventoryCount: data,})
+        const newInventoryCount = await inventoryModel.create({id, storeId, weekId, year, inventoryCount: data,});
+
+        const BALANCEOPER = await handleBalance(storeId, weekId, year);
         return re(res, 201, 'success', 'counted added', newInventoryCount)
 
         //console.log(data, storeId, weekId)
@@ -104,6 +110,15 @@ exports.getInventoryStoreCounts = asyncHandler(
         return re(res, 200, 'success', 'found inventory count fot store', transform(InventoryForStore))
 
 
+    }
+)
+
+exports.calcSales = asyncHandler(
+    async(req, res, next) => {
+        const startWeekId = req.params.wk01;
+        const endWeekId = req.params.wk02;
+
+        console.log('for:', startWeekId, endWeekId)
     }
 )
 

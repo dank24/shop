@@ -1,11 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { PreviewCard } from "./in_out";
-import { getMktWeek } from "../../api/genApi";
+import { getGen } from "../../api/genApi";
 import { inventoryCount } from "../../api/storeApi";
 import { MainContextEx } from "../../pages/context/mainContext";
 
 function Stock(props) {
-    const {addAlert} = useContext(MainContextEx)
+    const {addAlert, week} = useContext(MainContextEx)
+    console.log(week)
 
  /* VARIABLES */
     const [preview, setPreview] = useState(false)
@@ -17,7 +18,7 @@ function Stock(props) {
     function handleInputs(e) {
         const {value, id} = e.target;
 
-        setPageData(p => ({...p, [id]: value}))
+        setPageData(p => ({...p, [id]: Number(value)}))
     }//     handle_inputs_fn
 
     function handleBtn() {
@@ -43,17 +44,16 @@ function Stock(props) {
             if(innerHTML == 'Submit' ) {
                 let sData = {
                     storeId: storeId,
-                    weekId: '',
+                    weekId: week.id,
+                    year: week.year,
                     data: inputData,
                 }
 
-                getMktWeek()
-                .then(res => {sData['weekId'] = res.weekId; console.log(res.weekId)})
-                .then(ct => inventoryCount(sData))
-                .then(ct1 => {
-                    addAlert(ct1.message);
-                    if(ct1.status == 'success') {
-                        //some code
+                const INVCOUNTOPER = inventoryCount(sData)
+                .then(res => {
+                    addAlert(res.message);
+                    if(res.status == 'success') {
+                        //
                     }
                 })
                 .catch(err => console.log(err))
@@ -66,10 +66,7 @@ function Stock(props) {
 
  /* APPEND DATA */
     const [productsData, setProductsData] = useState([
-        {name: 'testPrd', stk1: '50', stk2: 20, stk3: '30'},
-        {name: 'test02', stk1: '50', stk2: 20, stk3: '30'},
-        {name: 'test03', stk1: '50', stk2: 20, stk3: '30'},
-        {name: 'test04', stk1: '50', stk2: 20, stk3: '30'},
+        //{name: 'testPrd', id: 'prd'},
     ])
 
  /* APPEND */
@@ -80,7 +77,7 @@ function Stock(props) {
                 <p>{it.name}</p>
                 <p>{it.stk1}</p>
                 <p>{it.stk2}</p>
-                <input id={it.name} type="number" placeholder="Enter" onChange={handleInputs}
+                <input id={it.id} type="number" placeholder="Enter" onChange={handleInputs}
                     value={inputData[it.name]}
                 />
             </div>
@@ -97,6 +94,12 @@ function Stock(props) {
         )
     })
 
+    useEffect(() => {
+        const GETPRODUCTS = getGen(2)
+        .then(res => setProductsData(res))
+        .catch(err => console.log(err))
+
+    }, [])
     console.log(inputData)
     
 

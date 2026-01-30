@@ -1,11 +1,50 @@
 const { default: mongoose } = require('mongoose');
-const {storeModel, productModel, managerModel, datesModel, IDCounterModel} = require('../models/models');
+const {
+    storeModel, productModel, managerModel, mktWeekModel, prdMovementModel,
+    IDCounterModel, yearModel, balanceModel, inventoryModel
+} = require('../models/models');
 const models = [storeModel, managerModel, productModel];
 const strArr = ['STR', 'MNG', 'PRD']
 const asyncHandler = require('express-async-handler');
 
 function re(res, code, status, message, data) {
     res.status(code).json({status: status, message: message, data: data})
+}
+
+async function mktweeksForYear(year) {
+    try {
+        const newDate = new Date(Date.parse('01-01-' + year));
+        if(newDate.toDateString() == 'Invalid Date') return {status: 'error', message: 'invalid date'}
+
+        const dataDiff = newDate.getDate() - newDate.getDay() ;
+        let saturday = newDate.setDate(dataDiff);
+
+        const weeksArr = []
+        let id = 1
+
+        do {
+            const obj = {
+                id: 'WK-' + String(id).padStart(2, 0) + '-' + String(year).substring(2),
+                weekNo: 'week' + ' ' + String(id).padStart(2, 0),
+                year: year,
+                startDate: new Date(saturday).toDateString(),
+                endDate: new Date(saturday + 518400000).toDateString()
+            }
+            weeksArr.push(obj);
+            id = id + 1;
+            saturday = saturday + 604800000
+            
+        } while (new Date(saturday).getFullYear() == year);
+
+        const DBOPER = await mktWeekModel.insertMany(weeksArr)
+        return {status: 'success', data: weeksArr}
+        
+    } catch (error) {
+        console.log(error)
+        return {status: 'error', error}
+    }
+
+    
 }
 
 async function IDCounter(na) {
@@ -28,27 +67,160 @@ async function IDCounter(na) {
 
 }
 
-async function createDate(dateId) {
+exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year, data) {
     try {
-        const useDate = String(dateId).padStart(2, 0)
-        const newDate = new Date(Date.now());
-        const dateDiff = newDate.getDate() - newDate.getDay();
-        const startDateId = newDate.setDate(dateDiff);
-        const startDate = new Date(startDateId).toDateString();
-        const endDateId = newDate.setDate(dateDiff + 6)
-        const endDate = new Date(endDateId).toDateString()
-        const year = newDate.getFullYear()
+        const weeklyInboundPrdsCount = {};
+        const weeklOutboundPrdsount = {};
+
+        const prevWeekInventoryCountId = String('INV-' + storeId + '-' + transWeekId() ).toUpperCase();
+        const inventoryCountId = String('INV-' + storeId + '-' + weekId).toUpperCase();
+        const ID = 'BAL-' + storeId + '-' + weekId;
+
+        const prdMvs = await prdMovementModel.find(
+            {weekId: weekId, $or: [{sender: storeId}, {reciever: storeId}]}
+        ).select('data sender reciever -_id');
     
-        const saveDate = await datesModel.create({weekId: useDate, year, endDate, startDate});
-        if(!saveDate) return {status: 'failure', message: 'failed to create date'}
-    
-        return {status: 'success', message: 'created date', data: saveDate}
+        
+        const in_out_cumul = prdMvs.reduce(
+            (acc, current) => {
+                current.reciever == storeId && acc['incoming'].push(current.data);  
+                current.sender == storeId && acc['outgoing'].push(current.data);   
+                return acc;
+
+            }, {incoming: [], outgoing: []}
+        );
+
+        in_out_cumul.incoming.forEach(it => {
+            for(let prd in it) {
+                weeklyInboundPrdsCount[prd] = (weeklyInboundPrdsCount[prd] ?? 0) + it[prd];
+            }
+        });
+
+        in_out_cumul.outgoing.map(it => {
+            for(let prd in it) {
+                weeklOutboundPrdsount[prd] = (weeklOutboundPrdsount[prd] ?? 0) + it[prd];
+            }
+        });
+
+        const prevInventoryCount = await inventoryModel.findOne({id: prevWeekInventoryCountId}).select('inventoryCount id -_id');
+        const currentInventoryCount = await inventoryModel.findOne({id: inventoryCountId}).select('inventoryCount id -_id');
+
+        const BalanceData = {
+            incomingGoodsForWeek: weeklyInboundPrdsCount,
+            outgoingGoodsForWeek: weeklOutboundPrdsount,
+        }
+
+        const CALCSALES = await calculateSale(currentInventoryCount, prevInventoryCount);
+        if(CALCSALES.status !== 'success') return console.log(CALCSALES.message);
+                
+        const BalanceOper = await balanceModel.findOneAndUpdate(
+            {id: ID},
+            {
+                $set: {data: BalanceData},
+                $setOnInsert: {
+                    id: ID,
+                    weekInventoryId: inventoryCountId, 
+                    storeId: storeId,
+                    weekId: weekId,
+                    year: year,
+                },
+            },
+            {
+                upsert: true,
+                new: true,
+            }
+
+        );
+
+        console.log('baby:', prevInventoryCount, '\n', currentInventoryCount)
+
+     /* HELPER FUNCTIONS    */
+        function transWeekId() {
+            const previous = String(Number(weekId.substring(3,5)) - 1 ).padStart(2,0);
+            return 'WK-' + previous + '-' + weekId.substring(6)
+        }
+
+        async function calculateSale(obj1, obj2) {
+            if(obj1 == null) return console.log({status: 'failure', message: 'current_inventory empty'});
+            if(obj1 == null && obj2 == null) return console.log({status: 'failure', message: 'inventorys empty'});
+            
+            try {
+                const PRODUCTS = await productModel.find().select('id -_id');
+
+                const usePrds = PRODUCTS.reduce(
+                    (acc, current) => {
+                        acc.push(current.id)
+                        return acc;
+                    }, []
+                );
+
+                if(obj1.id == 'INV-' + storeId.toUpperCase() + '-' + 'WK-01-' + String(year).substring(2) ) {
+                    const soldGoods = usePrds.map(it => {
+                        const value = 
+                            ( BalanceData.incomingGoodsForWeek[it] ?? 0 ) - 
+                        (
+                            (obj1.inventoryCount[it] ?? 0 ) + (BalanceData.outgoingGoodsForWeek[it] ?? 0)
+                        ); 
+
+                        return {name: it, quantity: value};
+                    });
+
+                    const useObj = soldGoods.reduce(
+                        (acc, current) => {
+                            if(String(current.quantity).startsWith('-') ) acc['status'] = 'inbalance'
+                            acc[current.name] = current.quantity;
+                            return acc;
+                        }, {status: 'balanced'}
+                    )
+
+                    BalanceData['soldGoodsForWeek'] = useObj;
+                    return {status: 'success', message: 'sales for week generated', data: useObj};
+                }
+                
+                let sold = usePrds.map(it => {
+                    let quantity = 
+                        (
+                            (BalanceData.incomingGoodsForWeek[it] ?? 0)
+                            + 
+                            (obj2.inventoryCount[it] ?? 0 )
+                        ) - 
+                    (   
+                        (BalanceData.outgoingGoodsForWeek[it] ?? 0 )
+                        +
+                        (obj1.inventoryCount[it] ?? 0 )
+                    )
+
+                    return {name: it, quantity: quantity};
+                })
+
+                const useObj = sold.reduce(
+                    (acc, current) => {
+                        if(String(current.quantity).startsWith('-') ) acc['status'] = 'inbalance'
+                        acc[current.name] = current.quantity;
+                        return acc
+                    }, {status: 'balance'}
+                );
+
+                BalanceData['soldGoodsForWeek'] = useObj;
+
+                console.log('wank', usePrds)
+                return {status:' success', message: 'sales for week generated', data: useObj}
+                
+            } catch (error) {
+                console.log('calcsales() error:', error.message);
+                return {status: 'error', message: error.message, log: error};
+            }
+
+
+        }
+
+        return {status: 'success', message: 'Weekly Balance Created'};
         
     } catch (error) {
-        return {status: 'error', message: 'failed to create date', errLog: error}
+        return {status: 'error', error: error};
 
     }
-   
+
 }
 
 /* ADD, DELETE, EDIT _GEN */
@@ -61,7 +233,7 @@ exports.addGen = asyncHandler(
         if(checkExisting) return res.status(409).json({status: 'failure', message: 'duplicate data'});
 
         const useId = await IDCounter(strArr[addData.index]);
-        const id = String(useId).padStart(2, 0)
+        const id = strArr[addData.index] + String(useId).padStart(2, 0)
 
         const newCollection = await useModel.create({...addData.data, id});
         if(!newCollection){
@@ -100,83 +272,92 @@ exports.editGen = asyncHandler(
 
     }
 )
+
+exports.getGen = asyncHandler(
+    async(req,res,next) => {
+        const index = req.params.in;
+        const useModel = models[index];
+
+        const GENS = await useModel.find().select('id name -_id');
+        return re(res, 200, 'success', 'found resource', GENS);
+    }
+)
 //
 
 /* OTHER UTILS */
-exports.mktDates = asyncHandler(
+exports.createYear = asyncHandler(
     async(req, res, next) => {
-        const {year, week, start, end} = req.body;
+        const year = Number(req.body.year);
 
-        const Week = await datesModel.findOne({weekId: week})
-        if(Week) return res.status(409).json({status: 'failure', message: 'week exists'})
+        const FindYear = await yearModel.findOne({name: year});
+        if(FindYear) return re(res, 409, 'failure', 'Entry Exists');
 
-        const newWeek = await datesModel.create({weekId: week, year, startDate: start, endDate: end });
-        if(!newWeek) return res.status(500).json({status: 'failure', message: 'server error'});
+        const createMarketWeeks = await mktweeksForYear(year)
+        if(createMarketWeeks.status !== 'success') return re(res, 400, 'failure', 'could not create weeks');
 
-        return res.status(200).json({status: 'success', message: 'week created', data: week});
+        const newYear = await yearModel.create({name: year});
+        return re(res, 201, 'success', 'Entry Created', year); 
     }
 )
 
-exports.createNewMktWeek = asyncHandler(
-    async(req,res,next) => {
-        const {weekId} = req.body;
+exports.getYears = asyncHandler(
+    async(req, res, next) => {
+        const Years = await yearModel.find().select('-_id name').sort('asc');
+        const vals = Years.map(it => (it.name ))
 
-        const CREATEDATEFN = await createDate(weekId);
-        if(!CREATEDATEFN) return res.status(500).json({status: 'failure', message: 'server error'})
+        return re(res, 200, 'success', 'data retrieved', vals);
         
-        return res.status(200).json({status: 'success', message: 'mkt week added', data: CREATEDATEFN})
-    }
-)
-
-exports.getCurrentMktDate = asyncHandler(
-    async(req, res, next) => {
-        const lastEntry = await datesModel.findOne().sort({_id: -1}).select('weekId endDate -_id');
-
-        if(lastEntry == null) {
-            const CREATEDATEFN = await createDate('01');
-
-            if(CREATEDATEFN.status !== 'success') {
-                console.log(CREATEDATEFN)
-                return res.status(404).json({status: 'failure', message: CREATEDATEFN.message})
-            }
-            return res.status(200).json(CREATEDATEFN);
-
-        }
-
-        const parsedCurrentDate = Date.parse(new Date(Date.now()));
-        const parsedEndDate = Date.parse(lastEntry.endDate);
-        const check = parsedCurrentDate < parsedEndDate;
-
-        if(!check) {
-            const weekId = Number(lastEntry.weekId) + 1;
-            
-            const CREATEDATEFN = await createDate(weekId);
-            if(CREATEDATEFN.status !== 'success') {
-                console.log(CREATEDATEFN);
-                return re(res, 400, 'failure', 'server error');
-            }
-            return re(res, 200, 'success', 'date created', CREATEDATEFN.data);
-
-        }
-
-        return re(res, 200, 'success', 'found date', lastEntry);
     }
 )
 
 exports.getMktWeeks = asyncHandler(
     async(req, res, next) => {
-        const MKTWEEKS = await datesModel.find().select('-_id -createdAt');
+        const yearInFocus = req.params.year;
+        
+        let limit = 0;
+        let skipLenght = 0;
+        req.params.skip && (skipLenght = Number(req.params.skip), limit = 11 );
 
-        const useData = MKTWEEKS.map(it => {
-            const obj = {
-                week: it.weekId, year: it.year, 
-                starts: it.startDate.toDateString().substring(4), 
-                ends: it.endDate.toDateString().substring(4)
-            };
+        const docCount = await mktWeekModel.countDocuments();
+        const MKTWEEKS = await mktWeekModel.find({year: Number(yearInFocus)}).select('-_id -year').skip(skipLenght).limit(limit).lean();
+        const transform = MKTWEEKS.map(it => ({id: it.id, week: it.weekNo, starts: it.startDate.toDateString(), ends: it.endDate.toDateString()} ))
 
-            return obj;
-        });
+        re(res, 200, 'success', 'Data Retrieved', transform)
+    }
+)
 
-        return re(res, 200, 'success', 'found market weeks', useData);
+exports.getWeeksForCalc = asyncHandler(
+    async(req, res, next) => {
+        const storeId = req.params.storeid;
+
+        const BALANCESFORWEEK = await inventoryModel.find({storeId: storeId}).select('weekId -_id ');
+
+        const WEEKSARR = [];
+        for(let id of BALANCESFORWEEK) {
+            let week = await mktWeekModel.findOne({id: id.weekId}).select('-_id -__v').lean();
+            WEEKSARR.push(week)
+        };
+
+        const transformWeeksArr = WEEKSARR.map(it => {
+            return {
+                starts: it.startDate.toDateString(),
+                ends: it.endDate.toDateString(),
+                week: it.weekNo,
+                year: it.year,
+                id: it.id
+            }
+        })
+
+        return re(res, 200, 'success', 'data retrieval success', transformWeeksArr);
+
+    }
+)
+
+exports.getBalanceSelections = asyncHandler(
+    async(req, res, next) => {
+        const {first, second } = JSON.parse(req.params.selections);
+        console.log('first:', first, 'second:', second);
+
+        const BALANCES = await balanceModel.find({})
     }
 )

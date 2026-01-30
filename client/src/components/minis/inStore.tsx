@@ -1,10 +1,12 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import React, { BaseSyntheticEvent, useEffect, useState, useContext } from "react";
+import { data, useParams, useSearchParams } from "react-router-dom";
 import { getStore } from "../../api/storeApi";
 
+import { MainContextEx } from "../../pages/context/mainContext";
 import '../../assets/stylesheets/comps.css'
 import ViewProducts from "../pages/viewPrds";
 import ViewStockCounts from "../pages/viewStk";
+import CalcSalesComp from "../pages/calcSales";
 import CashMini from "../pages/cash";
 import Stock from "../pages/invCount";
 import In_Out from "../pages/in_out";
@@ -17,12 +19,14 @@ interface storeDetailsTy {
     name: string, id?: string, access?: [], contact?: string, location?: string, manager?: string
 }
 interface divsTy {
-    name: string, mid?: string, btn?: string 
+    name: string, mid?: string, btn?: string,
+    lnk?: string,
 }
 
 function InStore() {
  /* HOOKS */
     const storeId = useParams().storeid
+    const {week} = useContext(MainContextEx)
 
  /* VARIABLES */
     const [storeDetails, setStoreDetails] = useState<storeDetailsTy>({name: ''});
@@ -31,12 +35,11 @@ function InStore() {
 
  /* FUNCTIONS */
     function handleBtns(e: BaseSyntheticEvent) {
-        const {id } = e.target
+        const {id } = e.target;
+        setSearchParams(p => ({...p, view: id} ));
 
-        setSearchParams(p => ({...p, view: id} ))
-    }
+    }//
 
-    console.log('view:', view)
 
  /* APPEND DATA */
     const [storeFnBtns, setStoreFnBtns] = useState<storeFnBtnsTy[]>([
@@ -44,13 +47,15 @@ function InStore() {
         {btnTxt: 'In-Out Goods', prelTxt: '12/12/25', id: 'in_out'},
         {btnTxt: 'Take Stock', prelTxt: 'This', id: 'stock'},
         {btnTxt: 'View Stocks', prelTxt: 'This', id: 'view_stock'},
+        //{btnTxt: 'Weekly Balance', prelTxt: 'This', id: 'Balances'},
         {btnTxt: 'Cash', prelTxt: 'This', id: 'cash'},
-    ])
+    ]);
+
     const [divs, setDivs] = useState<divsTy[]>([
-        {name: 'Sales', mid: 'this', btn: 'calculate Sales'},
+        {name: 'Sales', mid: 'this', btn: 'calculate Sales', lnk: 'calcsales'},
         {name: 'Smething1', mid: 'this', btn: 'calculate Sales'},
         {name: 'Smething3', mid: 'this', btn: 'calculate Sales'},
-    ])
+    ]);
 
  /* APPEND */
     const AppendFnBtns = storeFnBtns.map((it,id) => {
@@ -70,10 +75,10 @@ function InStore() {
 
     const AppendDivs = divs.map((it, id) => {
         return(
-            <div key={id} className="firstsec_divs">
+            <div key={id} className="firstsec_divs" >
                 <h3>{it.name}</h3>
                 <div>{it.mid}</div>
-                <button>{it.btn}</button>
+                <button id={it.lnk} onClick={handleBtns}>{it.btn}</button>
             </div>
         )
     })
@@ -91,7 +96,9 @@ function InStore() {
     return(
      <>
         <div id="sidebar_container_div">
-            < SideBar  header ='Store Name' />
+            < SideBar  
+                header ='Store Name' fn1Btn = {week?.display}
+            />
         </div>
 
      { storeDetails.name === '' &&
@@ -142,6 +149,10 @@ function InStore() {
 
             { view == 'cash' &&
                 < CashMini />
+            }
+
+            { view == 'calcsales' &&
+                < CalcSalesComp />
             }
 
 
