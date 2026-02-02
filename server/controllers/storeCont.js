@@ -1,5 +1,5 @@
 const { stat } = require('fs');
-const {storeModel, inventoryModel, balanceModel, prdMovementModel } = require('../models/models');
+const {storeModel, inventoryModel, balanceModel, prdMovementModel, IDCounterModel } = require('../models/models');
 const {handleBalance} = require('./utilCont')
 const asyncHandler = require('express-async-handler')
 
@@ -51,13 +51,53 @@ exports.inventoryCount = asyncHandler(
         const {data, storeId, weekId, year} = req.body
         const id = 'INV-' + storeId.toUpperCase() + '-' + weekId
 
+        async function previousWeekExists() {
+            try {
+                console.log('enum:', id)
+                const weekNum = String(Number(weekId.substring(3,5)) - 1).padStart(2,0);
+                if(weekNum == '00') return {status: 'success', message: 'first year entry'}
+
+                const week = 'WK-' + weekNum + '-' + year.substring(2)
+                const prevId = 'INV-' + storeId.toUpperCase() + '-' + week 
+    
+
+                const PREVWEEKDATA = await inventoryModel.findOne({id: prevId})
+                if(!PREVWEEKDATA) return {status: 'failure', message: 'no previous week entry '}
+                
+                return {status: 'success', message:'direct previous entry exists'}
+
+            } catch (error) {
+                console.log('PREVWEEKEXISTFN:', '\n' ,error.message )
+                return {status: 'error', message: error.message, log: error}
+            }
+        }
+        const check = await previousWeekExists();
+        if(check.status !=='success') return re(res, 400, 'failure', check.message);
+
         const InventoryCount = await inventoryModel.findOne({id: id})
         if(InventoryCount) return re(res, 409, 'failure', 'count for this week exists')
 
-        const newInventoryCount = await inventoryModel.create({id, storeId, weekId, year, inventoryCount: data,});
+        const sqCount = await IDCounterModel.findOneAndUpdate(
+            {name: 'INV'},
+            {
+                $inc: {count: 1},
+                $setOnInsert: {
+                    name: 'INV',
+                },
+            },
+            {
+                upsert: true,
+                new: true
+            }
+            
+        ).select('count -_id')
+
+        const newInventoryCount = await inventoryModel.create({
+            id, storeId, weekId, year, inventoryCount: data, sequenceNum: sqCount.count
+        });
 
         const BALANCEOPER = await handleBalance(storeId, weekId, year);
-        return re(res, 201, 'success', 'counted added', newInventoryCount)
+        return re(res, 201, 'success', 'counted added', newInventoryCount) 
 
         //console.log(data, storeId, weekId)
     }
@@ -115,10 +155,20 @@ exports.getInventoryStoreCounts = asyncHandler(
 
 exports.calcSales = asyncHandler(
     async(req, res, next) => {
-        const startWeekId = req.params.wk01;
-        const endWeekId = req.params.wk02;
+        const {startID, endID, storeID} = JSON.parse(req.params.data);
+        const rArr = [];
 
-        console.log('for:', startWeekId, endWeekId)
+        if(endID == false) {
+            const weekBalanceId = 'BAL-' + storeID + '-' + startID;
+            const BALANCEDATA = await balanceModel.findOne({id: weekBalanceId } ).select('data weekId -_id')
+
+            rArr.push(BALANCEDATA);
+        }
+
+
+
+        console.log('weight:', rArr)
+        return re(res, 200, 'success', 'works')
     }
 )
 

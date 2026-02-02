@@ -144,6 +144,11 @@ const mktWeek = new schema({
         type: Number,
         required: true,
     },
+    sequenceNum: {
+        type: Number,
+        unique: true,
+        required: true,
+    },
     startDate: Date,
     endDate: Date,
 
@@ -167,6 +172,11 @@ const inventorySchema = new schema({
         type: Date,
         default: Date.now
     },
+    sequenceNum: {
+        type: Number,
+        unique: true,
+        required: true,
+    },
     weekId: String,
     year: String,
 })//    inventory_schema
@@ -188,6 +198,11 @@ const balanceSchema = new schema({
     modifyCount: {
         type: Number,
         default: 0
+    },
+    sequenceNum: {
+        type: Number,
+        unique: true,
+        required: true,
     },
     weekInventoryId: String,
     WeekCashTotal: Number,

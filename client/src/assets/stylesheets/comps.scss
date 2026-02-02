@@ -817,22 +817,95 @@
     }
 
     #calcsales_first_sec {
-        @include basic-layout(40%, 100%, black, none, wheat, );
-        @include flex(center, center, column, 10px);
+        @include basic-layout(100%, 100%, black, none, transparent, $pad: 5px );
+        @include flex(flex-start, center, column, 4px);
         @include pos(absolute, $b: 0px );
-        border-top-left-radius: 2rem;
 
-        >div {
-            @include basic-layout(60px, 85%, black, 0.5rem, $pad: 5px );
-            @include flex(flex-start, center, row, );
+        #header_sec {
+            @include basic-layout(85px, 100%, none, 0.1rem, $bgc: rgb(245, 238, 238), $pad: 8px );
+            @include flex(center, center, column, 2px);
+            @include pos(sticky, $t: 4vh );
+            border-bottom: 2px solid black;
+            z-index: 10;
 
-            >:first-child {
-                width: 30%;
+            #sec1div1 {
+                @include basic-layout(35px, 100%, black, 0.3rem, rgb(245, 205, 173), $pad: 5px );
+                @include flex(flex-stt, center, row,  1%);
+
+                >div {
+                    @include basic-layout(100%, 49.5%, 0 );
+                    @include flex(flex-start, center, row, 8px);
+
+                }
             }
-            .display_date_div {
-                @include basic-layout(80%, 66%, $bgc: rgba(25, 0, 255, 0.123) );
-                @include flex(center, center, row, );
-            }   
+
+            #year_sec {
+                @include basic-layout(38px, 100%, none, $bgc: transparent ) ;
+                @include flex(flex-start, center, row, );
+                position: relative;
+                padding-top: 5px;
+                
+                #year_select {
+                    @include basic-layout(29px, 70px, black, 0.3rem );
+                    @include flex(center, center, ) 
+                }    
+
+                >button {
+                    @include basic-layout(30px, 62px, black, 0.4rem, brown, );
+                    @include pos(relative, 65% )
+                }
+                
+                #year_dropdown_div {
+                    @include basic-layout(fit-content, 38%, black, 0.3rem, $bgc: white, );
+                    @include flex(center, center, column, 2px);
+                    @include pos(absolute, -10px, 0px, 39px);
+
+                    >p {
+                        font-size: 2vh;
+                        @include basic-layout(35px, 99%, $bgc: rgba(128, 128, 128, 0.459));
+                        @include flex(center, center)
+                    }
+                }
+            }
+        }
+
+        #sec1div2 {
+            @include basic-layout(fit-content, 100%, none,);
+            @include flex(center, center, column, 5px);
+            padding: 5px;
+
+            #weeks_sec {
+                @include basic-layout(fit-content, 100%, );
+                @include flex(center, center, column, 2.5px);
+
+                .mkt_week_option {
+                    @include basic-layout(60px, 100%, none, 0.5rem, $pad: 10px, $bgc: rgb(41, 46, 46) );
+                    @include flex(flex-start, center, row, 20px );
+                    border-bottom: 1.5px solid black;
+                    color: white;  position: relative;
+    
+                    >:first-child {
+                        font-size: 2vh;
+                        width: 22%;
+                    }
+    
+                    >:nth-child(2) {
+                        margin-left: 10px;
+                    }
+    
+                    .date_p {
+                        align-self: flex-end;
+                        font-size: 1.7vh;
+                    }
+                    
+                    .select_img {
+                        @include pos(absolute, none, 15px, 15px);
+                    }
+                }
+            }
+
+
+
         }
 
         #submit_btn {

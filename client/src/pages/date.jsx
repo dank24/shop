@@ -6,7 +6,7 @@ import { getMktWeeks, getYears, createYear } from "../api/genApi"
 
 function DatesPage() {
  /* HOOKS */
-     const {mktWeek, setWeek} = useContext(MainContextEx)
+     const {mktWeek, setWeek, addAlert} = useContext(MainContextEx)
     const checkRefs = useRef({})
 
  /* VARIABLES */
@@ -40,9 +40,15 @@ function DatesPage() {
                 div.style.backgroundColor = 'transparent'
             }
         }
-        localStorage.setItem('currentWeek', JSON.stringify(it))
+        localStorage.setItem('currentWeek', JSON.stringify(it));
         setCurrentWeek(p => (it ));
-        setWeek(p => (it.id.substring(3) ))
+
+        const weekObj = {
+            display: it.id.substring(3),
+            id: it.id,
+            year: it.ends.substring(11)
+        };
+        setWeek(p => (weekObj ));
 
     }//
 
@@ -58,12 +64,19 @@ function DatesPage() {
                 setIsDropdownVisi(p => (!p ))
             break;
 
-            case ('add_btn'): 
+            case ('add_btn'):
+                console.log('send', Number(inputValue) )
+                if(Number(inputValue) != inputValue ) return addAlert('input is not a valid year');
+
                 const CREATEYEAROPER = createYear(inputValue)
                 .then(res => res.status == 'success' && (
                     setDropDownTxt(inputValue), setIsDropdownVisi(false),
-                    getWeeksFN()
+                    setYearsData(p => ([...p, inputValue ]))
                 ) )
+                .then(getWeeksFN(inputValue))
+                .catch(err =>  console.log(err))
+
+
             break;
 
             default:

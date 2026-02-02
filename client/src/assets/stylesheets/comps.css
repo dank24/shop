@@ -1514,52 +1514,202 @@
   gap: 0;
 }
 #calcsales_mini_main #calcsales_first_sec {
-  height: 40%;
+  height: 100%;
   width: 100%;
   border: 1px solid black;
   border-radius: none;
-  background-color: wheat;
-  padding: 0;
+  background-color: transparent;
+  padding: 5px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
   position: absolute;
   left: none;
   right: none;
   top: none;
   bottom: 0px;
-  border-top-left-radius: 2rem;
 }
-#calcsales_mini_main #calcsales_first_sec > div {
-  height: 60px;
-  width: 85%;
+#calcsales_mini_main #calcsales_first_sec #header_sec {
+  height: 85px;
+  width: 100%;
+  border: 1px solid none;
+  border-radius: 0.1rem;
+  background-color: rgb(245, 238, 238);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  position: sticky;
+  left: none;
+  right: none;
+  top: 4vh;
+  bottom: none;
+  border-bottom: 2px solid black;
+  z-index: 10;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #sec1div1 {
+  height: 35px;
+  width: 100%;
   border: 1px solid black;
-  border-radius: 0.5rem;
-  background-color: 0;
+  border-radius: 0.3rem;
+  background-color: rgb(245, 205, 173);
   padding: 5px;
+  display: flex;
+  justify-content: flex-stt;
+  align-items: center;
+  flex-direction: row;
+  gap: 1%;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #sec1div1 > div {
+  height: 100%;
+  width: 49.5%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #year_sec {
+  height: 38px;
+  width: 100%;
+  border: 1px solid none;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
   gap: 0;
+  position: relative;
+  padding-top: 5px;
 }
-#calcsales_mini_main #calcsales_first_sec > div > :first-child {
-  width: 30%;
-}
-#calcsales_mini_main #calcsales_first_sec > div .display_date_div {
-  height: 80%;
-  width: 66%;
-  border: 1px solid 0;
-  border-radius: 0;
-  background-color: rgba(25, 0, 255, 0.123);
+#calcsales_mini_main #calcsales_first_sec #header_sec #year_sec #year_select {
+  height: 29px;
+  width: 70px;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: 0;
   gap: 0;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #year_sec > button {
+  height: 30px;
+  width: 62px;
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  background-color: brown;
+  padding: 0;
+  position: relative;
+  left: 65%;
+  right: none;
+  top: none;
+  bottom: none;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #year_sec #year_dropdown_div {
+  height: fit-content;
+  width: 38%;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  background-color: white;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  position: absolute;
+  left: -10px;
+  right: 0px;
+  top: 39px;
+  bottom: none;
+}
+#calcsales_mini_main #calcsales_first_sec #header_sec #year_sec #year_dropdown_div > p {
+  font-size: 2vh;
+  height: 35px;
+  width: 99%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgba(128, 128, 128, 0.459);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 {
+  height: fit-content;
+  width: 100%;
+  border: 1px solid none;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec {
+  height: fit-content;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2.5px;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec .mkt_week_option {
+  height: 60px;
+  width: 100%;
+  border: 1px solid none;
+  border-radius: 0.5rem;
+  background-color: rgb(41, 46, 46);
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 20px;
+  border-bottom: 1.5px solid black;
+  color: white;
+  position: relative;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec .mkt_week_option > :first-child {
+  font-size: 2vh;
+  width: 22%;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec .mkt_week_option > :nth-child(2) {
+  margin-left: 10px;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec .mkt_week_option .date_p {
+  align-self: flex-end;
+  font-size: 1.7vh;
+}
+#calcsales_mini_main #calcsales_first_sec #sec1div2 #weeks_sec .mkt_week_option .select_img {
+  position: absolute;
+  left: none;
+  right: 15px;
+  top: 15px;
+  bottom: none;
 }
 #calcsales_mini_main #calcsales_first_sec #submit_btn {
   height: 32px;

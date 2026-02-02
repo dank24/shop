@@ -1,12 +1,15 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useRef, useState, } from "react";
 import { useParams } from "react-router-dom";
 
-import { getYears, getMktWeeks, getBalanceSelections, getBalanceWeeksForStore } from "../../api/genApi";
+import { getBalanceWeeksForStore } from "../../api/genApi";
 import { calcSales } from "../../api/storeApi";
-import { ar } from "zod/v4/locales";
+
+import empySelect from '../../assets/images/icons/empty_square02.svg'
+import filledSelect from '../../assets/images/icons/filled_square.svg'
 
 function CalcSalesComp() {
  /* HOOKS */
+    const imgsRef = useRef([null]);
     const storeId = useParams().storeid.toUpperCase();
 
  /* VARIABLES */
@@ -26,20 +29,20 @@ function CalcSalesComp() {
     const [yearsData, setYearsData] = useState([])
     const [page, setPage] = useState(0);
     const [dbWeeks, setDbWeeks] = useState([
-/*         {
+         {
             "starts": "Sun Mar 02 2025",
             "ends": "Sat Mar 08 2025",
             "week": "week 10",
             "year": 2026,
             'id': 'WK-01-02'
-        }, */
-    ])
+        }, 
+    ]);
     const [selectedDates, setSelectedDates] = useState({
-        startData: '',
-        endData: '',
+        startID: '',
+        endID: '',
         start: '',
         end: ''
-    })
+    });
 
 
  /* Functions */
@@ -49,7 +52,7 @@ function CalcSalesComp() {
         switch(className) {
             case('display_date_div') : 
                 setIsDropDownVisible(p => (true ));
-                setSelectedTxt(p => (id ))
+                setSelectedTxt(p => (className ))
             break;
 
             case('year_option') :
@@ -73,6 +76,42 @@ function CalcSalesComp() {
                 setIsDropDownVisible(false)
             break;
 
+            case('select_img') :
+                const CD = mktWeeksData[Number(id)];
+                const currentIMG = imgsRef?.current[Number(id)];
+
+                if(selectedDates.end !== '' && selectedDates.start !=='' && currentIMG.src.includes('empty_square02')) {
+                    const endINdex = selectedDates.endID;
+                    imgsRef.current[endINdex].src = empySelect;
+
+                    setSelectedDates(p => ({...p, end: CD.ends, endID: Number(id) }))
+                    currentIMG.src = filledSelect;
+                }
+                
+                else if(currentIMG.src.includes('empty_square02')) {
+                    selectedDates.start == '' ? (
+                        (setSelectedDates(p => ({...p, start: CD.starts, startID : Number(id) } )) )
+                    ) : (
+                        setSelectedDates(p => ({...p, end: CD.ends, endID: Number(id) } ))
+                    )
+                    currentIMG.src = filledSelect;
+                } else {
+                    let toModify = []
+                    for(let ids in selectedDates) {
+                        if(Number(id) == selectedDates[ids]) {
+                            toModify.push(ids);
+                            toModify.push(ids.slice(0, ids.length - 2) )
+                        }
+                    };
+
+                    imgsRef.current[Number(id)].src = empySelect;
+                    const obj2 = {...selectedDates, [toModify[0]]: '', [toModify[1]]: '' }
+                    setSelectedDates(p => (obj2))
+ 
+                }
+
+            break;
+
             default:
                 null
             break;
@@ -85,14 +124,27 @@ function CalcSalesComp() {
 
             case('next') :
                 setPage(p => (p + 11))
-            break;
+            breakdisplay_date_div;
 
             case('prev') : 
                 setPage(p => (p - 11))
             break;
 
             case('year_select') :
+                console.log('st')
                 setIsYearDropdown(p => (!p ))
+            break;
+
+            case('go_btn') :
+                const sObj = {
+                    startID: mktWeeksData[selectedDates.startID].id,
+                    endID: selectedDates.end !== '' && mktWeeksData[selectedDates.endID].id || false ,
+                    storeID: storeId
+
+                }
+
+                const CALCOPER = calcSales(sObj)
+                console.log('siren:', sObj)
             break;
 
             default:
@@ -101,7 +153,7 @@ function CalcSalesComp() {
         }
     }
 
-    console.log('light:', yearsData)
+    //console.log('light:', dbWeeks)
 
  /* Append */
     const AppendYearsData = yearsData.map((it, id) => {
@@ -110,55 +162,19 @@ function CalcSalesComp() {
         )
     });
 
-    const AppendMktWeeks = mktWeeksData.filter((it, id) => id >= page && id < page + 11)
-    .map((it, id) => {
+    const AppendMktWeeks = mktWeeksData.map((it, id) => {
         return(
             <div key={id} id={it.id} className="mkt_week_option">
                 <h3>{it.week}</h3>
                 <p className="date_p">{it.starts.substring(4)}</p>
                 <p className="date_p">-</p>
                 <p className="date_p">{it.ends.substring(4)}</p>
+                <img id={id} className='select_img' src={empySelect} width='25px' 
+                    ref={its => imgsRef.current[id] = its}
+                />
             </div>
         )   
     });
-
-    function AppendSelectDropdown() {
-        return(
-            <div id="dropdown_div" onClick={handleFirstSec}>
-                <section>
-                    <h2 id="close_x">X</h2>
-
-                    <section id="header_sec">
-                        <div id="year_select">{yearSelectTxt}</div>
-
-                        { isYearDropdown &&
-                            <div id="year_dropdown">
-                                {
-                                    AppendYearsData
-                                }
-                            </div>
-                        }
-
-                        <h3>Select {selectedTxt} Date</h3>
-                    </section>
-
-                    {
-                        AppendMktWeeks
-                    }
-
-                    <section id="paging_div">
-                        {page > 0 && <h4 id="prev">Prev</h4> }
-                        <div id="info">{page}/{mktWeeksData.length}</div>
-                        {mktWeeksData.length >0 && <h4 id="next">next</h4> }
-                    </section>
-
-                </section>
-
-
-            </div>
-        )
-    };
-
 
  /* USE EFFECT */
     useEffect(() => {
@@ -166,7 +182,8 @@ function CalcSalesComp() {
         .then(res => {
             res.status == 'success' && (
             setDbWeeks(p => ([...p, ...res.data])) );
-            return res.data
+
+            return res.data;
         } )
         .then(ct => {
             const filtYear = ct.reduce(
@@ -174,46 +191,66 @@ function CalcSalesComp() {
                     if(!acc.includes(current.year)) {acc = [...acc, current.year] }
                     return acc
                 }, []
-            ).sort((a,b ) => a - b )
+            ).sort((a,b ) => a - b );
 
-            setYearsData(p => (filtYear ))
+            setYearsData(p => (filtYear ));
         })
-
-        let years = [];
-
-        dbWeeks.map((week, index) => {
-            index == 0 && years.push(week.year);
-            week.year !== years[years.length - 1] && years.push(week.year);
-        })
-
-        setYearsData(p => (years.sort((a, b) => a - b) ))
+        .catch(err => console.log({error: err}));
 
     }, [])
-    
 
  /* Return */
     return(
         <main id="calcsales_mini_main">
-
-            { isDropdownVisible &&
-                < AppendSelectDropdown />
-            }
-
             { 
                 <section id="calcsales_first_sec" onClick={handleFirstSec}>
-                    <div id="sec1div1">
-                        <h3>Start Week:</h3>
-                        <div className="display_date_div" id="Start">{selectedDates.start}</div>
-                    </div>
+                    <section id="header_sec">
+                        <div id="sec1div1">
+                            <div>
+                               <p>FROM :</p>
+                               <h4><em>{selectedDates.start}</em></h4>
+                            </div>
+
+                            <div>
+                                <p>TO :</p>
+                                <h4><em>{selectedDates.end}</em></h4>
+                            </div>
+
+                        </div>
+
+                        <div id='year_sec'>
+                            <div id='year_select'>{yearSelectTxt}</div>
+
+                            { isYearDropdown &&
+                                <div id="year_dropdown_div">
+                                    <p className="year_option">2024</p>
+                                    <p className="year_option">2025</p>
+                                    <p>2026</p>
+                                    <p>2027</p>
+                                    <p>2028</p>
+                                </div>
+                            }
+
+                            <button id="go_btn" disabled={selectedDates.startID == ''}>
+                                Go
+                            </button>
+
+                            </div>
+                    </section>
 
                     <div id="sec1div2">
-                        <h3>End Week:</h3>
-                        <div className="display_date_div" id="End">{selectedDates.end}</div>
-                    </div>
+                        <section id="weeks_sec">
+                            {
+                                AppendMktWeeks
+                            }
 
-                    <button id="submit_btn">
-                        SUBMIT
-                    </button>
+                            <div id="foot_div" style={{height: '10px'}}>
+
+                            </div>
+                        </section>
+
+
+                    </div>
 
                 </section>
             }

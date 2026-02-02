@@ -19,8 +19,23 @@ async function mktweeksForYear(year) {
         const dataDiff = newDate.getDate() - newDate.getDay() ;
         let saturday = newDate.setDate(dataDiff);
 
+        const sqCount = await IDCounterModel.findOneAndUpdate(
+            {name: 'MKTWEEK'},
+            {
+                $inc: {count: 1},
+                $setOnInsert: {
+                    name: 'MKTWEEK'
+                }
+            },
+            {
+                upsert: true,
+                new: true
+            }
+        ).select('count -_id')
+
         const weeksArr = []
         let id = 1
+        let sequenceNum = sqCount.count;
 
         do {
             const obj = {
@@ -28,15 +43,18 @@ async function mktweeksForYear(year) {
                 weekNo: 'week' + ' ' + String(id).padStart(2, 0),
                 year: year,
                 startDate: new Date(saturday).toDateString(),
-                endDate: new Date(saturday + 518400000).toDateString()
+                endDate: new Date(saturday + 518400000).toDateString(),
+                sequenceNum: sequenceNum
             }
             weeksArr.push(obj);
+            sequenceNum = sequenceNum + 1;
             id = id + 1;
             saturday = saturday + 604800000
             
         } while (new Date(saturday).getFullYear() == year);
 
         const DBOPER = await mktWeekModel.insertMany(weeksArr)
+        const UPDSQCOUNT = await IDCounterModel.findOneAndUpdate({name: 'MKTWEEK'}, {$set: {count: sequenceNum}})
         return {status: 'success', data: weeksArr}
         
     } catch (error) {
@@ -123,6 +141,7 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
                     storeId: storeId,
                     weekId: weekId,
                     year: year,
+                    sequenceNum: Number(weekId.substring(3, 5) ) +  year.substring(2)
                 },
             },
             {

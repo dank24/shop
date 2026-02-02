@@ -65,10 +65,12 @@ export const getInventoryCounts = async() => {
 
 }
 
-export const calcSales = async(wk01, wk02) => {
+export const calcSales = async(sObj) => {
     try {
-        const res = await axiosInstance.get('/store/' + wk01 + '/' + wk02 )
+        const res = await axiosInstance.get('/store/calcsales/' + JSON.stringify(sObj));
+        if(res.statusText == 'OK') console.log('bum') 
+
     } catch (error) {
-        console.log(err)
+        console.log(error)
     }
 }

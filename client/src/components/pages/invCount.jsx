@@ -77,7 +77,9 @@ function Stock(props) {
                 <p>{it.name}</p>
                 <p>{it.stk1}</p>
                 <p>{it.stk2}</p>
-                <input id={it.id} type="number" placeholder="Enter" onChange={handleInputs}
+                <input id={it.id
+
+                } type="number" placeholder="Enter" onChange={handleInputs}
                     value={inputData[it.name]}
                 />
             </div>
