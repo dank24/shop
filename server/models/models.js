@@ -70,7 +70,8 @@ const productSchema = new schema({
         default: 'E0'
     },
     logo: [],
-    price: String,
+    purchasePrice: String,
+    retailPrice: String,
     quantity: String,
 })//    prd_schema
 
@@ -202,7 +203,6 @@ const balanceSchema = new schema({
     sequenceNum: {
         type: Number,
         unique: true,
-        required: true,
     },
     weekInventoryId: String,
     WeekCashTotal: Number,

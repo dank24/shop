@@ -1,5 +1,5 @@
 const { stat } = require('fs');
-const {storeModel, inventoryModel, balanceModel, prdMovementModel, IDCounterModel } = require('../models/models');
+const {storeModel, inventoryModel, balanceModel, productModel, prdMovementModel, IDCounterModel } = require('../models/models');
 const {handleBalance} = require('./utilCont')
 const asyncHandler = require('express-async-handler')
 
@@ -71,6 +71,7 @@ exports.inventoryCount = asyncHandler(
                 return {status: 'error', message: error.message, log: error}
             }
         }
+        
         const check = await previousWeekExists();
         if(check.status !=='success') return re(res, 400, 'failure', check.message);
 
@@ -97,6 +98,7 @@ exports.inventoryCount = asyncHandler(
         });
 
         const BALANCEOPER = await handleBalance(storeId, weekId, year);
+
         return re(res, 201, 'success', 'counted added', newInventoryCount) 
 
         //console.log(data, storeId, weekId)
@@ -156,19 +158,75 @@ exports.getInventoryStoreCounts = asyncHandler(
 exports.calcSales = asyncHandler(
     async(req, res, next) => {
         const {startID, endID, storeID} = JSON.parse(req.params.data);
-        const rArr = [];
+        let rArr;
+
+        const startBALID ='BAL-' + storeID + '-' + startID;
+        const endBALID = 'BAL-' + storeID + '-' + endID;
+
+        const PRODUCTS = await productModel.find().select('id name -_id');
 
         if(endID == false) {
-            const weekBalanceId = 'BAL-' + storeID + '-' + startID;
-            const BALANCEDATA = await balanceModel.findOne({id: weekBalanceId } ).select('data weekId -_id')
+            const BALANCEDATA = await balanceModel.findOne({id: startBALID } ).select('data weekId -_id');
+            const transformBalance = PRODUCTS.map(it => {
+                let acc = {name: it.name}
 
-            rArr.push(BALANCEDATA);
+                for(let cate in BALANCEDATA.data) {
+                    acc[cate] = (BALANCEDATA.data[cate][it.id] ?? 0 )
+                }
+
+                const useObj = { 
+                    name: acc['name'],
+                    inbound: acc['incomingGoodsForWeek'], 
+                    outbound: acc['outgoingGoodsForWeek'], 
+                    sold: acc['soldGoodsForWeek'],
+                    profit: acc['profitMarginForWeek'] * Number(acc['soldGoodsForWeek'] )
+                }
+
+                return useObj
+            })
+
+            //return console.log('tonight:', PRODUCTS, '\n', BALANCEDATA, 'send\n', transformBalance)
+            return re(res, 200, 'success', 'resource located', transformBalance)
         }
 
+        const startTarget = await balanceModel.findOne({id: startBALID}).select('sequenceNum -_id');
+        const endTarget = await balanceModel.findOne({id: endBALID}).select('sequenceNum -_id');
 
+        if(!startTarget && !endTarget) return re(res, 400, 'failure', 'start or end dates invalid');
 
-        console.log('weight:', rArr)
-        return re(res, 200, 'success', 'works')
+        rArr = await balanceModel.find({
+            sequenceNum: {
+                $gte: startTarget.sequenceNum,
+                $lte: endTarget.sequenceNum
+            }
+        }).sort({sequenceNum: 1}).select('weekId data -_id ');
+
+        const transformArr = PRODUCTS.map(it => {
+            // cumulative data
+            let acc = {
+                name: it.name,
+                inbound: 0,
+                outbound: 0,
+                sold: 0,
+                profit: 0,
+            }
+
+            rArr.forEach(its => {
+                acc['inbound'] = (its.data['incomingGoodsForWeek'][it.id] ?? 0 ) + acc['inbound'];
+                acc['outbound'] = (its.data['outgoingGoodsForWeek'][it.id] ?? 0) + acc['outbound'];
+                acc['sold'] = (its.data['soldGoodsForWeek'][it.id] ?? 0) + acc['sold'];
+
+                acc['profit'] = ((its.data['soldGoodsForWeek'][it.id] ?? 0 ) * (its.data['profitMarginForWeek'][it.id] ?? 0) ) + acc['profit']
+
+            }) 
+
+            return acc
+        })
+
+        //console.log('rend', startTarget, endTarget,)
+        //console.log('soak', PRODUCTS, transformArr)
+        return re(res, 200, 'success', 'resources located', transformArr);
+        
     }
 )
 

@@ -6,44 +6,35 @@ import { calcSales } from "../../api/storeApi";
 
 import empySelect from '../../assets/images/icons/empty_square02.svg'
 import filledSelect from '../../assets/images/icons/filled_square.svg'
+import { tr } from "zod/v4/locales";
 
 function CalcSalesComp() {
  /* HOOKS */
-    const imgsRef = useRef([null]);
+    const imgsRef = useRef([]);
     const storeId = useParams().storeid.toUpperCase();
 
  /* VARIABLES */
-    const [isVisible, setIsVisible] = useState({
-        isDropdownVisible: false,
-        isSelectMktWeeksVisi: false,
-        isYearDropdown: false
-    })
-
-    const [isSelectMktWeeksVisi, setIsSelectMktWeeksVisble] = useState(false);
-    const [isDropdownVisible, setIsDropDownVisible] = useState(false);
     const [isYearDropdown, setIsYearDropdown] = useState(false);
     const [yearSelectTxt, setYearSelectTxt] = useState('-Year');
-    const [mktWeeksData, setMktWeeksData] = useState([]);
-    const [calcScreen, setCalcScreen] = useState(false);
+    const [isCalcScreen, setIsCalcScreen] = useState(false);
     const [selectedTxt, setSelectedTxt] = useState('');
-    const [yearsData, setYearsData] = useState([])
     const [page, setPage] = useState(0);
     const [dbWeeks, setDbWeeks] = useState([
-         {
-            "starts": "Sun Mar 02 2025",
-            "ends": "Sat Mar 08 2025",
-            "week": "week 10",
-            "year": 2026,
-            'id': 'WK-01-02'
-        }, 
+        {
+        "starts": "Sun Mar 02 2025",
+        "ends": "Sat Mar 08 2025",
+        "week": "week 10",
+        "year": 2026,
+        'id': 'WK-01-02'
+    }, 
     ]);
     const [selectedDates, setSelectedDates] = useState({
-        startID: '',
-        endID: '',
-        start: '',
-        end: ''
-    });
-
+    startID: '',
+    endID: '',
+    start: '',
+    startEnd: '',
+    end: ''
+    });   
 
  /* Functions */
     const handleFirstSec = (e) => {
@@ -71,43 +62,43 @@ function CalcSalesComp() {
             break;
 
             case('mkt_week_option'):
-                console.log('fel', id)
-                setSelectedDates(p => ({...p, [selectedTxt.toLocaleLowerCase()]: id} ))
-                setIsDropDownVisible(false)
+                //
             break;
 
             case('select_img') :
                 const CD = mktWeeksData[Number(id)];
                 const currentIMG = imgsRef?.current[Number(id)];
 
-                if(selectedDates.end !== '' && selectedDates.start !=='' && currentIMG.src.includes('empty_square02')) {
-                    const endINdex = selectedDates.endID;
-                    imgsRef.current[endINdex].src = empySelect;
+                if(selectedDates.start === '') {
+                    setSelectedDates(p => ({...p, startID: Number(id), start: CD.starts, startEnd: CD.ends} ))
+                    imgsRef.current[Number(id)].src = filledSelect
 
-                    setSelectedDates(p => ({...p, end: CD.ends, endID: Number(id) }))
-                    currentIMG.src = filledSelect;
-                }
-                
-                else if(currentIMG.src.includes('empty_square02')) {
-                    selectedDates.start == '' ? (
-                        (setSelectedDates(p => ({...p, start: CD.starts, startID : Number(id) } )) )
-                    ) : (
-                        setSelectedDates(p => ({...p, end: CD.ends, endID: Number(id) } ))
-                    )
-                    currentIMG.src = filledSelect;
-                } else {
-                    let toModify = []
-                    for(let ids in selectedDates) {
-                        if(Number(id) == selectedDates[ids]) {
-                            toModify.push(ids);
-                            toModify.push(ids.slice(0, ids.length - 2) )
-                        }
-                    };
+                } else if(selectedDates.start !== '' && selectedDates.end == '') {
+                    setSelectedDates(p => ({...p, endID: Number(id), end: CD.starts} ))
+                    imgsRef.current[Number(id)].src = filledSelect
 
-                    imgsRef.current[Number(id)].src = empySelect;
-                    const obj2 = {...selectedDates, [toModify[0]]: '', [toModify[1]]: '' }
-                    setSelectedDates(p => (obj2))
- 
+                } else if(selectedDates.end !== '' && selectedDates.start !== '' ) {
+                    const prevEndID = selectedDates.endID;
+
+                    if(Number(id) == selectedDates.startID ) {
+                        setSelectedDates(p => ({...p, start: '', startID: ''} ));
+                        imgsRef.current[Number(id)].src = empySelect;
+
+                        return;
+                    }
+
+                    if(Number(id) == selectedDates.endID ) {
+                        setSelectedDates(p => ({...p, end: '', endID: ''} ))
+                        imgsRef.current[Number(id)].src = empySelect;
+
+                        return;
+                    }
+
+                    imgsRef.current[prevEndID].src = empySelect;
+
+                    setSelectedDates(p => ({...p, endID: Number(id), end: CD.starts} ))
+                    imgsRef.current[Number(id)].src = filledSelect
+
                 }
 
             break;
@@ -118,18 +109,6 @@ function CalcSalesComp() {
         }
 
         switch(id) {
-            case('close_x') : 
-                setIsDropDownVisible(false)
-            break
-
-            case('next') :
-                setPage(p => (p + 11))
-            breakdisplay_date_div;
-
-            case('prev') : 
-                setPage(p => (p - 11))
-            break;
-
             case('year_select') :
                 console.log('st')
                 setIsYearDropdown(p => (!p ))
@@ -140,11 +119,33 @@ function CalcSalesComp() {
                     startID: mktWeeksData[selectedDates.startID].id,
                     endID: selectedDates.end !== '' && mktWeeksData[selectedDates.endID].id || false ,
                     storeID: storeId
-
                 }
 
                 const CALCOPER = calcSales(sObj)
-                console.log('siren:', sObj)
+                .then(res => {
+                    res.status == 'success' ? (
+                        setCalcData(p => (res.data )),
+                        setIsCalcScreen(true)
+                    )
+                    : (
+                        console.log('failure', res)
+
+                    )
+                })
+                .catch(err => console.log(err))
+                
+            break;
+
+            case('back_btn'):
+                setIsCalcScreen(false)
+
+                const arr = [selectedDates.startID, selectedDates.endID]
+                setTimeout(() => {
+                    arr.forEach(id => {
+                        imgsRef.current[id].src = filledSelect
+                    })
+                }, 2);
+
             break;
 
             default:
@@ -153,9 +154,12 @@ function CalcSalesComp() {
         }
     }
 
-    //console.log('light:', dbWeeks)
+ /* APPEND DATA */
+    const [mktWeeksData, setMktWeeksData] = useState([]);
+    const [yearsData, setYearsData] = useState([]);
+    const [calcData, setCalcData] = useState([]);
 
- /* Append */
+ /* APPEND */
     const AppendYearsData = yearsData.map((it, id) => {
         return(
             <p key={id} className="year_option">{it}</p>
@@ -175,6 +179,19 @@ function CalcSalesComp() {
             </div>
         )   
     });
+
+    const AppendCalc = calcData.map((it, id) => {
+        return(
+            <div key={id} className="calc_div">
+                <h5>{String(id + 1).padStart(2,0)}</h5>
+                <p>{it.name}</p>
+                <p>{it.inbound.toLocaleString()}</p>
+                <p>{it.outbound.toLocaleString()}</p>
+                <p>{it.sold.toLocaleString()}</p>
+                <p>{it.profit.toLocaleString()}</p>
+            </div>
+        )
+    })
 
  /* USE EFFECT */
     useEffect(() => {
@@ -199,10 +216,13 @@ function CalcSalesComp() {
 
     }, [])
 
+    console.log(selectedDates)
+    console.log('light:', calcData)
+
  /* Return */
     return(
         <main id="calcsales_mini_main">
-            { 
+            { !isCalcScreen &&
                 <section id="calcsales_first_sec" onClick={handleFirstSec}>
                     <section id="header_sec">
                         <div id="sec1div1">
@@ -211,10 +231,20 @@ function CalcSalesComp() {
                                <h4><em>{selectedDates.start}</em></h4>
                             </div>
 
+                        { selectedDates.end == '' && selectedDates.start !== '' &&
+                            <div>
+                                <p>TO :</p>
+                                <h4><em>{selectedDates.startEnd}</em></h4>
+                            </div>
+                        }
+
+                        { selectedDates.end !== '' &&
                             <div>
                                 <p>TO :</p>
                                 <h4><em>{selectedDates.end}</em></h4>
                             </div>
+                        }
+
 
                         </div>
 
@@ -231,7 +261,7 @@ function CalcSalesComp() {
                                 </div>
                             }
 
-                            <button id="go_btn" disabled={selectedDates.startID == ''}>
+                            <button id="go_btn" disabled={selectedDates.startID === ''}>
                                 Go
                             </button>
 
@@ -255,15 +285,50 @@ function CalcSalesComp() {
                 </section>
             }
 
-            { calcScreen &&
+            { isCalcScreen &&
                 <section id="calculate_sec">
-                    <div id="header">
-                        <h3>N</h3>
-                        <h4>Product</h4>
-                        <h4>Original</h4>
-                        <h4>Final</h4>
-                        <h4>%Profit</h4>
+                    <div id="calcsec_div1">
+                        <div id="def_div">
+                            <div id="start_div">
+                                <p>Start Date:</p>
+                                <h4>{selectedDates.start.substring(4)}</h4>
+                            </div>
+                            
+                            <div id="end_div">
+                                <p>Start Date:</p>
+                                <h4>{selectedDates.end.substring(4)}</h4>
+                            </div>
+
+                            <button id="back_btn" onClick={handleFirstSec}>
+                                Back
+                            </button>
+                            
+                        </div>
+
+                        <div className="calc_div" id="header">
+                            <h3>N</h3>
+                            <h4>Product</h4>
+                            <h4>IN</h4>
+                            <h4>OUT</h4>
+                            <h4>SOLD</h4>
+                            <h4>%Profit</h4>
+                        </div>
                     </div>
+
+                    
+                    {
+                        AppendCalc
+                    }
+
+                     <div className="calc_div">
+                        <h5>01</h5>
+                        <p>Big-Boy 70g</p>
+                        <p>5000</p>
+                        <p>2500</p>
+                        <p>25,000</p>
+                        <p>200,000</p>
+                    </div> 
+
 
                 </section>
             }

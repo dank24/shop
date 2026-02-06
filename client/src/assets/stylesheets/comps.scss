@@ -264,8 +264,10 @@
     background-color: rgb(243, 247, 250);
 
     #mini_header {
+        @include basic-layout(60px, 55vw, none, 0.4rem, rgb(126, 120, 120), 5px);
+        @include flex(center, center, );
         font-size: 2.5vh;  align-self: flex-start;
-        padding-left: 6px;  margin-top: 6vh
+        margin: 10px;  color: black;
     }
 
 
@@ -287,7 +289,7 @@
     }
 
     .input_div {
-        @include basic-layout(90px, 98%, $pad: 5px, $bgc: transparent);
+        @include basic-layout(100px, 98%, $pad: 5px, $bgc: transparent);
         @include flex(center, flex-start , column, 5% );
 
         label {
@@ -298,7 +300,7 @@
         }
 
         input {
-            @include basic-layout(65%, 98%, black, 0rem, $pad: 4px, $bgc: rgb(228, 216, 216) );
+            @include basic-layout(75%, 98%, black, 0.4rem, $pad: 5px, $bgc: rgb(228, 216, 216) );
             align-self: center;  font-size: 2vh; outline:  none;
             box-shadow: 2px 1px 3px  black ;
         }
@@ -916,35 +918,93 @@
 
     #calculate_sec {
         @include basic-layout(fit-content, 100%, 0black, none, );
-        @include flex(center, center, column, 5px);
+        @include flex(center, center, column, 1px);
+        color: rgba(10, 10, 10, 0.959);
 
-        >div {
-            @include basic-layout(3.5vh, 98%,  black, );
-            @include flex(flex-start, center, row, 0px);
+        #calcsec_div1 {
+            @include basic-layout(8vh, 100%,   );
+            @include flex(flex-start, center, column, 2px);
+            @include pos(sticky, $t: 1px );
+            border-bottom: 1px solid brown;
+
+            #def_div {
+                @include basic-layout(3.5vh, 99%, kblack, none, rgb(167, 142, 142), );
+                @include flex(center, center, row, 1px);
+                font-size: 1.7vh;
+    
+                >div {
+                    @include basic-layout(100%, 41%,  );
+                    @include flex(flex-start, center, row, 4% )
+                }
+    
+                >button {
+                    @include basic-layout(80%, 15%, black, 0.4rem, wheat, )
+                }
+            }
+    
+            #header {
+                @include basic-layout(4vh, 99%, black, $bgc: white, );
+                border-bottom: none;
+    
+                >* {
+                    font-size: 1.7vh;
+                }
+                >:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+        >:nth-child(2) {
+            margin-top: 2px;
+        }
+
+        >:nth-child(3) {
+            margin-top: 2px;
+        }
+
+        .calc_div {
+            @include basic-layout(4.2vh, 99%,  bilack, $bgc: rgb(223, 217, 207) );
+            @include flex(flex-start, center, row, 1px);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.65vh;
+
 
             >* {
-                @include basic-layout(100%, 21%, $pad: 6px );
-                @include flex(flex-start, center, );
-                border-right: 1px solid black;
-                font-size: 1.7vh;
+                @include basic-layout(100%, 15%, $pad: 5px );
+                @include flex(center, center, );
+                color: rgb(17, 20, 22);
             }
             
             >:first-child {
-                width: 6%;  justify-content: center;
-                background-color: red;
-                padding: 0; 
+                @include basic-layout(100%, 5%, $pad: 0, $bgc: rgb(221, 196, 148), );
+                justify-content: center; border: none;  border-right: 1px solid black;
             }
 
             >:nth-child(2) {
                 justify-content: flex-start;
-                width: 30%;
+                width: 31%;
+                font-weight: bold;
+            }
+
+            >:nth-child(3) {
+                background-color: rgb(51, 167, 51);
+            }
+
+            >:nth-child(4) {
+                background-color: rgb(253, 88, 88);
             }
 
             :last-child {
+                background-color: rgb(114, 114, 155);
+                width: 18.5%;
                 border-right: none;
-                width: 22%;
             }
 
+        }
+
+        >:last-child{
+            border-bottom: 1px solid black;
         }
 
     }

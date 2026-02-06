@@ -490,10 +490,21 @@
   background-color: rgb(243, 247, 250);
 }
 #dashboard_add_mini #mini_header {
+  height: 60px;
+  width: 55vw;
+  border: 1px solid none;
+  border-radius: 0.4rem;
+  background-color: rgb(126, 120, 120);
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: 0;
+  gap: 0;
   font-size: 2.5vh;
   align-self: flex-start;
-  padding-left: 6px;
-  margin-top: 6vh;
+  margin: 10px;
+  color: black;
 }
 #dashboard_add_mini #form_div {
   height: 71vh;
@@ -530,7 +541,7 @@
   margin-top: 2.5dvh;
 }
 #dashboard_add_mini .input_div {
-  height: 90px;
+  height: 100px;
   width: 98%;
   border: 1px solid 0;
   border-radius: 0;
@@ -554,12 +565,12 @@
   font-family: "Times New Roman", Times, serif;
 }
 #dashboard_add_mini .input_div input {
-  height: 65%;
+  height: 75%;
   width: 98%;
   border: 1px solid black;
-  border-radius: 0rem;
+  border-radius: 0.4rem;
   background-color: rgb(228, 216, 216);
-  padding: 4px;
+  padding: 5px;
   align-self: center;
   font-size: 2vh;
   outline: none;
@@ -1735,12 +1746,46 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 5px;
+  gap: 1px;
+  color: rgba(10, 10, 10, 0.959);
 }
-#calcsales_mini_main #calculate_sec > div {
+#calcsales_mini_main #calculate_sec #calcsec_div1 {
+  height: 8vh;
+  width: 100%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  position: sticky;
+  left: none;
+  right: none;
+  top: 1px;
+  bottom: none;
+  border-bottom: 1px solid brown;
+}
+#calcsales_mini_main #calculate_sec #calcsec_div1 #def_div {
   height: 3.5vh;
-  width: 98%;
-  border: 1px solid black;
+  width: 99%;
+  border: 1px solid kblack;
+  border-radius: none;
+  background-color: rgb(167, 142, 142);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 1px;
+  font-size: 1.7vh;
+}
+#calcsales_mini_main #calculate_sec #calcsec_div1 #def_div > div {
+  height: 100%;
+  width: 41%;
+  border: 1px solid 0;
   border-radius: 0;
   background-color: 0;
   padding: 0;
@@ -1748,36 +1793,95 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
-  gap: 0px;
+  gap: 4%;
 }
-#calcsales_mini_main #calculate_sec > div > * {
-  height: 100%;
-  width: 21%;
-  border: 1px solid 0;
+#calcsales_mini_main #calculate_sec #calcsec_div1 #def_div > button {
+  height: 80%;
+  width: 15%;
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  background-color: wheat;
+  padding: 0;
+}
+#calcsales_mini_main #calculate_sec #calcsec_div1 #header {
+  height: 4vh;
+  width: 99%;
+  border: 1px solid black;
   border-radius: 0;
-  background-color: 0;
-  padding: 6px;
+  background-color: white;
+  padding: 0;
+  border-bottom: none;
+}
+#calcsales_mini_main #calculate_sec #calcsec_div1 #header > * {
+  font-size: 1.7vh;
+}
+#calcsales_mini_main #calculate_sec #calcsec_div1 #header > :last-child {
+  border-right: none;
+}
+#calcsales_mini_main #calculate_sec > :nth-child(2) {
+  margin-top: 2px;
+}
+#calcsales_mini_main #calculate_sec > :nth-child(3) {
+  margin-top: 2px;
+}
+#calcsales_mini_main #calculate_sec .calc_div {
+  height: 4.2vh;
+  width: 99%;
+  border: 1px solid bilack;
+  border-radius: 0;
+  background-color: rgb(223, 217, 207);
+  padding: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex-direction: row;
+  gap: 1px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.65vh;
+}
+#calcsales_mini_main #calculate_sec .calc_div > * {
+  height: 100%;
+  width: 15%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: 0;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: 0;
   gap: 0;
-  border-right: 1px solid black;
-  font-size: 1.7vh;
+  color: rgb(17, 20, 22);
 }
-#calcsales_mini_main #calculate_sec > div > :first-child {
-  width: 6%;
-  justify-content: center;
-  background-color: red;
+#calcsales_mini_main #calculate_sec .calc_div > :first-child {
+  height: 100%;
+  width: 5%;
+  border: 1px solid 0;
+  border-radius: 0;
+  background-color: rgb(221, 196, 148);
   padding: 0;
+  justify-content: center;
+  border: none;
+  border-right: 1px solid black;
 }
-#calcsales_mini_main #calculate_sec > div > :nth-child(2) {
+#calcsales_mini_main #calculate_sec .calc_div > :nth-child(2) {
   justify-content: flex-start;
-  width: 30%;
+  width: 31%;
+  font-weight: bold;
 }
-#calcsales_mini_main #calculate_sec > div :last-child {
+#calcsales_mini_main #calculate_sec .calc_div > :nth-child(3) {
+  background-color: rgb(51, 167, 51);
+}
+#calcsales_mini_main #calculate_sec .calc_div > :nth-child(4) {
+  background-color: rgb(253, 88, 88);
+}
+#calcsales_mini_main #calculate_sec .calc_div :last-child {
+  background-color: rgb(114, 114, 155);
+  width: 18.5%;
   border-right: none;
-  width: 22%;
+}
+#calcsales_mini_main #calculate_sec > :last-child {
+  border-bottom: 1px solid black;
 }
 
 /*# sourceMappingURL=comps.css.map */

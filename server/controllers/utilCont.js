@@ -85,10 +85,10 @@ async function IDCounter(na) {
 
 }
 
-exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year, data) {
+exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year, ty) {
     try {
         const weeklyInboundPrdsCount = {};
-        const weeklOutboundPrdsount = {};
+        const weeklyOutboundPrdsount = {};
 
         const prevWeekInventoryCountId = String('INV-' + storeId + '-' + transWeekId() ).toUpperCase();
         const inventoryCountId = String('INV-' + storeId + '-' + weekId).toUpperCase();
@@ -116,32 +116,41 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
 
         in_out_cumul.outgoing.map(it => {
             for(let prd in it) {
-                weeklOutboundPrdsount[prd] = (weeklOutboundPrdsount[prd] ?? 0) + it[prd];
+                weeklyOutboundPrdsount[prd] = (weeklyOutboundPrdsount[prd] ?? 0) + it[prd];
             }
         });
 
         const prevInventoryCount = await inventoryModel.findOne({id: prevWeekInventoryCountId}).select('inventoryCount id -_id');
-        const currentInventoryCount = await inventoryModel.findOne({id: inventoryCountId}).select('inventoryCount id -_id');
+        const currentInventoryCount = await inventoryModel.findOne({id: inventoryCountId}).select('inventoryCount id sequenceNum -_id');
 
         const BalanceData = {
             incomingGoodsForWeek: weeklyInboundPrdsCount,
-            outgoingGoodsForWeek: weeklOutboundPrdsount,
+            outgoingGoodsForWeek: weeklyOutboundPrdsount,
         }
 
         const CALCSALES = await calculateSale(currentInventoryCount, prevInventoryCount);
-        if(CALCSALES.status !== 'success') return console.log(CALCSALES.message);
-                
+        if(CALCSALES.status !== 'success') return console.log('error calcsalesFN', '\n', CALCSALES);
+
+        const sqCount = currentInventoryCount.sequenceNum || 0;
+        currentInventoryCount && await IDCounterModel.findOneAndUpdate(
+            {name: 'BAL'},
+            {$set: {count: sqCount}, $setOnInsert: {name: 'BAL'} },
+            {upsert: true, new: true}
+        );
+        
         const BalanceOper = await balanceModel.findOneAndUpdate(
             {id: ID},
             {
-                $set: {data: BalanceData},
+                $set: {
+                    data: BalanceData,
+                    sequenceNum: sqCount
+                },
                 $setOnInsert: {
                     id: ID,
                     weekInventoryId: inventoryCountId, 
                     storeId: storeId,
                     weekId: weekId,
                     year: year,
-                    sequenceNum: Number(weekId.substring(3, 5) ) +  year.substring(2)
                 },
             },
             {
@@ -164,7 +173,7 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
             if(obj1 == null && obj2 == null) return console.log({status: 'failure', message: 'inventorys empty'});
             
             try {
-                const PRODUCTS = await productModel.find().select('id -_id');
+                const PRODUCTS = await productModel.find().select('id retailPrice purchasePrice -_id');
 
                 const usePrds = PRODUCTS.reduce(
                     (acc, current) => {
@@ -172,6 +181,15 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
                         return acc;
                     }, []
                 );
+
+                const salesMargin = PRODUCTS.reduce(
+                    (acc, cu) => {
+                        acc[cu.id] = Number(cu.retailPrice ) - Number(cu.purchasePrice );
+                        return acc
+                    }, {}
+                );
+
+                BalanceData['profitMarginForWeek'] = salesMargin;
 
                 if(obj1.id == 'INV-' + storeId.toUpperCase() + '-' + 'WK-01-' + String(year).substring(2) ) {
                     const soldGoods = usePrds.map(it => {
@@ -193,6 +211,7 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
                     )
 
                     BalanceData['soldGoodsForWeek'] = useObj;
+                    console.log('singke')
                     return {status: 'success', message: 'sales for week generated', data: useObj};
                 }
                 
@@ -222,8 +241,8 @@ exports.handleBalance = async function InsertWeeklyBalance(storeId, weekId, year
 
                 BalanceData['soldGoodsForWeek'] = useObj;
 
-                console.log('wank', usePrds)
-                return {status:' success', message: 'sales for week generated', data: useObj}
+                //console.log('double', BalanceData)
+                return {status:'success', message: 'sales for week generated', data: useObj}
                 
             } catch (error) {
                 console.log('calcsales() error:', error.message);

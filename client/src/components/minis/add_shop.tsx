@@ -29,17 +29,17 @@ function AddShopMini() {
     const [mega, setMega] = useState([
         ['Store Name', 'Shop Manager', 'Contact', 'Location'], 
         ['Manager Name', 'Email', 'Manager Phone', 'Guarantor', 'Guarantor Contact'],
-        ['Product Name', 'Price', 'Quantity',]
+        ['Product Name', 'Purchase Price', 'Retail Price', 'Quantity',]
     ])
     
     const [ids, setIds] = useState([
         ['name', 'manager', 'contact', 'location'],
         ['name', 'email', 'phone', 'guarantor', 'guarantorPhone'],
-        ['name', 'price', 'quantity']
+        ['name', 'purchasePrice', 'retailPrice', 'quantity']
     ])
 
     const [headerTxt, setHeaderTxt] = useState<string[]>([
-        'Shop', 'Manager', 'Product'
+        'Store', 'Manager', 'Product'
     ])
 
     const [shopData, setShopDate] = useState<string[]>([
@@ -98,7 +98,7 @@ function AddShopMini() {
     return(
         <main id="dashboard_add_mini">
 
-            <h3 id="mini_header">Add A {headerTxt[index]}</h3>
+            <h4 id="mini_header">Create a {headerTxt[index]}</h4>
 
             <div id="form_div">
             {index == 0 &&

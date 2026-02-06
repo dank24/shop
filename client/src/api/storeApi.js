@@ -68,9 +68,10 @@ export const getInventoryCounts = async() => {
 export const calcSales = async(sObj) => {
     try {
         const res = await axiosInstance.get('/store/calcsales/' + JSON.stringify(sObj));
-        if(res.statusText == 'OK') console.log('bum') 
+        if(res.statusText == 'OK') return {...res.data}
 
     } catch (error) {
         console.log(error)
+        return {status: 'error', message: error.response?.data.message}
     }
 }
