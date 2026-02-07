@@ -268,17 +268,17 @@ exports.addGen = asyncHandler(
         const useModel = models[addData.index]
 
         const checkExisting = await useModel.findOne({name: addData.data.name}).select('_id');
-        if(checkExisting) return res.status(409).json({status: 'failure', message: 'duplicate data'});
+        if(checkExisting) return res.status(409).json({status: 'failure', message: 'Duplicate Data'});
 
         const useId = await IDCounter(strArr[addData.index]);
         const id = strArr[addData.index] + String(useId).padStart(2, 0)
 
         const newCollection = await useModel.create({...addData.data, id});
         if(!newCollection){
-            return res.status(404).json({status: 'failure', message: 'database error',})  
+            return res.status(404).json({status: 'failure', message: 'Database Error',})  
         }  
     
-        return res.status(200).json({status: 'success', message: 'added to collection', data: newCollection})
+        return res.status(201).json({status: 'success', message: 'Added To Tollection', data: newCollection.name})
     }
 )
 

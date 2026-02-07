@@ -4,12 +4,12 @@ import { getMktWeek } from "../../api/genApi";
 import { createContext } from "react";
 
 interface contextTy {
-    addAlert?: (msg: string) => void
+    addAlert: (msg: string) => void
     week?: {display?: string, id?: string, year?: string}
     setWeek?: any
 }
 
-export const MainContextEx = createContext<contextTy>({});
+export const MainContextEx = createContext<contextTy>({addAlert: () => {}});
 
 function MainContext({children}) {
  /* VARIABLES*/
@@ -78,7 +78,7 @@ function MainContext({children}) {
  /* return */
     return(
         <MainContextEx.Provider value={
-            { addAlert: AlertFNS.NEWALERT, week, setWeek: setWeek}
+            { addAlert: AlertFNS.NEWALERT || '', week, setWeek: setWeek}
         }>
             <div id="alerts_div">
                 {

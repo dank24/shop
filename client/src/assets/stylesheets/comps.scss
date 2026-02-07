@@ -260,7 +260,7 @@
 
 #dashboard_add_mini {
     @include basic-layout(100%, 100%);
-    @include flex(flex-start, center, column, 1.5vh);
+    @include flex(flex-start, center, column, 0.5vh);
     background-color: rgb(243, 247, 250);
 
     #mini_header {
@@ -268,11 +268,12 @@
         @include flex(center, center, );
         font-size: 2.5vh;  align-self: flex-start;
         margin: 10px;  color: black;
+        border-bottom: 1px solid black;
     }
 
 
     #form_div {
-        @include basic-layout(71vh, 96%, brown, 0, 0,);
+        @include basic-layout(80vh, 96%, none, 0.8rem, rgb(179, 170, 155),);
         @include flex(flex-start, center, column, 2%);
         padding-top: 25px;
 
@@ -300,19 +301,55 @@
         }
 
         input {
-            @include basic-layout(75%, 98%, black, 0.4rem, $pad: 5px, $bgc: rgb(228, 216, 216) );
-            align-self: center;  font-size: 2vh; outline:  none;
+            @include basic-layout(65%, 98%, black, 0.4rem, $pad: 5px, $bgc: rgb(228, 216, 216) );
+            align-self: center;  font-size: 2.7vh; outline:  none;
             box-shadow: 2px 1px 3px  black ;
         }
         
-
     }
-
 
     #options_div {
         @include basic-layout(90px, 99%, $pad: 5px, $bgc: transparent);
     }
 
+    #prev_sec {
+        @include basic-layout(100%, 100%, $bgc: rgb(177, 166, 145) );
+        @include flex(center, center, column, );
+
+        #preview_items_div {
+            @include basic-layout(80%, 90%, none, 0.4rem, rgb(112, 108, 108),  );
+            @include flex(center, center, column, 5px);
+            position: relative; 
+
+            #back_btn {
+                @include basic-layout(38px, 36%, black, $bgc: rgb(63, 62, 62) );
+                @include pos(absolute, 0px, none, 0px );  color: white;
+                margin-top: 0;
+            }
+
+            >h2 {
+                @include basic-layout(40px, 38%, none, 0.4rem, rgb(88, 86, 82), );
+                @include flex(center, center, );  font-size: 2.3vh;
+            }
+
+            .ids_divs {
+                @include basic-layout(65px, 96%, 0, 0.8rem, $bgc: grey, $pad: 5px );
+                @include flex(flex-start, center, row, 10px );
+                font-size: 2.6vh;
+                
+                >:last-child {
+                    color: rgb(16, 16, 90);
+                    font-size: 2.3vh
+                }
+            }
+
+            button {
+                @include basic-layout(50px, 90%, black, 0.4rem, rgb(63, 63, 102)  );
+                margin-top: 15px;
+            }
+        }
+
+    }
 
     
 }

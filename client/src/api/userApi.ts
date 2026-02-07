@@ -38,12 +38,11 @@ export const register = async(registerData: userDataTy) => {
 export const add_prop = async(data: {}) => {    
     try {
         const response = await axiosinstance.post('utils/add', data)
-        const re = response.data
-        console.log('re', re.data)
-        return re.data
+        if(response.statusText == 'Created') return response.data
         
     } catch (error) {
-        console.log('err', error.response)
+        console.log('err', error.response.data)
+        return {status: 'error', message: error.response.data.message}
     }
 }// add mng,prd,store_ FN
 
